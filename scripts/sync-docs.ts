@@ -1,8 +1,12 @@
 import { existsSync } from "node:fs"
 import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises"
 import path from "node:path"
+import type { CorpusEntry } from "../src/lib/import-corpus"
+import { summarizeGolden } from "./sync/corpus"
 import { transformPage } from "./sync/markdown"
 import {
+  CORPUS_GOLDEN_SOURCE,
+  CORPUS_OUT,
   DOCS_OUT,
   SCHEMA_OUT,
   SCHEMA_SOURCE,
@@ -17,7 +21,7 @@ function coreDir(): string {
 }
 
 function requireCore(core: string): void {
-  const missing = ["docs", SCHEMA_SOURCE].filter(
+  const missing = ["docs", SCHEMA_SOURCE, CORPUS_GOLDEN_SOURCE].filter(
     (entry) => !existsSync(path.join(core, entry)),
   )
   if (missing.length === 0) return
@@ -38,6 +42,30 @@ async function listDocs(docsDir: string): Promise<string[]> {
     )
     .filter((rel) => !rel.split("/").some((segment) => segment.startsWith(".")))
     .sort()
+}
+
+async function listGoldens(goldenDir: string): Promise<string[]> {
+  const sources = (await readdir(goldenDir, { withFileTypes: true }))
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+  const perSource = await Promise.all(
+    sources.map(async (source) =>
+      (await readdir(path.join(goldenDir, source), { withFileTypes: true }))
+        .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
+        .map((entry) => `${source}/${entry.name}`),
+    ),
+  )
+  return perSource.flat().sort()
+}
+
+async function summarizeGoldens(goldenDir: string): Promise<CorpusEntry[]> {
+  const rels = await listGoldens(goldenDir)
+  if (rels.length === 0) throw new Error(`no import goldens found in ${goldenDir}`)
+  return Promise.all(
+    rels.map(async (rel) =>
+      summarizeGolden(rel, JSON.parse(await readFile(path.join(goldenDir, rel), "utf8"))),
+    ),
+  )
 }
 
 function coreCommit(core: string): string {
@@ -78,6 +106,8 @@ async function sync(): Promise<string> {
     })),
   )
 
+  const corpus = await summarizeGoldens(path.join(core, CORPUS_GOLDEN_SOURCE))
+
   await rm(DOCS_OUT, { recursive: true, force: true })
   await rm(path.dirname(SCHEMA_OUT), { recursive: true, force: true })
   for (const { rel, text } of transformed) {
@@ -88,7 +118,11 @@ async function sync(): Promise<string> {
   for (const rel of assets) await copyInto(path.join(docsDir, rel), outputPathFor(rel))
   await copyInto(schemaSource, SCHEMA_OUT)
 
-  return `Synced ${plural(pages.length, "page")}, ${plural(assets.length, "asset")} and the ObserveSpec schema from ${core} (${coreCommit(core)})`
+  const commit = coreCommit(core)
+  await mkdir(path.dirname(CORPUS_OUT), { recursive: true })
+  await writeFile(CORPUS_OUT, JSON.stringify({ core: commit, entries: corpus }, null, 2) + "\n")
+
+  return `Synced ${plural(pages.length, "page")}, ${plural(assets.length, "asset")}, the ObserveSpec schema and ${plural(corpus.length, "import golden")} from ${core} (${commit})`
 }
 
 try {

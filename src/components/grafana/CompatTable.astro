@@ -1,0 +1,146 @@
+---
+interface Props {
+  panelTypeCount: number
+}
+
+type Tone = "ok" | "warn" | null
+
+const { panelTypeCount } = Astro.props
+
+const rows: { feature: string; status: string; tone: Tone; note: string }[] = [
+  {
+    feature:
+      "Time series, stat, gauge, bar gauge, table, pie, heatmap, histogram, state timeline, logs and more",
+    status: "Imported",
+    tone: "ok",
+    note: `${panelTypeCount} data panel types, plus text, rows, dashboard list and news`,
+  },
+  {
+    feature: "Prometheus and ClickHouse queries",
+    status: "Imported",
+    tone: "ok",
+    note: "Several queries per panel, legends, intervals, time shift",
+  },
+  {
+    feature: "Variables: query, custom, constant, interval, textbox, datasource, ad hoc",
+    status: "Imported",
+    tone: "ok",
+    note: "Multi-value and All, chained variables",
+  },
+  {
+    feature: "Field config: units, decimals, thresholds, value mappings, overrides, links",
+    status: "Imported",
+    tone: "ok",
+    note: "Overrides by name, regex or query",
+  },
+  {
+    feature: "Rows, repeating panels and rows, transformations",
+    status: "Imported",
+    tone: "ok",
+    note: "Collapsed rows keep their children",
+  },
+  {
+    feature: "Library panels",
+    status: "Imported",
+    tone: "ok",
+    note: "When the export includes them (Export for sharing externally); otherwise a placeholder that names the panel",
+  },
+  {
+    feature: "Loki, Tempo, Elasticsearch and other datasources",
+    status: "Placeholder",
+    tone: "warn",
+    note: "Shown with the original title and the reason",
+  },
+  {
+    feature: "Plugin panels from grafana.com",
+    status: "Placeholder",
+    tone: "warn",
+    note: "Listed in the import report",
+  },
+  {
+    feature: "Alert rules, annotations, Grafana's HTTP API",
+    status: "Not imported",
+    tone: null,
+    note: "Dashboards only",
+  },
+  {
+    feature: "Export back to Grafana",
+    status: "Not planned",
+    tone: null,
+    note: "Share the dashboard link, or ask an LLM to translate the spec",
+  },
+]
+---
+
+<section id="compat" class="wrap section">
+  <div class="head">
+    <h2 class="h2">What imports</h2>
+    <p>
+      "Same meaning" means the same queries, series, layout, variables, units, thresholds, mappings
+      and colours. Panels are drawn by SlashObserve, so they look like SlashObserve, not a pixel
+      copy.
+    </p>
+  </div>
+  <div class="card scroll" role="region" aria-label="What imports from Grafana" tabindex="0">
+    <table class="tbl">
+      <caption class="sr-only">What imports from Grafana</caption>
+      <thead>
+        <tr>
+          <th scope="col">Grafana feature</th>
+          <th scope="col">In SlashObserve</th>
+          <th scope="col">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          rows.map((row) => (
+            <tr>
+              <td>{row.feature}</td>
+              <td>
+                <span class="tag">
+                  {row.tone && <span class:list={["dot", row.tone]} aria-hidden="true" />}
+                  {row.status}
+                </span>
+              </td>
+              <td class="hint">{row.note}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-bottom: 96px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    scroll-margin-top: 24px;
+  }
+
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 680px;
+  }
+
+  .head p {
+    margin: 0;
+    color: var(--mfg);
+  }
+
+  .scroll {
+    overflow-x: auto;
+  }
+
+  .ok {
+    background: var(--ok);
+  }
+
+  .warn {
+    background: var(--warn);
+  }
+</style>

@@ -1,0 +1,88 @@
+---
+const grafanaPanel = `{
+  "type": "timeseries",
+  "title": "p99 latency",
+  "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+  "datasource": { "type": "prometheus", "uid": "P1809F7CD0C75ACF3" },
+  "fieldConfig": {
+    "defaults": {
+      "unit": "s",
+      "thresholds": { "mode": "absolute", "steps": [
+        { "color": "green", "value": null },
+        { "color": "orange", "value": 0.25 },
+        { "color": "red", "value": 0.5 } ] },
+      "custom": { "drawStyle": "line", "lineWidth": 1, ... }
+    },
+    "overrides": []
+  },
+  "options": { "legend": { "displayMode": "list", ... } },
+  "targets": [ { "refId": "A", "expr": "histogram_quantile(...)" } ]
+}`
+
+const specPanel = `{
+  "id": "p_p99",
+  "type": "timeseries",
+  "title": "p99 latency",
+  "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+  "datasource": "prom",
+  "unit": "s",
+  "queries": [{ "query": "histogram_quantile(...)" }],
+  "thresholds": [
+    { "value": 0.25, "color": "warning" },
+    { "value": 0.5, "color": "critical" }
+  ]
+}`
+---
+
+<section class="wrap panes g1-sm" aria-label="One panel in Grafana and in ObserveSpec">
+  <figure>
+    <pre class="code grafana" tabindex="0">{grafanaPanel}</pre>
+    <figcaption>
+      <span class="title">Grafana panel JSON</span>
+      <span class="hint">Every default spelled out</span>
+    </figcaption>
+  </figure>
+  <figure>
+    <pre class="code" tabindex="0">{specPanel}</pre>
+    <figcaption>
+      <span class="title">The same panel in ObserveSpec</span>
+      <span class="hint">Defaults omitted, one way to say each thing</span>
+    </figcaption>
+  </figure>
+</section>
+
+<style>
+  .panes {
+    padding-bottom: 96px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  pre {
+    height: 300px;
+  }
+
+  .grafana {
+    color: var(--mfg);
+  }
+
+  figcaption {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 13px;
+  }
+
+  .title {
+    font-weight: 500;
+  }
+</style>

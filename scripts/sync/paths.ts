@@ -3,6 +3,8 @@ export const CORE_EDIT_BRANCH = "main"
 export const DOCS_OUT = "src/content/docs/docs"
 export const SCHEMA_SOURCE = "spec/schema/observespec.v0.json"
 export const SCHEMA_OUT = "public/schemas/observespec.v0.json"
+export const CORPUS_GOLDEN_SOURCE = "pkg/grafana/testdata/golden"
+export const CORPUS_OUT = "src/generated/import-corpus.json"
 
 const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/
 
