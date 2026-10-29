@@ -1,0 +1,32 @@
+---
+const { editUrl } = Astro.locals.starlightRoute
+const sourcePath = editUrl ? new URL(editUrl).pathname.replace(/^\/[^/]+\/[^/]+\/edit\/[^/]+\//, "") : null
+---
+
+{
+  editUrl && (
+    <div class="edit-row print:hidden">
+      <a href={editUrl}>Edit this page on GitHub</a>
+      <span>Source: {sourcePath}</span>
+    </div>
+  )
+}
+
+<style>
+  .edit-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--mfg);
+  }
+
+  a {
+    color: var(--mfg);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--fg);
+  }
+</style>
