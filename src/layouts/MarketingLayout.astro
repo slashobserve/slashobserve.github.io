@@ -9,6 +9,7 @@ import SiteFooter from "../components/site/SiteFooter.astro"
 import SiteHeader from "../components/site/SiteHeader.astro"
 import ThemeScript from "../components/site/ThemeScript.astro"
 import { getDocLinks } from "../lib/get-doc-links"
+import { CARD_HEIGHT, CARD_WIDTH, cardFor, cardImagePath } from "../lib/og/cards"
 
 interface Props {
   title: string
@@ -20,6 +21,8 @@ interface Props {
 
 const { title, description, minimalHeader = false, halo = false, canonical = true } = Astro.props
 const links = await getDocLinks()
+const pageUrl = new URL(Astro.url.pathname, Astro.site)
+const card = cardFor(Astro.url.pathname)
 ---
 
 <!doctype html>
@@ -30,7 +33,21 @@ const links = await getDocLinks()
     <meta name="color-scheme" content="light dark" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    {canonical && <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SlashObserve" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {canonical && <meta property="og:url" content={pageUrl} />}
+    {card && (
+      <>
+        <meta property="og:image" content={new URL(cardImagePath(card), Astro.site)} />
+        <meta property="og:image:width" content={String(CARD_WIDTH)} />
+        <meta property="og:image:height" content={String(CARD_HEIGHT)} />
+        <meta property="og:image:alt" content={`${card.section}: ${card.title}`} />
+        <meta name="twitter:card" content="summary_large_image" />
+      </>
+    )}
+    {canonical && <link rel="canonical" href={pageUrl} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <ThemeScript />
     <link rel="preload" as="font" type="font/woff2" crossorigin href={geistLatin} />
