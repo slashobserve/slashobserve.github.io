@@ -15,9 +15,10 @@ interface Props {
   description: string
   minimalHeader?: boolean
   halo?: boolean
+  canonical?: boolean
 }
 
-const { title, description, minimalHeader = false, halo = false } = Astro.props
+const { title, description, minimalHeader = false, halo = false, canonical = true } = Astro.props
 const links = await getDocLinks()
 ---
 
@@ -29,7 +30,7 @@ const links = await getDocLinks()
     <meta name="color-scheme" content="light dark" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    {canonical && <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <ThemeScript />
     <link rel="preload" as="font" type="font/woff2" crossorigin href={geistLatin} />

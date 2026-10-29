@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "astro dev",
     "sync": "bun scripts/sync-docs.ts",
-    "build": "bun run sync && astro build",
+    "build": "bun run sync && astro build --force",
     "preview": "astro preview",
     "check": "astro check",
     "check:links": "bun scripts/check-links.ts",
