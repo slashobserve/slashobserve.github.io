@@ -12,6 +12,7 @@ interface Props {
 
 const { links, minimal = false } = Astro.props
 const getStartedHref = docsEntryHref(links)
+const navItems = headerNav(links)
 ---
 
 {
@@ -25,12 +26,12 @@ const getStartedHref = docsEntryHref(links)
       </span>
     </header>
   ) : (
-    <header class="wrap full">
+    <header class="wrap full" data-site-header>
       <a class="home" href="/" aria-label="SlashObserve home">
         <Wordmark size={21} />
       </a>
       <nav aria-label="Main" class="main-nav hide-sm">
-        {headerNav(links).map((item) => (
+        {navItems.map((item) => (
           <a class="navlink" href={item.href}>
             {item.label}
           </a>
@@ -42,11 +43,60 @@ const getStartedHref = docsEntryHref(links)
         </a>
         <ThemeToggle />
         {getStartedHref && (
-          <a class="btn btn-primary get-started" href={getStartedHref}>
+          <a class="btn btn-primary get-started hide-sm" href={getStartedHref}>
             Get started
           </a>
         )}
+        <button
+          type="button"
+          class="icon-btn menu-toggle"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="site-menu"
+        >
+          <svg
+            class="icon-open"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          >
+            <path d="M4 7h16M4 12h16M4 17h16"></path>
+          </svg>
+          <svg
+            class="icon-close"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          >
+            <path d="M6 6l12 12M18 6 6 18"></path>
+          </svg>
+        </button>
       </div>
+      <nav id="site-menu" class="menu-panel" aria-label="Mobile" hidden>
+        {navItems.map((item) => (
+          <a class="menu-link" href={item.href}>
+            {item.label}
+          </a>
+        ))}
+        <a class="menu-link" href={GITHUB_URL}>
+          <GitHubIcon />GitHub
+        </a>
+        {getStartedHref && (
+          <a class="btn btn-primary menu-cta" href={getStartedHref}>
+            Get started
+          </a>
+        )}
+      </nav>
     </header>
   )
 }
@@ -58,6 +108,7 @@ const getStartedHref = docsEntryHref(links)
   }
 
   .full {
+    position: relative;
     gap: 20px;
     min-height: 68px;
   }
@@ -105,4 +156,123 @@ const getStartedHref = docsEntryHref(links)
     min-height: 38px;
     padding: 0 14px;
   }
+
+  .menu-toggle {
+    display: none;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .menu-toggle:hover {
+    color: var(--fg);
+  }
+
+  .menu-toggle .icon-close,
+  .menu-toggle[aria-expanded="true"] .icon-open {
+    display: none;
+  }
+
+  .menu-toggle[aria-expanded="true"] .icon-close {
+    display: block;
+  }
+
+  .menu-panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 24px 20px;
+    box-sizing: border-box;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-card);
+  }
+
+  .menu-panel[hidden] {
+    display: none;
+  }
+
+  .menu-link {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 10px;
+    font-size: 15px;
+    color: var(--fg);
+    text-decoration: none;
+    border-radius: 6px;
+  }
+
+  .menu-link:hover {
+    background: var(--muted-bg);
+    color: var(--fg);
+  }
+
+  .menu-cta {
+    margin-top: 8px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 860px) {
+    .menu-toggle {
+      display: inline-flex;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .menu-panel {
+      animation: menu-fade 120ms ease-out;
+    }
+  }
+
+  @keyframes menu-fade {
+    from {
+      opacity: 0;
+    }
+  }
 </style>
+
+<script>
+  const MOBILE_QUERY = "(max-width: 860px)"
+  const toggle = document.querySelector<HTMLButtonElement>(".menu-toggle")
+  const panel = document.getElementById("site-menu")
+
+  if (toggle && panel) {
+    const setOpen = (open: boolean) => {
+      panel.hidden = !open
+      toggle.setAttribute("aria-expanded", String(open))
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu")
+    }
+    const isOpen = () => !panel.hidden
+
+    toggle.addEventListener("click", () => setOpen(!isOpen()))
+
+    panel.addEventListener("click", (event) => {
+      if ((event.target as Element).closest("a")) setOpen(false)
+    })
+
+    document.addEventListener("click", (event) => {
+      const target = event.target as Node
+      if (isOpen() && !panel.contains(target) && !toggle.contains(target)) setOpen(false)
+    })
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" || !isOpen()) return
+      setOpen(false)
+      toggle.focus()
+    })
+
+    matchMedia(MOBILE_QUERY).addEventListener("change", (event) => {
+      if (!event.matches) setOpen(false)
+    })
+  }
+</script>
