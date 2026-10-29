@@ -1,0 +1,95 @@
+---
+import type { Feature } from "../../lib/features"
+
+interface Props {
+  feature: Feature
+}
+
+const { feature } = Astro.props
+const at = feature.code ? feature.title.indexOf(feature.code) : -1
+const before = at < 0 ? feature.title : feature.title.slice(0, at)
+const code = at < 0 ? "" : (feature.code ?? "")
+const after = at < 0 ? "" : feature.title.slice(at + code.length)
+---
+
+<article class="item">
+  <h3>
+    {
+      feature.href ? (
+        <a href={feature.href}>
+          {before}
+          {code && <span class="mono word">{code}</span>}
+          {after}
+          <span class="arrow" aria-hidden="true"> →</span>
+        </a>
+      ) : (
+        <>
+          {before}
+          {code && <span class="mono word">{code}</span>}
+          {after}
+        </>
+      )
+    }
+  </h3>
+  <p>{feature.body}</p>
+</article>
+
+<style>
+  .item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: var(--shadow-card);
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  p {
+    margin: 0;
+    color: var(--mfg);
+    font-size: 14px;
+  }
+
+  .word {
+    font-size: 14px;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+  }
+
+  .item:has(a:hover) {
+    border-color: var(--border-strong);
+  }
+
+  a:focus-visible {
+    outline: none;
+  }
+
+  .item:has(a:focus-visible) {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+
+  .arrow {
+    color: var(--mfg);
+  }
+</style>

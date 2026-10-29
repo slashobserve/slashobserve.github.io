@@ -1,4 +1,16 @@
-export type DocLinkKey = "quickStart" | "install" | "importGuide" | "mcp" | "selfHost" | "reference"
+export type DocLinkKey =
+  | "quickStart"
+  | "install"
+  | "importGuide"
+  | "mcp"
+  | "selfHost"
+  | "reference"
+  | "roles"
+  | "folders"
+  | "oidc"
+  | "llm"
+  | "cli"
+  | "datasources"
 
 export type DocLinks = Record<DocLinkKey, string | null>
 
@@ -9,6 +21,12 @@ export const DOC_LINK_CANDIDATES: Record<DocLinkKey, readonly string[]> = {
   mcp: ["docs/use/mcp", "docs/self-hosting#mcp"],
   selfHost: ["docs/self-hosting"],
   reference: ["docs/reference"],
+  roles: ["docs/teams/roles", "docs/self-hosting#roles"],
+  folders: ["docs/teams/folders", "docs/self-hosting#folders-and-access"],
+  oidc: ["docs/connect/oidc", "docs/self-hosting#sign-in-with-oidc"],
+  llm: ["docs/connect/llm-providers", "docs/self-hosting#llm-providers"],
+  cli: ["docs/use/cli", "docs/self-hosting#cli"],
+  datasources: ["docs/connect/prometheus", "docs/self-hosting#datasources-file"],
 }
 
 function resolveCandidate(candidate: string, existingIds: ReadonlySet<string>): string | null {
