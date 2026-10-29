@@ -1,13 +1,12 @@
 ---
 import coreRef from "../../../core-ref.txt?raw"
 import { GITHUB_URL } from "../../lib/site-nav"
-import GitHubIcon from "../site/GitHubIcon.astro"
 
 const ref = coreRef.trim()
 ---
 
 <span class="tag">{ref} · pre-release</span>
-<a class="gh-btn" href={GITHUB_URL}><GitHubIcon size={15} />GitHub</a>
+<a class="gh-btn" href={GITHUB_URL}>GitHub</a>
 
 <style>
   .tag {
@@ -28,7 +27,7 @@ const ref = coreRef.trim()
     justify-content: center;
     gap: 6px;
     height: 36px;
-    padding: 0 14px;
+    padding: 0 12px;
     box-sizing: border-box;
     border: 1px solid var(--border);
     border-radius: 6px;

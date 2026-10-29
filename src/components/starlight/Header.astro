@@ -1,0 +1,109 @@
+---
+import Search from "@astrojs/starlight/components/Search.astro"
+import SiteTitle from "./SiteTitle.astro"
+import SocialIcons from "./SocialIcons.astro"
+import ThemeSelect from "./ThemeSelect.astro"
+import { PRODUCT_LINKS } from "../../lib/site-nav"
+---
+
+<div class="bar">
+  <div class="title-wrapper">
+    <SiteTitle />
+  </div>
+  <div class="search print:hidden">
+    <Search />
+  </div>
+  <div class="right-group print:hidden">
+    <nav class="links" aria-label="Site">
+      {PRODUCT_LINKS.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+    <div class="actions">
+      <SocialIcons />
+    </div>
+    <ThemeSelect />
+  </div>
+</div>
+
+<style>
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 100%;
+  }
+
+  .title-wrapper {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    padding: 0.25rem;
+    margin: -0.25rem;
+    overflow: clip;
+  }
+
+  .search {
+    display: flex;
+    margin-inline-start: auto;
+  }
+
+  .right-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .links {
+    display: none;
+    align-items: center;
+  }
+
+  .links a {
+    padding: 0 8px;
+    font-size: 14px;
+    color: var(--mfg);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .links a:hover {
+    color: var(--fg);
+  }
+
+  .actions {
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .actions :global(.tag) {
+    display: none;
+  }
+
+  @media (min-width: 50rem) {
+    .search {
+      flex: 0 1 320px;
+      min-width: 0;
+      margin-inline-start: 24px;
+    }
+
+    .right-group {
+      margin-inline-start: auto;
+    }
+
+    .actions {
+      display: flex;
+    }
+  }
+
+  @media (min-width: 56rem) {
+    .links {
+      display: flex;
+    }
+  }
+
+  @media (min-width: 68.75rem) {
+    .actions :global(.tag) {
+      display: inline-flex;
+    }
+  }
+</style>

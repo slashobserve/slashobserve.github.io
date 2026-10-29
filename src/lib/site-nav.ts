@@ -6,6 +6,11 @@ export const GITHUB_URL = "https://github.com/slashobserve/slashobserve"
 export const FEATURES_PATH = "/features/"
 export const GRAFANA_PATH = "/grafana/"
 
+export const PRODUCT_LINKS: NavItem[] = [
+  { label: "Features", href: FEATURES_PATH },
+  { label: "Coming from Grafana", href: GRAFANA_PATH },
+]
+
 export function docsEntryHref(links: DocLinks): string | null {
   return links.quickStart ?? links.selfHost
 }
@@ -19,23 +24,20 @@ export function isCurrentPage(href: string, pathname: string): boolean {
 }
 
 export function headerNav(links: DocLinks): NavItem[] {
-  return navItems([
-    ["Features", FEATURES_PATH],
-    ["Coming from Grafana", GRAFANA_PATH],
-    ["Docs", docsEntryHref(links)],
-    ["Self-host", links.selfHost],
-  ])
+  return [
+    ...PRODUCT_LINKS,
+    ...navItems([
+      ["Docs", docsEntryHref(links)],
+      ["Self-host", links.selfHost],
+    ]),
+  ]
 }
 
 export function footerColumns(links: DocLinks): { title: string; items: NavItem[] }[] {
   return [
     {
       title: "Product",
-      items: navItems([
-        ["Features", FEATURES_PATH],
-        ["Coming from Grafana", GRAFANA_PATH],
-        ["Self-host", links.selfHost],
-      ]),
+      items: [...PRODUCT_LINKS, ...navItems([["Self-host", links.selfHost]])],
     },
     {
       title: "Docs",

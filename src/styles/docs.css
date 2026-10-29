@@ -30,6 +30,13 @@
   --sl-nav-height: 3.75rem;
   --sl-sidebar-width: 16.25rem;
   --sl-content-width: 47.5rem;
+  --sl-content-margin-inline: 0;
+}
+
+@media (min-width: 68.75rem) {
+  :root {
+    --sl-mobile-toc-height: 0rem;
+  }
 }
 
 @media (min-width: 50rem) {
@@ -38,19 +45,16 @@
   }
 }
 
-.header {
+header.header {
   border-bottom: 1px solid var(--border);
-}
-
-.social-icons::after {
-  display: none;
 }
 
 @media (min-width: 50rem) {
   site-search button[data-open-modal] {
-    width: 320px;
-    max-width: 320px;
+    width: 100%;
+    max-width: none;
     height: 36px;
+    padding-inline: 10px;
     border: 1px solid var(--border);
     border-radius: 6px;
     background: var(--bg);
@@ -61,6 +65,21 @@
   site-search button[data-open-modal]:hover {
     border-color: var(--border-strong);
     color: var(--fg);
+  }
+
+  site-search button[data-open-modal] > svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  site-search button[data-open-modal] > kbd {
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    gap: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--mfg);
   }
 }
 
@@ -92,12 +111,38 @@ nav.sidebar a[aria-current="page"] {
 nav.sidebar summary {
   margin: 18px 10px 4px;
   padding: 0;
+  cursor: default;
+  pointer-events: none;
+}
+
+nav.sidebar .caret {
+  display: none;
+}
+
+nav.sidebar ul ul li {
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 nav.sidebar .large {
   font-size: 13px;
   font-weight: 600;
   color: var(--fg);
+}
+
+.content-panel {
+  padding-block: 0;
+}
+
+.content-panel:first-of-type {
+  padding-top: 36px;
+}
+
+.content-panel + .content-panel {
+  padding-top: 12px;
+  padding-bottom: 80px;
+  border-top: 0;
 }
 
 .sl-markdown-content > p:first-child {
@@ -188,8 +233,25 @@ starlight-toc {
   font-size: 13px;
 }
 
+starlight-toc h2 {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--fg);
+}
+
 starlight-toc a {
+  --pad-inline: 0px;
+  padding-block: 3px;
+  line-height: 1.6;
   color: var(--mfg);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+starlight-toc a:hover {
+  color: var(--fg);
 }
 
 starlight-toc a[aria-current="true"] {

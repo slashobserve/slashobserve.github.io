@@ -12,7 +12,7 @@ export default defineConfig({
     starlight({
       title: "SlashObserve",
       disable404Route: true,
-      sidebar: buildSidebar(tree.rootPages, tree.sectionDirs),
+      sidebar: buildSidebar(tree.rootPages, tree.sections),
       customCss: [
         "@fontsource-variable/geist",
         "@fontsource-variable/geist-mono",
@@ -20,6 +20,9 @@ export default defineConfig({
         "./src/styles/docs.css",
       ],
       components: {
+        Header: "./src/components/starlight/Header.astro",
+        PageSidebar: "./src/components/starlight/PageSidebar.astro",
+        TwoColumnContent: "./src/components/starlight/TwoColumnContent.astro",
         SiteTitle: "./src/components/starlight/SiteTitle.astro",
         SocialIcons: "./src/components/starlight/SocialIcons.astro",
         ThemeSelect: "./src/components/starlight/ThemeSelect.astro",

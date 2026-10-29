@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import { resolveDocLinks } from "./doc-links"
-import { footerColumns, headerNav, isCurrentPage } from "./site-nav"
+import { PRODUCT_LINKS, footerColumns, headerNav, isCurrentPage } from "./site-nav"
 
 const today = new Set(["docs/self-hosting"])
 const afterSplit = new Set([
@@ -12,6 +12,12 @@ const afterSplit = new Set([
 
 const features = { label: "Features", href: "/features/" }
 const grafana = { label: "Coming from Grafana", href: "/grafana/" }
+
+describe("PRODUCT_LINKS", () => {
+  test("lists Features then Coming from Grafana", () => {
+    expect(PRODUCT_LINKS).toEqual([features, grafana])
+  })
+})
 
 describe("headerNav", () => {
   test("lists Features, Coming from Grafana, Docs and Self-host for today's docs", () => {
