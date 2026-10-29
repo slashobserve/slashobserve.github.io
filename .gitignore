@@ -5,3 +5,4 @@ dist/
 src/content/docs/
 public/schemas/
 .DS_Store
+.claude/
