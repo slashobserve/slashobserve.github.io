@@ -1,4 +1,3 @@
-/// <reference types="bun" />
 import { describe, expect, test } from "bun:test"
 import { resolveDocLinks } from "./doc-links"
 import { footerColumns, headerNav } from "./site-nav"

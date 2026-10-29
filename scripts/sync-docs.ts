@@ -1,5 +1,3 @@
-/// <reference types="bun" />
-
 import { existsSync } from "node:fs"
 import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises"
 import path from "node:path"

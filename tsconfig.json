@@ -4,6 +4,7 @@
   "exclude": ["dist", ".core", "node_modules", "src/content/docs", "public"],
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "react"
+    "jsxImportSource": "react",
+    "types": ["bun"]
   }
 }
