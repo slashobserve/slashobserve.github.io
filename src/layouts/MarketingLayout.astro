@@ -1,0 +1,70 @@
+---
+import "@fontsource-variable/geist"
+import "@fontsource-variable/geist-mono"
+import "../styles/tokens.css"
+import "../styles/marketing.css"
+import geistLatin from "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url"
+import Halo from "../components/site/Halo.astro"
+import SiteFooter from "../components/site/SiteFooter.astro"
+import SiteHeader from "../components/site/SiteHeader.astro"
+import ThemeScript from "../components/site/ThemeScript.astro"
+import { getDocLinks } from "../lib/get-doc-links"
+
+interface Props {
+  title: string
+  description: string
+  minimalHeader?: boolean
+  halo?: boolean
+}
+
+const { title, description, minimalHeader = false, halo = false } = Astro.props
+const links = await getDocLinks()
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <ThemeScript />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href={geistLatin} />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="site">
+      {halo && <Halo />}
+      <SiteHeader links={links} minimal={minimalHeader} />
+      <main id="main">
+        <slot />
+      </main>
+      {!minimalHeader && <SiteFooter links={links} />}
+    </div>
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 10;
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: var(--primary);
+    color: var(--pfg);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transform: translateY(-200%);
+  }
+
+  .skip-link:focus-visible {
+    transform: none;
+  }
+</style>

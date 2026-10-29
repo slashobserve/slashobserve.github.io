@@ -1,0 +1,108 @@
+---
+interface Props {
+  bordered?: boolean
+}
+
+const { bordered = false } = Astro.props
+---
+
+<button
+  type="button"
+  class:list={["theme-toggle", "icon-btn", { bordered }]}
+  aria-label="Switch theme"
+>
+  <svg
+    width="17"
+    height="17"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+  >
+    <circle cx="12" cy="12" r="4"></circle>
+    <path
+      d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"
+    ></path>
+  </svg>
+</button>
+
+<style>
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--mfg);
+    cursor: pointer;
+  }
+
+  .theme-toggle:hover {
+    color: var(--fg);
+  }
+
+  .theme-toggle.bordered {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+  }
+
+  .theme-toggle:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+</style>
+
+<script>
+  const STORAGE_KEY = "starlight-theme"
+  const toggles = document.querySelectorAll<HTMLButtonElement>(".theme-toggle")
+  const lightQuery = matchMedia("(prefers-color-scheme: light)")
+
+  function readStoredTheme(): string | null {
+    try {
+      return localStorage.getItem(STORAGE_KEY)
+    } catch {
+      return null
+    }
+  }
+
+  function storeTheme(theme: string) {
+    try {
+      localStorage.setItem(STORAGE_KEY, theme)
+    } catch {}
+  }
+
+  function currentTheme(): "light" | "dark" {
+    return document.documentElement.dataset.theme === "light" ? "light" : "dark"
+  }
+
+  function applyTheme(theme: "light" | "dark") {
+    document.documentElement.dataset.theme = theme
+    const other = theme === "light" ? "dark" : "light"
+    for (const toggle of toggles) toggle.setAttribute("aria-label", `Switch to ${other} theme`)
+  }
+
+  applyTheme(currentTheme())
+
+  for (const toggle of toggles) {
+    toggle.addEventListener("click", () => {
+      const next = currentTheme() === "light" ? "dark" : "light"
+      applyTheme(next)
+      storeTheme(next)
+    })
+  }
+
+  lightQuery.addEventListener("change", (event) => {
+    if (readStoredTheme()) return
+    applyTheme(event.matches ? "light" : "dark")
+  })
+</script>

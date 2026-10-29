@@ -1,0 +1,82 @@
+---
+import type { DocLinks } from "../../lib/doc-links"
+import { footerColumns } from "../../lib/site-nav"
+import Wordmark from "./Wordmark.astro"
+
+interface Props {
+  links: DocLinks
+}
+
+const { links } = Astro.props
+---
+
+<footer>
+  <div class="wrap g1-sm grid">
+    <div class="brand">
+      <Wordmark size={20} />
+      <span class="hint tagline">
+        Dashboards from a sentence, on your own data. Open source under Apache-2.0.
+      </span>
+    </div>
+    <nav aria-label="Footer" class="columns">
+      {
+        footerColumns(links).map((column) => (
+          <div class="column">
+            <span class="title">{column.title}</span>
+            {column.items.map((item) => (
+              <a class="navlink" href={item.href}>
+                {item.label}
+              </a>
+            ))}
+          </div>
+        ))
+      }
+    </nav>
+  </div>
+</footer>
+
+<style>
+  footer {
+    border-top: 1px solid var(--border);
+  }
+
+  .grid {
+    padding-top: 48px;
+    padding-bottom: 48px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+    gap: 32px;
+  }
+
+  .columns {
+    display: contents;
+  }
+
+  .brand,
+  .column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .brand {
+    gap: 10px;
+  }
+
+  .column {
+    gap: 4px;
+    font-size: 14px;
+  }
+
+  .title {
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+
+  .tagline {
+    max-width: 30ch;
+  }
+
+  .column .navlink {
+    padding: 3px 0;
+  }
+</style>
