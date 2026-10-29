@@ -3,6 +3,7 @@
   color-scheme: light;
   --brand: #2a78d6;
   --brand-muted: #eaf2fc;
+  --brand-text: #195aa8;
   --bg: #ffffff;
   --surface: #ffffff;
   --muted-bg: #f7f8f9;
@@ -32,6 +33,7 @@
   color-scheme: dark;
   --brand: #5598e7;
   --brand-muted: #16243a;
+  --brand-text: #7fb2ee;
   --bg: #0c0d0f;
   --surface: #16181b;
   --muted-bg: #121315;
@@ -62,6 +64,7 @@
     color-scheme: dark;
     --brand: #5598e7;
     --brand-muted: #16243a;
+    --brand-text: #7fb2ee;
     --bg: #0c0d0f;
     --surface: #16181b;
     --muted-bg: #121315;
@@ -96,6 +99,9 @@
   --ink-mfg: #a4a9b0;
   --ink-border: rgba(255, 255, 255, 0.2);
   --ink-glow: rgba(85, 152, 231, 0.3);
+  --ink-surface: #16181b;
+  --ink-line: #26292d;
+  --ink-code: #e6e8eb;
   --term-fg: #c9ccd3;
   --term-strong: #f1f2f4;
   --term-dim: #70757e;
