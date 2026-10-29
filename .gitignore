@@ -4,5 +4,6 @@ dist/
 .core/
 src/content/docs/
 public/schemas/
+src/generated/
 .DS_Store
 .claude/
