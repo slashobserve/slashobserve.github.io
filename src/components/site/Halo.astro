@@ -1,0 +1,31 @@
+<div class="halo" aria-hidden="true"></div>
+<div class="grid" aria-hidden="true"></div>
+
+<style>
+  .halo,
+  .grid {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 760px;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .halo {
+    background:
+      radial-gradient(48% 60% at 50% 0%, var(--halo), transparent 70%),
+      radial-gradient(30% 40% at 18% 10%, var(--halo2), transparent 70%),
+      radial-gradient(30% 40% at 82% 10%, var(--halo2), transparent 70%);
+    -webkit-mask-image: linear-gradient(black 40%, transparent 95%);
+    mask-image: linear-gradient(black 40%, transparent 95%);
+  }
+
+  .grid {
+    background-image:
+      linear-gradient(var(--gridline) 1px, transparent 1px),
+      linear-gradient(90deg, var(--gridline) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(60% 70% at 50% 20%, black, transparent 80%);
+    mask-image: radial-gradient(60% 70% at 50% 20%, black, transparent 80%);
+  }
+</style>

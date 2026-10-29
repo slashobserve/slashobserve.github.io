@@ -1,0 +1,24 @@
+---
+interface Props {
+  size?: number
+}
+
+const { size = 21 } = Astro.props
+---
+
+<span class="wordmark" translate="no" style={`font-size: ${size}px`}
+  ><span class="slash">/</span>observe</span
+>
+
+<style>
+  .wordmark {
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+
+  .slash {
+    color: var(--brand);
+    margin-right: 0.02em;
+  }
+</style>

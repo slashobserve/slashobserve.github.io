@@ -1,0 +1,108 @@
+---
+import type { DocLinks } from "../../lib/doc-links"
+import { docsEntryHref, GITHUB_URL, headerNav } from "../../lib/site-nav"
+import GitHubIcon from "./GitHubIcon.astro"
+import ThemeToggle from "./ThemeToggle.astro"
+import Wordmark from "./Wordmark.astro"
+
+interface Props {
+  links: DocLinks
+  minimal?: boolean
+}
+
+const { links, minimal = false } = Astro.props
+const getStartedHref = docsEntryHref(links)
+---
+
+{
+  minimal ? (
+    <header class="minimal">
+      <a class="home" href="/" aria-label="SlashObserve home">
+        <Wordmark size={21} />
+      </a>
+      <span class="push">
+        <ThemeToggle bordered />
+      </span>
+    </header>
+  ) : (
+    <header class="wrap full">
+      <a class="home" href="/" aria-label="SlashObserve home">
+        <Wordmark size={21} />
+      </a>
+      <nav aria-label="Main" class="main-nav hide-sm">
+        {headerNav(links).map((item) => (
+          <a class="navlink" href={item.href}>
+            {item.label}
+          </a>
+        ))}
+      </nav>
+      <div class="actions">
+        <a class="navlink github hide-sm" href={GITHUB_URL}>
+          <GitHubIcon />GitHub
+        </a>
+        <ThemeToggle />
+        {getStartedHref && (
+          <a class="btn btn-primary get-started" href={getStartedHref}>
+            Get started
+          </a>
+        )}
+      </div>
+    </header>
+  )
+}
+
+<style>
+  header {
+    display: flex;
+    align-items: center;
+  }
+
+  .full {
+    gap: 20px;
+    min-height: 68px;
+  }
+
+  .minimal {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+    min-height: 64px;
+    gap: 12px;
+    box-sizing: border-box;
+  }
+
+  .home {
+    text-decoration: none;
+    color: var(--fg);
+  }
+
+  .main-nav {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+    margin-left: 20px;
+  }
+
+  .actions {
+    margin-left: auto;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .push {
+    margin-left: auto;
+    display: inline-flex;
+  }
+
+  .github {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .get-started {
+    min-height: 38px;
+    padding: 0 14px;
+  }
+</style>
