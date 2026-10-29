@@ -14,7 +14,7 @@ body{margin:0}
 .hint{font-size:13px;color:var(--mfg)}
 .navlink{font-size:14px;color:var(--mfg);text-decoration:none;padding:8px 10px;border-radius:6px}
 .navlink:hover{color:var(--fg)}
-.eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--brand)}
+.eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--brand-text)}
 .h2{margin:0;font-size:44px;line-height:1.08;letter-spacing:-0.03em;font-weight:600;text-wrap:balance}
 .lead{margin:0;font-size:18px;line-height:1.55;color:var(--mfg);max-width:60ch}
 .code{font-family:var(--font-mono);font-size:13px;line-height:1.7;border:1px solid var(--border);border-radius:10px;padding:14px 16px;overflow-x:auto;white-space:pre;margin:0;background:var(--surface)}
