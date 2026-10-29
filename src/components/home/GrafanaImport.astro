@@ -1,0 +1,123 @@
+---
+import type { DocLinks } from "../../lib/doc-links"
+
+interface Props {
+  links: DocLinks
+}
+
+const { links } = Astro.props
+---
+
+<section class="wrap pad-sm section">
+  <div class="split g1-sm">
+    <div class="copy">
+      <span class="eyebrow">Coming from Grafana</span>
+      <h2 class="h2">Dashboards you're used to. Without building them by hand.</h2>
+      <p class="lead">
+        Paste or upload Grafana JSON. Queries, variables, layout, units, thresholds, overrides and
+        value mappings come across. What can't come across becomes a placeholder that says why.
+      </p>
+      {
+        links.importGuide && (
+          <div class="actions">
+            <a class="btn" href={links.importGuide}>
+              How import works
+            </a>
+          </div>
+        )
+      }
+    </div>
+    <div class="card report">
+      <div class="report-head">
+        <span class="report-title">Import report</span>
+        <span class="mono hint file">node-exporter-full.json</span>
+      </div>
+      <ul class="lines">
+        <li>
+          <span class="dot ok"></span>
+          <span>Datasource Prometheus matched to <span class="mono">prom</span></span>
+        </li>
+        <li>
+          <span class="dot ok"></span>
+          <span>Variables job, node and diskdevices imported</span>
+        </li>
+        <li>
+          <span class="dot warn"></span>
+          <span>Systemd Units State has no data on this host</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-top: 128px;
+    padding-bottom: 128px;
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: 64px;
+    align-items: center;
+  }
+
+  .copy {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .report {
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    font-size: 13px;
+  }
+
+  .report-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .report-title {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .file {
+    font-size: 12px;
+  }
+
+  .lines {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .lines li {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .ok {
+    background: var(--ok);
+  }
+
+  .warn {
+    background: var(--warn);
+  }
+</style>

@@ -1,0 +1,208 @@
+---
+import Wordmark from "../site/Wordmark.astro"
+
+const demoCommands = `git clone https://github.com/slashobserve/slashobserve
+cd slashobserve
+make demo`
+
+const deployCommand = `docker run -d --name slashobserve -p 8080:8080 \\
+  --env-file slashobserve.env \\
+  -v "$PWD/datasources.yaml:/etc/slashobserve/datasources.yaml:ro" \\
+  ghcr.io/slashobserve/slashobserve`
+
+const callers = [
+  { name: "People", detail: "Chat, dashboards, comments" },
+  { name: "Agents", detail: "MCP, CLI and API keys" },
+]
+
+const backends = [
+  { name: "Prometheus and ClickHouse", detail: "Read-only, your data" },
+  { name: "Postgres", detail: "Dashboards, versions, comments" },
+  { name: "Your OIDC and your LLM", detail: "Anthropic or OpenAI-compatible" },
+]
+
+const parts = ["Agent", "Query proxy", "MCP", "API"]
+---
+
+<section class="band">
+  <div class="wrap pad-sm section">
+    <div class="heading">
+      <h2 class="h2">Run it on your own servers.</h2>
+      <p class="lead">
+        Your metrics never leave your network. The only outside call is to the model you choose.
+        Apache-2.0 licensed.
+      </p>
+    </div>
+    <figure
+      class="diagram g1-sm"
+      aria-label="SlashObserve runs inside your infrastructure, between people and agents and your data, identity provider and model"
+    >
+      <div class="stack">
+        {
+          callers.map((caller) => (
+            <div class="box">
+              <div class="box-name">{caller.name}</div>
+              <div class="hint box-detail">{caller.detail}</div>
+            </div>
+          ))
+        }
+      </div>
+      <span aria-hidden="true" class="connector hide-sm"></span>
+      <div class="boundary g1-sm">
+        <span class="mono boundary-label">Your infrastructure</span>
+        <div class="card product">
+          <div class="product-name"><Wordmark size={18} /></div>
+          <div class="hint">One Go binary, web app included</div>
+          <div class="parts">
+            {parts.map((part) => <span class="chip part">{part}</span>)}
+          </div>
+        </div>
+        <span aria-hidden="true" class="connector hide-sm"></span>
+        <div class="stack">
+          {
+            backends.map((backend) => (
+              <div class="box backend">
+                <div class="box-name">{backend.name}</div>
+                <div class="hint box-detail">{backend.detail}</div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </figure>
+    <div class="commands g1-sm">
+      <div class="command">
+        <span class="hint label">Try it with the demo stack</span>
+        <pre class="code">{demoCommands}</pre>
+      </div>
+      <div class="command">
+        <span class="hint label">Run your own deployment</span>
+        <pre class="code">{deployCommand}</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .band {
+    border-top: 1px solid var(--border);
+  }
+
+  .section {
+    padding-top: 128px;
+    padding-bottom: 128px;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 720px;
+  }
+
+  .diagram {
+    margin: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 48px minmax(0, 2.4fr);
+    align-items: center;
+    gap: 12px 0;
+  }
+
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .box {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    background: var(--surface);
+  }
+
+  .backend {
+    padding: 10px 14px;
+  }
+
+  .box-name {
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .box-detail {
+    font-size: 12px;
+  }
+
+  .connector {
+    height: 1px;
+    background: var(--border-strong);
+    width: 100%;
+  }
+
+  .boundary {
+    position: relative;
+    border: 1px dashed var(--border-strong);
+    border-radius: 14px;
+    padding: 36px 20px 20px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) 48px minmax(0, 1fr);
+    align-items: center;
+    gap: 12px 0;
+  }
+
+  .boundary-label {
+    position: absolute;
+    top: 12px;
+    left: 20px;
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mfg);
+  }
+
+  .product {
+    padding: 18px;
+    box-shadow:
+      0 0 0 4px var(--brand-muted),
+      var(--shadow-card);
+    border-color: var(--brand);
+  }
+
+  .product-name {
+    margin-bottom: 2px;
+  }
+
+  .parts {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .part {
+    background: var(--brand-muted);
+    color: var(--brand);
+    box-shadow: none;
+  }
+
+  .commands {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .command {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .label {
+    font-weight: 500;
+  }
+</style>

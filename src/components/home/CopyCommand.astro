@@ -1,0 +1,130 @@
+---
+interface Props {
+  command: string
+}
+
+const { command } = Astro.props
+---
+
+<div class="code row" data-command={command}>
+  <span class="prompt">$</span>
+  <span class="text" title={command}>{command}</span>
+  <button type="button" class="copy" aria-label="Copy command">
+    <svg
+      class="icon-copy"
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+    >
+      <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+      <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path>
+    </svg>
+    <svg
+      class="icon-check"
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M20 6 9 17l-5-5"></path>
+    </svg>
+  </button>
+  <span class="sr-only status" role="status"></span>
+</div>
+
+<style>
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 8px 0 14px;
+    min-height: 44px;
+    text-align: left;
+  }
+
+  .prompt {
+    color: var(--mfg);
+  }
+
+  .text {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .copy {
+    border: 0;
+    background: transparent;
+    color: var(--mfg);
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+  }
+
+  .copy:hover {
+    color: var(--fg);
+  }
+
+  .icon-check {
+    display: none;
+  }
+
+  .copied .icon-copy {
+    display: none;
+  }
+
+  .copied .icon-check {
+    display: block;
+  }
+</style>
+
+<script>
+  const CONFIRM_MS = 1500
+
+  function selectText(node: Element) {
+    const range = document.createRange()
+    range.selectNodeContents(node)
+    const selection = getSelection()
+    selection?.removeAllRanges()
+    selection?.addRange(range)
+  }
+
+  document.querySelectorAll<HTMLElement>("[data-command]").forEach((row) => {
+    const command = row.dataset.command ?? ""
+    const button = row.querySelector<HTMLButtonElement>(".copy")
+    const text = row.querySelector(".text")
+    const status = row.querySelector(".status")
+    if (!button || !text || !status) return
+
+    let resetTimer: ReturnType<typeof setTimeout> | undefined
+
+    button.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(command)
+      } catch {
+        selectText(text)
+        status.textContent = "Press Ctrl+C or Cmd+C to copy"
+        return
+      }
+      button.setAttribute("aria-label", "Copied")
+      row.classList.add("copied")
+      status.textContent = "Copied to clipboard"
+      clearTimeout(resetTimer)
+      resetTimer = setTimeout(() => {
+        button.setAttribute("aria-label", "Copy command")
+        row.classList.remove("copied")
+      }, CONFIRM_MS)
+    })
+  })
+</script>

@@ -1,0 +1,202 @@
+---
+import type { DocLinks } from "../../lib/doc-links"
+
+interface Props {
+  links: DocLinks
+}
+
+const { links } = Astro.props
+
+const mcpConfig = `{
+  "mcpServers": {
+    "slashobserve": {
+      "type": "http",
+      "url": "https://observe.example.com/mcp",
+      "headers": { "Authorization": "Bearer \${OBSERVE_TOKEN}" }
+    }
+  }
+}`
+
+const cliCommands = `printf '%s' "$OBSERVE_TOKEN" | observe login --server https://observe.example.com --with-token
+observe "checkout p99 latency, last 6h"
+observe import node-exporter-full.json`
+
+const apiCommand = `curl -X POST https://observe.example.com/api/v1/observe \\
+  -H "Authorization: Bearer $OBSERVE_TOKEN" \\
+  -H "Content-Type: application/json" \\
+  -d '{"prompt": "checkout health by pod, last 6h"}'`
+
+const tabs = [
+  { key: "mcp", label: "MCP", code: mcpConfig },
+  { key: "cli", label: "CLI", code: cliCommands },
+  { key: "api", label: "HTTP API", code: apiCommand },
+]
+---
+
+<section class="band">
+  <div class="wrap g1-sm pad-sm grid">
+    <div class="copy">
+      <span class="eyebrow">For agents</span>
+      <h2 class="h2">Anything you can do in the app, your agent can do.</h2>
+      <p class="lead">
+        Claude Code, Cursor and OpenCode connect over MCP and build dashboards with their own model.
+        They read your team's comments, fix them, and reply.
+      </p>
+    </div>
+    <div class="connect" data-tabs>
+      <div role="tablist" aria-label="Ways to connect" class="tablist">
+        {
+          tabs.map((tab, index) => (
+            <button
+              type="button"
+              role="tab"
+              id={`connect-tab-${tab.key}`}
+              aria-controls={`connect-panel-${tab.key}`}
+              aria-selected={index === 0 ? "true" : "false"}
+              tabindex={index === 0 ? 0 : -1}
+              class={index === 0 ? "tab tab-on" : "tab"}
+            >
+              {tab.label}
+            </button>
+          ))
+        }
+      </div>
+      <div
+        role="tabpanel"
+        id="connect-panel-mcp"
+        aria-labelledby="connect-tab-mcp"
+        tabindex="0"
+        class="panel"
+      >
+        <p>Add the server to <span class="mono inline">.mcp.json</span> with a service-account key.</p>
+        <pre class="code">{mcpConfig}</pre>
+      </div>
+      <div
+        role="tabpanel"
+        id="connect-panel-cli"
+        aria-labelledby="connect-tab-cli"
+        tabindex="0"
+        class="panel"
+        hidden
+      >
+        <p>The <span class="mono inline">observe</span> CLI asks, lists and imports from any shell or CI job.</p>
+        <pre class="code">{cliCommands}</pre>
+      </div>
+      <div
+        role="tabpanel"
+        id="connect-panel-api"
+        aria-labelledby="connect-tab-api"
+        tabindex="0"
+        class="panel"
+        hidden
+      >
+        <p>Everything the app does is in the HTTP API, documented with OpenAPI.</p>
+        <pre class="code">{apiCommand}</pre>
+      </div>
+      {
+        links.mcp && (
+          <a class="hint docs-link" href={links.mcp}>
+            MCP setup in the docs
+          </a>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .band {
+    border-top: 1px solid var(--border);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 64px;
+    align-items: center;
+    padding-top: 128px;
+    padding-bottom: 128px;
+  }
+
+  .copy {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .connect {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+  }
+
+  .tablist {
+    display: inline-flex;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 9px;
+    background: var(--muted-bg);
+    box-shadow: inset 0 0 0 1px var(--border);
+    align-self: flex-start;
+  }
+
+  .panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+  }
+
+  .panel[hidden] {
+    display: none;
+  }
+
+  .panel p {
+    margin: 0;
+    color: var(--mfg);
+  }
+
+  .inline {
+    font-size: 13px;
+  }
+
+  .docs-link {
+    align-self: flex-start;
+  }
+</style>
+
+<script>
+  const KEYS_TO_INDEX = {
+    ArrowLeft: (index: number, count: number) => (index - 1 + count) % count,
+    ArrowRight: (index: number, count: number) => (index + 1) % count,
+    Home: () => 0,
+    End: (_: number, count: number) => count - 1,
+  } as const
+
+  document.querySelectorAll<HTMLElement>("[data-tabs]").forEach((root) => {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>("[role=tab]"))
+
+    function select(selected: HTMLButtonElement) {
+      tabs.forEach((tab) => {
+        const on = tab === selected
+        tab.setAttribute("aria-selected", String(on))
+        tab.tabIndex = on ? 0 : -1
+        tab.className = on ? "tab tab-on" : "tab"
+        const panel = document.getElementById(tab.getAttribute("aria-controls") ?? "")
+        if (panel) panel.hidden = !on
+      })
+      selected.focus()
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => select(tab))
+      tab.addEventListener("keydown", (event) => {
+        const move = KEYS_TO_INDEX[event.key as keyof typeof KEYS_TO_INDEX]
+        if (!move) return
+        event.preventDefault()
+        select(tabs[move(index, tabs.length)])
+      })
+    })
+  })
+</script>
