@@ -1,0 +1,28 @@
+---
+import Wordmark from "../site/Wordmark.astro"
+---
+
+<a href="/" class="site-title" aria-label="SlashObserve home">
+  <Wordmark size={19} />
+</a>
+<span class="docs-label">Docs</span>
+
+<style>
+  .site-title {
+    display: inline-flex;
+    align-items: center;
+    color: var(--fg);
+    text-decoration: none;
+  }
+
+  .docs-label {
+    margin-left: 14px;
+    padding-left: 14px;
+    border-left: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--fg);
+    white-space: nowrap;
+  }
+</style>
