@@ -1,0 +1,184 @@
+<form role="search" aria-label="Search the docs" class="docs-search" data-docs-search>
+  <label for="nf-search" class="field">
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+    >
+      <circle cx="11" cy="11" r="7"></circle>
+      <path d="m20 20-3.5-3.5"></path>
+    </svg>
+    <input id="nf-search" type="search" name="q" placeholder="Search docs" autocomplete="off" />
+  </label>
+  <p class="sr-only" role="status" aria-live="polite" data-status></p>
+  <ul class="results" data-results></ul>
+  <template data-result-template>
+    <li><a href="/"></a><span class="hint"></span></li>
+  </template>
+</form>
+
+<style>
+  .docs-search {
+    width: 440px;
+    max-width: 100%;
+  }
+
+  .field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0 12px;
+    min-height: 44px;
+    box-sizing: border-box;
+  }
+
+  .field:focus-within {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+
+  .field svg {
+    color: var(--mfg);
+    flex: none;
+  }
+
+  input {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font: inherit;
+    color: var(--fg);
+    flex: 1;
+    min-width: 0;
+  }
+
+  .results {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 0;
+    font-size: 14px;
+  }
+
+  .results[hidden] {
+    display: none;
+  }
+
+  .results li {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 2px;
+    border-top: 1px solid var(--border);
+  }
+
+  .results li:first-child {
+    border-top: 0;
+  }
+
+  .results a {
+    overflow-wrap: anywhere;
+  }
+</style>
+
+<script>
+  interface PagefindData {
+    url: string
+    meta: { title?: string }
+  }
+
+  interface Pagefind {
+    search(query: string): Promise<{ results: { data(): Promise<PagefindData> }[] }>
+  }
+
+  const MAX_RESULTS = 5
+  const DEBOUNCE_MS = 150
+  const PAGEFIND_URL = "/pagefind/pagefind.js"
+
+  const form = document.querySelector<HTMLFormElement>("[data-docs-search]")!
+  const input = form.querySelector<HTMLInputElement>("input")!
+  const status = form.querySelector<HTMLElement>("[data-status]")!
+  const list = form.querySelector<HTMLUListElement>("[data-results]")!
+  const template = form.querySelector<HTMLTemplateElement>("[data-result-template]")!
+
+  let pagefind: Promise<Pagefind | null> | null = null
+  let timer: ReturnType<typeof setTimeout> | undefined
+  let latestSearch = 0
+  let firstUrl: string | null = null
+
+  function loadPagefind(): Promise<Pagefind | null> {
+    pagefind ??= import(/* @vite-ignore */ PAGEFIND_URL).then(
+      (module: Pagefind) => module,
+      () => null,
+    )
+    return pagefind
+  }
+
+  function renderResult(data: PagefindData): void {
+    const item = template.content.cloneNode(true) as DocumentFragment
+    const link = item.querySelector("a")!
+    link.href = data.url
+    link.textContent = data.meta.title || data.url
+    item.querySelector(".hint")!.textContent = data.url
+    list.append(item)
+  }
+
+  async function runSearch(query: string): Promise<void> {
+    const search = ++latestSearch
+    list.replaceChildren()
+    firstUrl = null
+    if (!query.trim()) {
+      status.textContent = ""
+      return
+    }
+    status.textContent = "Searching"
+    const engine = await loadPagefind()
+    if (search !== latestSearch) return
+    if (!engine) {
+      list.hidden = true
+      status.textContent = "Search works on the built site"
+      return
+    }
+    const found = await engine.search(query)
+    const shown = await Promise.all(
+      found.results.slice(0, MAX_RESULTS).map((result) => result.data()),
+    )
+    if (search !== latestSearch) return
+    shown.forEach(renderResult)
+    firstUrl = shown[0]?.url ?? null
+    status.textContent = shown.length
+      ? `${found.results.length} ${found.results.length === 1 ? "result" : "results"}`
+      : "No docs pages match"
+  }
+
+  function queryFromPath(pathname: string): string {
+    const segment = pathname.split("/").filter(Boolean).at(-1) ?? ""
+    try {
+      return decodeURIComponent(segment).replaceAll("-", " ")
+    } catch {
+      return ""
+    }
+  }
+
+  input.addEventListener("input", () => {
+    clearTimeout(timer)
+    timer = setTimeout(() => void runSearch(input.value), DEBOUNCE_MS)
+  })
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault()
+    if (firstUrl) window.location.assign(firstUrl)
+  })
+
+  const initialQuery = queryFromPath(window.location.pathname)
+  if (initialQuery) {
+    input.value = initialQuery
+    void runSearch(initialQuery)
+  }
+</script>
