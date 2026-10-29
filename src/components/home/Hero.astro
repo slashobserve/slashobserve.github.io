@@ -1,0 +1,86 @@
+---
+import type { DocLinks } from "../../lib/doc-links"
+import AgentLoop from "./AgentLoop"
+import CopyCommand from "./CopyCommand.astro"
+
+interface Props {
+  links: DocLinks
+}
+
+const { links } = Astro.props
+---
+
+<section class="wrap hero">
+  <div class="intro">
+    <span class="eyebrow">Open source · self-hosted</span>
+    <h1 class="h1-sm">Ask for a dashboard. Get one that works.</h1>
+    <p class="lead">
+      SlashObserve builds Grafana-style dashboards from a sentence, on the Prometheus and ClickHouse
+      you already run. Every query runs before it's saved. Every change is a version your team can
+      review.
+    </p>
+    <div class="commands g1-sm">
+      <CopyCommand command="git clone github.com/slashobserve/slashobserve && make demo" />
+      {links.quickStart && <a class="btn btn-primary" href={links.quickStart}>Run the demo</a>}
+    </div>
+    {
+      links.importGuide && (
+        <a class="hint import-link" href={links.importGuide}>
+          Coming from Grafana? Import your dashboards →
+        </a>
+      )
+    }
+  </div>
+
+  <div class="loop">
+    <AgentLoop client:visible />
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-top: 72px;
+    padding-bottom: 96px;
+  }
+
+  .intro {
+    max-width: 860px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 72px;
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+
+  .lead {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .commands {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    width: 100%;
+    max-width: 560px;
+    margin-top: 10px;
+  }
+
+  .import-link {
+    text-decoration: none;
+  }
+
+  .loop {
+    margin-top: 72px;
+  }
+</style>
