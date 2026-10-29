@@ -1,12 +1,22 @@
 ---
-const names = [
-  "Prometheus",
-  "ClickHouse",
-  "OpenTelemetry",
-  "Grafana dashboards",
-  "Claude Code",
-  "Cursor",
-  "OIDC",
+import {
+  siClaude,
+  siClickhouse,
+  siCursor,
+  siGrafana,
+  siOpenid,
+  siOpentelemetry,
+  siPrometheus,
+} from "simple-icons"
+
+const items = [
+  { name: "Prometheus", icon: siPrometheus },
+  { name: "ClickHouse", icon: siClickhouse },
+  { name: "OpenTelemetry", icon: siOpentelemetry },
+  { name: "Grafana dashboards", icon: siGrafana },
+  { name: "Claude Code", icon: siClaude },
+  { name: "Cursor", icon: siCursor },
+  { name: "OIDC", icon: siOpenid },
 ]
 ---
 
@@ -14,7 +24,16 @@ const names = [
   <div class="wrap row">
     <span class="hint">Works with what you run</span>
     <ul>
-      {names.map((name) => <li class="logo-word">{name}</li>)}
+      {
+        items.map(({ name, icon }) => (
+          <li class="logo-word">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d={icon.path} fill="currentColor" />
+            </svg>
+            {name}
+          </li>
+        ))
+      }
     </ul>
   </div>
 </section>
@@ -44,5 +63,22 @@ const names = [
     list-style: none;
     margin: 0;
     padding: 0;
+  }
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: color 0.15s;
+  }
+
+  li:hover {
+    color: var(--fg);
+  }
+
+  svg {
+    height: 20px;
+    width: 20px;
+    flex: none;
   }
 </style>
