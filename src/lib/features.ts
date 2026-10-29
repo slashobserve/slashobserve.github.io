@@ -68,7 +68,7 @@ export const FEATURE_GROUPS: readonly { title: string; items: readonly FeatureSp
         body: "Group dashboards and grant access per folder.",
         doc: "folders",
       },
-      { title: "Share links", body: "Send a dashboard to anyone who can sign in." },
+      { title: "Share links", body: "Copy a dashboard or panel link with its time range and variables. It grants no access on its own." },
       {
         title: "The agent acts as you",
         body: "It can only change what the person asking can change.",
