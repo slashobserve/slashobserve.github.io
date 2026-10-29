@@ -1,0 +1,116 @@
+---
+import type { CorpusRow } from "../../lib/import-corpus"
+
+interface Props {
+  rows: CorpusRow[]
+  total: CorpusRow | null
+}
+
+const { rows, total } = Astro.props
+const hasData = rows.length > 0 || total !== null
+---
+
+{
+  hasData && (
+    <section class="wrap section">
+      <div class="head">
+        <h2 class="h2">Tested on dashboards people use</h2>
+        <p>
+          The importer is checked against a corpus of public dashboards on every change. These
+          numbers come from that run.
+        </p>
+      </div>
+      <div
+        class="card scroll"
+        role="region"
+        aria-label="Importer results on the public corpus"
+        tabindex="0"
+      >
+        <table class="tbl">
+          <caption class="sr-only">Importer results on the public corpus</caption>
+          <thead>
+            <tr>
+              <th scope="col">Dashboard</th>
+              <th scope="col">Source</th>
+              <th scope="col" class="num">Panels</th>
+              <th scope="col" class="num">Imported</th>
+              <th scope="col" class="num">Partial</th>
+              <th scope="col" class="num">Placeholders</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr>
+                <td>
+                  {row.label}
+                  {row.dashboards > 1 && <span class="hint">, {row.dashboards} dashboards</span>}
+                </td>
+                <td class="hint">{row.source}</td>
+                <td class="num">{row.panels}</td>
+                <td class="num">{row.imported}</td>
+                <td class="num">{row.partial}</td>
+                <td class="num">{row.placeholders}</td>
+              </tr>
+            ))}
+          </tbody>
+          {total && (
+            <tfoot>
+              <tr>
+                <td>{total.label}</td>
+                <td class="hint" />
+                <td class="num">{total.panels}</td>
+                <td class="num">{total.imported}</td>
+                <td class="num">{total.partial}</td>
+                <td class="num">{total.placeholders}</td>
+              </tr>
+            </tfoot>
+          )}
+        </table>
+      </div>
+      <p class="hint note">
+        Imported: everything came across. Partial: the panel imports, and the import report lists
+        what did not. Placeholder: the panel is kept in place with the reason it could not be
+        imported.
+      </p>
+      {total && total.rejected > 0 && (
+        <p class="hint note">
+          {total.rejected} corpus files were rejected as invalid input and are not counted.
+        </p>
+      )}
+    </section>
+  )
+}
+
+<style>
+  .section {
+    padding-bottom: 96px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 680px;
+  }
+
+  .head p {
+    margin: 0;
+    color: var(--mfg);
+  }
+
+  .scroll {
+    overflow-x: auto;
+  }
+
+  .note {
+    margin: 0;
+  }
+
+  tfoot td {
+    border-top: 1px solid var(--border);
+    font-weight: 500;
+  }
+</style>

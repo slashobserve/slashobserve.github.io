@@ -1,0 +1,78 @@
+<section class="wrap section">
+  <div class="panel">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="copy">
+      <h2 class="h2">Try it with one dashboard</h2>
+      <p>
+        Export any dashboard from Grafana (Share, Export, Save to file) and import it into the demo
+        stack.
+      </p>
+    </div>
+    <pre class="code" tabindex="0"><span class="prompt" aria-hidden="true">$</span> observe import node-exporter-full.json</pre>
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-bottom: 104px;
+  }
+
+  .panel {
+    position: relative;
+    overflow: hidden;
+    border-radius: 18px;
+    background: var(--ink-bg);
+    color: var(--ink-fg);
+    padding: 56px 48px;
+    display: flex;
+    gap: 28px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(50% 90% at 20% 0%, var(--ink-glow), transparent 70%);
+  }
+
+  .copy {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 520px;
+  }
+
+  .h2 {
+    font-size: 34px;
+    color: var(--ink-fg);
+  }
+
+  p {
+    margin: 0;
+    color: var(--ink-mfg);
+  }
+
+  pre {
+    position: relative;
+    flex: 1 1 360px;
+    min-width: 0;
+    max-width: 480px;
+    background: var(--ink-surface);
+    border-color: var(--ink-line);
+    color: var(--ink-code);
+  }
+
+  .prompt {
+    color: var(--term-accent);
+  }
+
+  @media (max-width: 860px) {
+    .panel {
+      padding: 40px 24px;
+    }
+  }
+</style>

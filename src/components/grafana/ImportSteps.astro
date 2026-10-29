@@ -1,0 +1,64 @@
+<section class="wrap section" aria-label="How import works">
+  <div class="steps g1-sm">
+    <article class="card">
+      <span class="hint">1. Bring the JSON</span>
+      <h2>Paste, upload, or send it from a script</h2>
+      <p>
+        The Import from Grafana button in the chat, <span class="mono">observe import</span>, or the
+        <span class="mono">import_grafana_dashboard</span> MCP tool. Classic model, external share
+        exports and API responses all work.
+      </p>
+    </article>
+    <article class="card">
+      <span class="hint">2. Match datasources</span>
+      <h2>Your Grafana uids map to your datasources</h2>
+      <p>
+        Matches come from <span class="mono">grafanaUids</span> in the datasources file.
+        SlashObserve never guesses between two of the same type: it asks.
+      </p>
+    </article>
+    <article class="card">
+      <span class="hint">3. Read the report</span>
+      <h2>Every query runs once, and you see the result</h2>
+      <p>
+        Panels that fail are saved as unverified, not dropped. Unsupported panels become
+        placeholders that say why.
+      </p>
+    </article>
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-bottom: 96px;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  article {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0;
+    color: var(--mfg);
+    font-size: 14px;
+  }
+
+  .mono {
+    font-size: 13px;
+  }
+</style>

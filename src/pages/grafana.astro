@@ -1,0 +1,30 @@
+---
+import "../components/grafana/tables.css"
+import CompatTable from "../components/grafana/CompatTable.astro"
+import CorpusTable from "../components/grafana/CorpusTable.astro"
+import GrafanaHero from "../components/grafana/GrafanaHero.astro"
+import ImportSteps from "../components/grafana/ImportSteps.astro"
+import SpecComparison from "../components/grafana/SpecComparison.astro"
+import TryImport from "../components/grafana/TryImport.astro"
+import MarketingLayout from "../layouts/MarketingLayout.astro"
+import { getDocLinks } from "../lib/get-doc-links"
+import { corpusTable, readImportCorpus } from "../lib/import-corpus"
+import { dataPanelTypeCount, readSyncedSchema } from "../lib/schema-facts"
+
+const links = await getDocLinks()
+const { rows, total } = corpusTable(readImportCorpus())
+const panelTypeCount = dataPanelTypeCount(readSyncedSchema())
+---
+
+<MarketingLayout
+  title="Coming from Grafana | SlashObserve"
+  description="Import a Grafana dashboard and it shows the same data, layout and meaning in SlashObserve. See what imports and how the importer does on public dashboards."
+  halo
+>
+  <GrafanaHero importGuide={links.importGuide} />
+  <ImportSteps />
+  <SpecComparison />
+  <CompatTable panelTypeCount={panelTypeCount} />
+  <CorpusTable rows={rows} total={total} />
+  <TryImport />
+</MarketingLayout>
