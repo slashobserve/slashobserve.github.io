@@ -17,7 +17,7 @@ export type DocLinks = Record<DocLinkKey, string | null>
 export const DOC_LINK_CANDIDATES: Record<DocLinkKey, readonly string[]> = {
   quickStart: ["docs/get-started/quick-start", "docs/self-hosting#quick-start"],
   install: ["docs/get-started/install", "docs/self-hosting#run-your-own-deployment"],
-  importGuide: ["docs/use/import-from-grafana", "docs/self-hosting#import-grafana-dashboards"],
+  importGuide: ["docs/use/import-grafana", "docs/self-hosting#import-grafana-dashboards"],
   mcp: ["docs/use/mcp", "docs/self-hosting#mcp"],
   selfHost: ["docs/self-hosting"],
   reference: ["docs/reference"],

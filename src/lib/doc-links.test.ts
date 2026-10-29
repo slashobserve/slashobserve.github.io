@@ -6,7 +6,7 @@ const afterSplit = new Set([
   "docs/self-hosting",
   "docs/get-started/quick-start",
   "docs/get-started/install",
-  "docs/use/import-from-grafana",
+  "docs/use/import-grafana",
   "docs/use/mcp",
   "docs/reference",
   "docs/teams/roles",
@@ -39,7 +39,7 @@ describe("resolveDocLinks", () => {
     expect(resolveDocLinks(afterSplit)).toEqual({
       quickStart: "/docs/get-started/quick-start/",
       install: "/docs/get-started/install/",
-      importGuide: "/docs/use/import-from-grafana/",
+      importGuide: "/docs/use/import-grafana/",
       mcp: "/docs/use/mcp/",
       selfHost: "/docs/self-hosting/",
       reference: "/docs/reference/",
