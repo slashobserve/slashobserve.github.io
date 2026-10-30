@@ -1,5 +1,7 @@
 ---
 import FeatureGroup from "../components/features/FeatureGroup.astro"
+import ClosingCta from "../components/home/ClosingCta.astro"
+import PageHero from "../components/site/PageHero.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
 import { featureGroups } from "../lib/features"
 import { getDocLinks } from "../lib/get-doc-links"
@@ -14,48 +16,20 @@ const groups = featureGroups(links, dataPanelTypeCount(readSyncedSchema()))
   description="Everything SlashObserve does today: dashboards from a sentence, review and versions, roles, Grafana import, Prometheus and ClickHouse, MCP, CLI and self-hosting."
   halo
 >
-  <div class="wrap page">
-    <div class="intro">
-      <span class="eyebrow">Features</span>
-      <h1 class="h1-sm">Everything you need to run dashboards with an agent.</h1>
-      <p class="lead">
-        Everything SlashObserve does today, with a link to the docs where a page covers it.
-      </p>
-    </div>
-    <div>
-      {groups.map((group, index) => <FeatureGroup group={group} id={`group-${index}`} />)}
-    </div>
+  <PageHero eyebrow="Features" title="Everything you need to run dashboards with an agent.">
+    <p class="lead">
+      Everything SlashObserve does today, with a link to the docs where a page covers it.
+    </p>
+  </PageHero>
+  <div class="wrap section-y groups">
+    {groups.map((group, index) => <FeatureGroup group={group} id={`group-${index}`} />)}
   </div>
+  <ClosingCta links={links} />
 </MarketingLayout>
 
 <style>
-  .page {
-    padding-top: 72px;
-    padding-bottom: 104px;
-    display: flex;
-    flex-direction: column;
-    gap: 56px;
-  }
-
-  .intro {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 18px;
-  }
-
-  h1 {
-    margin: 0;
-    font-size: 64px;
-    line-height: 1.03;
-    letter-spacing: -0.04em;
-    font-weight: 600;
-    max-width: 820px;
-    text-wrap: balance;
-  }
-
-  .lead {
-    text-align: center;
+  .groups {
+    padding-top: 0;
+    padding-bottom: 0;
   }
 </style>

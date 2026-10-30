@@ -33,8 +33,8 @@ const tabs = [
 ]
 ---
 
-<section class="band">
-  <div class="wrap g1-sm pad-sm grid">
+<section class="band-ink">
+  <div class="wrap section-y grid" data-reveal>
     <div class="copy">
       <span class="eyebrow">For agents</span>
       <h2 class="h2">Anything you can do in the app, your agent can do.</h2>
@@ -105,17 +105,25 @@ const tabs = [
 </section>
 
 <style>
-  .band {
-    border-top: 1px solid var(--border);
-  }
-
   .grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     gap: 64px;
     align-items: center;
-    padding-top: 128px;
-    padding-bottom: 128px;
+  }
+
+  @media (max-width: 1023px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 40px;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 32px;
+    }
   }
 
   .copy {
@@ -136,9 +144,24 @@ const tabs = [
     gap: 2px;
     padding: 3px;
     border-radius: 9px;
-    background: var(--muted-bg);
-    box-shadow: inset 0 0 0 1px var(--border);
+    background: var(--band-code);
+    box-shadow: inset 0 0 0 1px var(--band-line);
     align-self: flex-start;
+  }
+
+  .tab {
+    color: var(--ink-mfg);
+  }
+
+  .tab:hover {
+    color: var(--ink-fg);
+  }
+
+  .tab-on,
+  .tab-on:hover {
+    background: var(--ink-fg);
+    color: var(--band-bg);
+    box-shadow: none;
   }
 
   .panel {
@@ -154,15 +177,21 @@ const tabs = [
 
   .panel p {
     margin: 0;
-    color: var(--mfg);
+    color: var(--ink-mfg);
   }
 
   .inline {
     font-size: 13px;
+    color: var(--ink-fg);
   }
 
   .docs-link {
     align-self: flex-start;
+    color: var(--ink-mfg);
+  }
+
+  .docs-link:hover {
+    color: var(--ink-fg);
   }
 </style>
 

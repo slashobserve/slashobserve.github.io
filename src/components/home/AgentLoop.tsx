@@ -5,6 +5,7 @@ const gridStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "minmax(0, 0.85fr) 64px minmax(0, 1.25fr)",
   alignItems: "stretch",
+  rowGap: 28,
 }
 
 const figureStyle: CSSProperties = {
@@ -43,7 +44,7 @@ const followUpGroupStyle: CSSProperties = {
   borderTop: "1px dashed var(--ink-border)",
 }
 
-const promptMarkStyle: CSSProperties = { color: "var(--term-accent)", marginRight: 8 }
+const promptMarkStyle: CSSProperties = { color: "var(--term-dim)", marginRight: 8 }
 
 const browserBarStyle: CSSProperties = {
   borderBottom: "1px solid var(--border)",
@@ -111,7 +112,7 @@ const stepRowStyle: CSSProperties = {
   display: "flex",
   gap: 28,
   flexWrap: "wrap",
-  marginTop: 18,
+  marginTop: 24,
   justifyContent: "center",
 }
 
@@ -205,7 +206,7 @@ export default function AgentLoop() {
               <div>Found datasources prom, ch</div>
               <div>Wrote 4 panels</div>
               {scene.firstRun && (
-                <div style={terminalGroupStyle}>
+                <div className="loop-enter" style={terminalGroupStyle}>
                   <div>Ran 4 queries</div>
                   <div style={{ color: "var(--term-warn)" }}>
                     Repaired p99 latency: added le to by()
@@ -214,7 +215,7 @@ export default function AgentLoop() {
                 </div>
               )}
               {scene.followUp && (
-                <div style={followUpGroupStyle}>
+                <div className="loop-enter" style={followUpGroupStyle}>
                   <div style={{ color: "var(--term-strong)" }}>
                     <span style={promptMarkStyle}>●</span>Priya: "add error rate by route"
                   </div>
@@ -284,13 +285,13 @@ export default function AgentLoop() {
             <div style={panelGridStyle}>
               {scene.placeholders &&
                 placeholderLabels.map((label) => (
-                  <div key={label} style={placeholderStyle}>
+                  <div key={label} className="loop-enter" style={placeholderStyle}>
                     {label}
                   </div>
                 ))}
               {scene.firstRun && (
                 <>
-                  <div style={panelStyle}>
+                  <div className="loop-enter" style={panelStyle}>
                     <div style={panelTitleStyle}>Requests per second by pod</div>
                     <svg
                       viewBox="0 0 300 90"
@@ -314,7 +315,7 @@ export default function AgentLoop() {
                       />
                     </svg>
                   </div>
-                  <div style={panelStyle}>
+                  <div className="loop-enter" style={panelStyle}>
                     <div style={panelTitleStyle}>p99 latency</div>
                     <svg
                       viewBox="0 0 300 90"
@@ -336,7 +337,7 @@ export default function AgentLoop() {
                       />
                     </svg>
                   </div>
-                  <div style={{ ...panelStyle, gap: 2 }}>
+                  <div className="loop-enter" style={{ ...panelStyle, gap: 2 }}>
                     <div style={panelTitleStyle}>Error rate</div>
                     <div
                       style={{
@@ -357,7 +358,7 @@ export default function AgentLoop() {
                     </div>
                   </div>
                   {scene.showLogsPanel && (
-                    <div style={{ ...panelStyle, fontSize: 11, minWidth: 0 }}>
+                    <div className="loop-enter" style={{ ...panelStyle, fontSize: 11, minWidth: 0 }}>
                       <div style={panelTitleStyle}>Error logs by message</div>
                       <div style={logRowStyle}>
                         <span className="mono" style={logMessageStyle}>
@@ -377,6 +378,7 @@ export default function AgentLoop() {
               )}
               {scene.followUp && (
                 <div
+                  className="loop-enter"
                   style={{
                     ...panelStyle,
                     border: "1px solid var(--brand)",
@@ -410,21 +412,30 @@ export default function AgentLoop() {
         </figure>
       </div>
       <div style={stepRowStyle}>
-        {STEPS.map(({ label }, index) => (
-          <button
-            key={label}
-            type="button"
-            className={index === step ? "step step-on" : "step"}
-            aria-current={index === step ? "step" : undefined}
-            onClick={() => {
-              setStep(index as Step)
-              setPaused(true)
-            }}
-          >
-            <i aria-hidden="true" />
-            {label}
-          </button>
-        ))}
+        {STEPS.map(({ label }, index) => {
+          const active = index === step
+          return (
+            <button
+              key={label}
+              type="button"
+              className={["step", active && "step-on", active && playing && "step-playing"]
+                .filter(Boolean)
+                .join(" ")}
+              aria-current={active ? "step" : undefined}
+              onClick={() => {
+                setStep(index as Step)
+                setPaused(true)
+              }}
+            >
+              <i aria-hidden="true">
+                {active && playing && (
+                  <span key={step} className="step-fill" style={{ animationDuration: `${STEP_MS}ms` }} />
+                )}
+              </i>
+              {label}
+            </button>
+          )
+        })}
       </div>
     </div>
   )

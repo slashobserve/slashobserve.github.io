@@ -1,5 +1,6 @@
 ---
 import DocsSearch from "../components/not-found/DocsSearch.astro"
+import PageHero from "../components/site/PageHero.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
 import { getDocLinks } from "../lib/get-doc-links"
 
@@ -14,71 +15,33 @@ const links = await getDocLinks()
   canonical={false}
 >
   <meta slot="head" name="robots" content="noindex" />
-  <div class="board">
-    <div class="eyebrow">404 · no data</div>
-    <h1>No data for this page</h1>
-    <p class="lead">
-      The address may be old, or the page moved when the docs were reorganised. Search the docs, or
-      start from one of these.
-    </p>
-    <DocsSearch />
-    <div class="actions">
-      <a class="btn btn-primary" href="/">Home</a>
-      {links.quickStart && <a class="btn" href={links.quickStart}>Quick start</a>}
-      {links.reference && <a class="btn" href={links.reference}>Reference</a>}
-    </div>
+  <div class="not-found">
+    <PageHero eyebrow="404 · no data" title="No data for this page">
+      <p class="lead">
+        The address may be old, or the page moved when the docs were reorganised. Search the docs, or
+        start from one of these.
+      </p>
+      <DocsSearch />
+      <div class="actions">
+        <a class="btn btn-primary" href="/">Home</a>
+        {links.quickStart && <a class="btn" href={links.quickStart}>Quick start</a>}
+        {links.reference && <a class="btn" href={links.reference}>Reference</a>}
+      </div>
+    </PageHero>
   </div>
 </MarketingLayout>
 
 <style>
-  .board {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 120px 32px;
-    box-sizing: border-box;
+  .not-found {
+    min-height: calc(100svh - 64px);
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    justify-content: center;
+    padding-bottom: 64px;
+    box-sizing: border-box;
   }
 
-  h1 {
-    margin: 0;
-    font-size: 64px;
-    letter-spacing: -0.035em;
-    font-weight: 600;
-    line-height: 1.05;
-  }
-
-  .lead {
-    font-size: 17px;
-    line-height: inherit;
-    max-width: 520px;
-  }
-
-  .actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .actions .btn {
-    min-height: 40px;
-    padding: 0 16px;
-    border-radius: 6px;
-  }
-
-  .actions .btn:not(.btn-primary) {
-    background: var(--bg);
-  }
-
-  @media (max-width: 760px) {
-    .board {
-      padding-left: 16px;
-      padding-right: 16px;
-    }
-
-    h1 {
-      font-size: 42px;
-    }
+  .not-found :global(.page-hero) {
+    width: 100%;
   }
 </style>

@@ -2,10 +2,10 @@
 import "../components/grafana/tables.css"
 import CompatTable from "../components/grafana/CompatTable.astro"
 import CorpusTable from "../components/grafana/CorpusTable.astro"
-import GrafanaHero from "../components/grafana/GrafanaHero.astro"
 import ImportSteps from "../components/grafana/ImportSteps.astro"
 import SpecComparison from "../components/grafana/SpecComparison.astro"
 import TryImport from "../components/grafana/TryImport.astro"
+import PageHero from "../components/site/PageHero.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
 import { getDocLinks } from "../lib/get-doc-links"
 import { corpusTable, readImportCorpus } from "../lib/import-corpus"
@@ -21,7 +21,22 @@ const panelTypeCount = dataPanelTypeCount(readSyncedSchema())
   description="Import a Grafana dashboard and it shows the same data, layout and meaning in SlashObserve. See what imports and how the importer does on public dashboards."
   halo
 >
-  <GrafanaHero importGuide={links.importGuide} />
+  <PageHero eyebrow="Coming from Grafana" title="Keep your dashboards. Change how you build them.">
+    <p class="lead">
+      Import a Grafana dashboard and it shows the same data, layout and meaning in SlashObserve. From
+      then on the agent can revise it, your team can review it, and every change is a version.
+    </p>
+    <div class="actions">
+      {
+        links.importGuide && (
+          <a class="btn btn-primary" href={links.importGuide}>
+            Import your first dashboard
+          </a>
+        )
+      }
+      <a class="btn" href="#compat">See what imports</a>
+    </div>
+  </PageHero>
   <ImportSteps />
   <SpecComparison />
   <CompatTable panelTypeCount={panelTypeCount} />

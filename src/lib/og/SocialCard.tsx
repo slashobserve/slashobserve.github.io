@@ -5,8 +5,7 @@ type Props = { section: string; title: string; colors: CardColors }
 const fill = { position: "absolute", top: 0, left: 0, right: 0, bottom: 0 } as const
 
 export function SocialCardImage({ section, title, colors }: Props) {
-  const gridLine = `linear-gradient(${colors.gridline} 1px, transparent 1px)`
-  const gridColumn = `linear-gradient(90deg, ${colors.gridline} 1px, transparent 1px)`
+  const dots = `radial-gradient(circle, ${colors.gridline} 6%, transparent 9%)`
   return (
     <div
       style={{
@@ -36,14 +35,13 @@ export function SocialCardImage({ section, title, colors }: Props) {
         style={{
           ...fill,
           display: "flex",
-          backgroundImage: `${gridLine}, ${gridColumn}`,
-          backgroundSize: "56px 56px",
-          maskImage: "radial-gradient(70% 90% at 85% 0%, black, transparent 80%)",
-        }}
+          backgroundImage: dots,
+          backgroundSize: "24px 24px",
+          maskImage: "radial-gradient(70% 90% at 85% 0%, black, transparent 80%)",        }}
       />
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ display: "flex", fontSize: 44, fontWeight: 600, letterSpacing: "-0.035em" }}>
-          <span style={{ color: colors.brand }}>/</span>
+          <span style={{ color: colors.fg }}>/</span>
           <span>observe</span>
         </div>
         <div

@@ -1,0 +1,72 @@
+<section class="finale">
+  <div class="wrap inner" data-reveal>
+    <slot />
+  </div>
+</section>
+
+<style>
+  .finale {
+    position: relative;
+    isolation: isolate;
+    padding: 160px 0 128px;
+  }
+
+  .finale::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      radial-gradient(50% 70% at 50% 100%, var(--halo), transparent 70%),
+      radial-gradient(circle, var(--gridline) 1px, transparent 1.5px);
+    background-size:
+      auto,
+      24px 24px;
+    -webkit-mask-image: radial-gradient(60% 80% at 50% 100%, black, transparent 80%);
+    mask-image: radial-gradient(60% 80% at 50% 100%, black, transparent 80%);
+  }
+
+  .inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 24px;
+  }
+
+  .inner :global(.h2) {
+    font-size: 64px;
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    max-width: 900px;
+  }
+
+  .inner > :global(p) {
+    margin: 0;
+    font-size: 20px;
+    color: var(--mfg);
+    max-width: 52ch;
+  }
+
+  @media (max-width: 1023px) {
+    .inner :global(.h2) {
+      font-size: 48px;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .finale {
+      padding: 96px 0 80px;
+    }
+
+    .inner :global(.h2) {
+      font-size: 36px;
+      line-height: 1.08;
+    }
+
+    .inner > :global(p) {
+      font-size: 17px;
+    }
+  }
+</style>

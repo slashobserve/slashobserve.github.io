@@ -6,103 +6,105 @@ const exampleQuery = 'rate(http_requests_total{pod=~"$pod"}[$__rate_interval])'
 const tiles = Array.from({ length: 8 }, (_, index) => index === 3)
 ---
 
-<section class="wrap pad-sm section">
-  <div class="heading">
-    <h2 class="h2">Everything you need to replace your Grafana.</h2>
-    <p class="lead">
-      The panels, variables and field options teams rely on, drawn by a renderer built for reading
-      under pressure.
-    </p>
-  </div>
-  <div class="cards g1-sm">
-    <figure class="card">
-      <div class="art tiles" aria-hidden="true">
-        {tiles.map((active) => <span class:list={["tile", { active }]}></span>)}
-      </div>
-      <figcaption>
-        <h3>{panelTypes}</h3>
-        <p>
-          Time series, stat, gauge, table, heatmap, logs, state timeline and more, with rows and
-          repeats.
-        </p>
-      </figcaption>
-    </figure>
-    <figure class="card">
-      <div class="art variables" aria-hidden="true">
-        <div class="chips">
-          <span class="chip">pod: <b>All</b></span>
-          <span class="chip">route: /checkout</span>
-          <span class="chip">interval: 5m</span>
+<section class="band-muted">
+  <div class="wrap section-y inner">
+    <div class="heading" data-reveal>
+      <h2 class="h2">Everything you need to replace your Grafana.</h2>
+      <p class="lead">
+        The panels, variables and field options teams rely on, drawn by a renderer built for reading
+        under pressure.
+      </p>
+    </div>
+    <div class="cards" data-reveal>
+      <figure class="card">
+        <div class="art tiles" aria-hidden="true">
+          {tiles.map((active) => <span class:list={["tile", { active }]}></span>)}
         </div>
-        <div class="mono query">{exampleQuery}</div>
-      </div>
-      <figcaption>
-        <h3>Variables and multi-query panels</h3>
-        <p>
-          Query, custom, interval, textbox, datasource and ad hoc variables. Several PromQL or SQL
-          queries per panel.
-        </p>
-      </figcaption>
-    </figure>
-    <figure class="card">
-      <div class="art thresholds" aria-hidden="true">
-        <div class="row">
-          <span>&lt; 250 ms</span>
-          <span class="status"><span class="dot ok"></span>OK</span>
+        <figcaption>
+          <h3>{panelTypes}</h3>
+          <p>
+            Time series, stat, gauge, table, heatmap, logs, state timeline and more, with rows and
+            repeats.
+          </p>
+        </figcaption>
+      </figure>
+      <figure class="card">
+        <div class="art variables" aria-hidden="true">
+          <div class="chips">
+            <span class="chip">pod: <b>All</b></span>
+            <span class="chip">route: /checkout</span>
+            <span class="chip">interval: 5m</span>
+          </div>
+          <div class="mono query">{exampleQuery}</div>
         </div>
-        <div class="row">
-          <span>250 to 500 ms</span>
-          <span class="status"><span class="dot warn"></span>Warning</span>
+        <figcaption>
+          <h3>Variables and multi-query panels</h3>
+          <p>
+            Query, custom, interval, textbox, datasource and ad hoc variables. Several PromQL or SQL
+            queries per panel.
+          </p>
+        </figcaption>
+      </figure>
+      <figure class="card">
+        <div class="art thresholds" aria-hidden="true">
+          <div class="row">
+            <span>&lt; 250 ms</span>
+            <span class="status"><span class="dot ok"></span>OK</span>
+          </div>
+          <div class="row">
+            <span>250 to 500 ms</span>
+            <span class="status"><span class="dot warn"></span>Warning</span>
+          </div>
+          <div class="row">
+            <span>&gt; 500 ms</span>
+            <span class="status"><span class="dot crit"></span>Critical</span>
+          </div>
         </div>
-        <div class="row">
-          <span>&gt; 500 ms</span>
-          <span class="status"><span class="dot crit"></span>Critical</span>
-        </div>
-      </div>
-      <figcaption>
-        <h3>Thresholds, mappings, overrides</h3>
-        <p>
-          Units, decimals, value mappings, links and per-series overrides, the way Grafana users
-          expect.
-        </p>
-      </figcaption>
-    </figure>
+        <figcaption>
+          <h3>Thresholds, mappings, overrides</h3>
+          <p>
+            Units, decimals, value mappings, links and per-series overrides, the way Grafana users
+            expect.
+          </p>
+        </figcaption>
+      </figure>
+    </div>
   </div>
 </section>
 
 <style>
-  .section {
-    padding-top: 128px;
-    padding-bottom: 128px;
+  .inner {
     display: flex;
     flex-direction: column;
     gap: 48px;
   }
 
   .heading {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    max-width: 720px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 64px;
+    align-items: end;
   }
 
   .cards {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
+    gap: 20px;
   }
 
   figure {
     margin: 0;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
+    border-radius: 16px;
   }
 
   .art {
-    height: 150px;
+    height: 168px;
+    margin: 8px 8px 0;
+    border-radius: 10px;
+    box-shadow: inset 0 0 0 1px var(--border);
     background: var(--muted-bg);
-    border-bottom: 1px solid var(--border);
     padding: 18px;
     box-sizing: border-box;
   }
@@ -191,19 +193,33 @@ const tiles = Array.from({ length: 8 }, (_, index) => index === 3)
   }
 
   figcaption {
-    padding: 20px;
+    padding: 20px 20px 24px;
   }
 
   h3 {
     margin: 0;
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 600;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.005em;
   }
 
   figcaption p {
     margin: 6px 0 0;
     font-size: 14px;
     color: var(--mfg);
+  }
+
+  @media (max-width: 1023px) {
+    .heading {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 16px;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .cards {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 16px;
+    }
   }
 </style>

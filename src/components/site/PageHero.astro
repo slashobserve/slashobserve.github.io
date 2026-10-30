@@ -1,0 +1,73 @@
+---
+interface Props {
+  eyebrow: string
+  title: string
+}
+
+const { eyebrow, title } = Astro.props
+---
+
+<section class="wrap page-hero">
+  <span class="eyebrow">{eyebrow}</span>
+  <h1 class="h1-sm">{title}</h1>
+  <slot />
+</section>
+
+<style>
+  .page-hero {
+    padding-top: 88px;
+    padding-bottom: 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 24px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 72px;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+    max-width: 960px;
+    text-wrap: balance;
+  }
+
+  .page-hero :global(.lead) {
+    font-size: 20px;
+    max-width: 640px;
+    text-align: center;
+  }
+
+  .page-hero :global(.actions) {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 1279px) {
+    h1 {
+      font-size: 64px;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    h1 {
+      font-size: 56px;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .page-hero {
+      padding-top: 48px;
+      padding-bottom: 40px;
+    }
+
+    .page-hero :global(.lead) {
+      font-size: 17px;
+    }
+  }
+</style>

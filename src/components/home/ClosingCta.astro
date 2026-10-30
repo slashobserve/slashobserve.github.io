@@ -1,5 +1,6 @@
 ---
 import type { DocLinks } from "../../lib/doc-links"
+import Finale from "../site/Finale.astro"
 
 interface Props {
   links: DocLinks
@@ -8,76 +9,31 @@ interface Props {
 const { links } = Astro.props
 ---
 
-<section class="wrap section">
-  <div class="panel">
-    <div class="glow" aria-hidden="true"></div>
-    <h2 class="h2">Your next dashboard is one sentence away.</h2>
-    <p>
-      Run the demo on your laptop with Docker and an LLM key, or import a Grafana dashboard you
-      already have.
-    </p>
-    <div class="actions">
-      {
-        links.quickStart && (
-          <a class="btn run" href={links.quickStart}>
-            Run the demo
-          </a>
-        )
-      }
-      {
-        links.importGuide && (
-          <a class="btn import" href={links.importGuide}>
-            Import from Grafana
-          </a>
-        )
-      }
-    </div>
+<Finale>
+  <h2 class="h2">Your next dashboard is one sentence away.</h2>
+  <p>
+    Run the demo on your laptop with Docker and an LLM key, or import a Grafana dashboard you
+    already have.
+  </p>
+  <div class="actions">
+    {
+      links.quickStart && (
+        <a class="btn btn-primary" href={links.quickStart}>
+          Run the demo
+        </a>
+      )
+    }
+    {
+      links.importGuide && (
+        <a class="btn" href={links.importGuide}>
+          Import from Grafana
+        </a>
+      )
+    }
   </div>
-</section>
+</Finale>
 
 <style>
-  .section {
-    padding-bottom: 96px;
-  }
-
-  .panel {
-    position: relative;
-    overflow: hidden;
-    border-radius: 18px;
-    background: var(--ink-bg);
-    color: var(--ink-fg);
-    padding: 72px 48px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 20px;
-  }
-
-  .glow {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: radial-gradient(50% 80% at 50% 0%, var(--ink-glow), transparent 70%);
-  }
-
-  .h2,
-  p,
-  .actions {
-    position: relative;
-  }
-
-  .h2 {
-    color: var(--ink-fg);
-  }
-
-  p {
-    margin: 0;
-    font-size: 18px;
-    color: var(--ink-mfg);
-    max-width: 52ch;
-  }
-
   .actions {
     display: flex;
     gap: 10px;
@@ -86,23 +42,12 @@ const { links } = Astro.props
     margin-top: 8px;
   }
 
-  .run {
-    background: var(--ink-fg);
-    color: var(--ink-bg);
-    border-color: var(--ink-fg);
-  }
-
-  .run:hover {
-    color: var(--ink-bg);
-  }
-
-  .import {
-    background: transparent;
-    color: var(--ink-fg);
-    border-color: var(--ink-border);
-  }
-
-  .import:hover {
-    color: var(--ink-fg);
+  @media (max-width: 860px) {
+    .actions {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      width: 100%;
+      max-width: 360px;
+    }
   }
 </style>
