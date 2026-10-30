@@ -1,5 +1,6 @@
 ---
 import type { DocLinks } from "../../lib/doc-links"
+import Stage from "./Stage.astro"
 
 interface Props {
   links: DocLinks
@@ -8,8 +9,8 @@ interface Props {
 const { links } = Astro.props
 ---
 
-<section class="wrap pad-sm section">
-  <div class="split g1-sm">
+<section class="wrap section-y">
+  <div class="split" data-reveal>
     <div class="copy">
       <span class="eyebrow">Coming from Grafana</span>
       <h2 class="h2">Dashboards you're used to. Without building them by hand.</h2>
@@ -27,38 +28,37 @@ const { links } = Astro.props
         )
       }
     </div>
-    <div class="card report">
-      <div class="report-head">
-        <span class="report-title">Import report</span>
-        <span class="mono hint file">node-exporter-full.json</span>
-      </div>
-      <ul class="lines">
-        <li>
-          <span class="dot ok"></span>
-          <span>Datasource Prometheus matched to <span class="mono">prom</span></span>
-        </li>
-        <li>
-          <span class="dot ok"></span>
-          <span>Variables job, node and diskdevices imported</span>
-        </li>
-        <li>
-          <span class="dot warn"></span>
-          <span>Systemd Units State has no data on this host</span>
-        </li>
-      </ul>
+    <div class="visual">
+      <Stage>
+        <div class="card report">
+          <div class="report-head">
+            <span class="report-title">Import report</span>
+            <span class="mono hint file">node-exporter-full.json</span>
+          </div>
+          <ul class="lines">
+            <li>
+              <span class="dot ok"></span>
+              <span>Datasource Prometheus matched to <span class="mono">prom</span></span>
+            </li>
+            <li>
+              <span class="dot ok"></span>
+              <span>Variables job, node and diskdevices imported</span>
+            </li>
+            <li>
+              <span class="dot warn"></span>
+              <span>Systemd Units State has no data on this host</span>
+            </li>
+          </ul>
+        </div>
+      </Stage>
     </div>
   </div>
 </section>
 
 <style>
-  .section {
-    padding-top: 128px;
-    padding-bottom: 128px;
-  }
-
   .split {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     gap: 64px;
     align-items: center;
   }
@@ -76,6 +76,8 @@ const { links } = Astro.props
   }
 
   .report {
+    max-width: 520px;
+    margin: 32px auto;
     padding: 18px;
     display: flex;
     flex-direction: column;
@@ -119,5 +121,23 @@ const { links } = Astro.props
 
   .warn {
     background: var(--warn);
+  }
+
+  @media (max-width: 1023px) {
+    .split {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 40px;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .split {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 32px;
+    }
+
+    .report {
+      margin: 0;
+    }
   }
 </style>
