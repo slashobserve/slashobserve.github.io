@@ -72,8 +72,8 @@ const rows: { feature: string; status: string; tone: Tone; note: string }[] = [
 ]
 ---
 
-<section id="compat" class="wrap section">
-  <div class="head">
+<section id="compat" class="wrap section-y compat">
+  <div class="split-head" data-reveal>
     <h2 class="h2">What imports</h2>
     <p>
       "Same meaning" means the same queries, series, layout, variables, units, thresholds, mappings
@@ -81,28 +81,28 @@ const rows: { feature: string; status: string; tone: Tone; note: string }[] = [
       copy.
     </p>
   </div>
-  <div class="card scroll" role="region" aria-label="What imports from Grafana" tabindex="0">
-    <table class="tbl">
+  <div class="table-frame" role="region" aria-label="What imports from Grafana" tabindex="0" data-reveal>
+    <table class="tbl tbl-stack" role="table">
       <caption class="sr-only">What imports from Grafana</caption>
-      <thead>
-        <tr>
-          <th scope="col">Grafana feature</th>
-          <th scope="col">In SlashObserve</th>
-          <th scope="col">Notes</th>
+      <thead role="rowgroup">
+        <tr role="row">
+          <th scope="col" role="columnheader">Grafana feature</th>
+          <th scope="col" role="columnheader">In SlashObserve</th>
+          <th scope="col" role="columnheader">Notes</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody role="rowgroup">
         {
           rows.map((row) => (
-            <tr>
-              <td>{row.feature}</td>
-              <td>
+            <tr role="row">
+              <td role="cell">{row.feature}</td>
+              <td role="cell">
                 <span class="tag">
                   {row.tone && <span class:list={["dot", row.tone]} aria-hidden="true" />}
                   {row.status}
                 </span>
               </td>
-              <td class="hint">{row.note}</td>
+              <td role="cell" class="hint">{row.note}</td>
             </tr>
           ))
         }
@@ -112,28 +112,11 @@ const rows: { feature: string; status: string; tone: Tone; note: string }[] = [
 </section>
 
 <style>
-  .section {
-    padding-bottom: 96px;
+  .compat {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 40px;
     scroll-margin-top: 24px;
-  }
-
-  .head {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    max-width: 680px;
-  }
-
-  .head p {
-    margin: 0;
-    color: var(--mfg);
-  }
-
-  .scroll {
-    overflow-x: auto;
   }
 
   .ok {
