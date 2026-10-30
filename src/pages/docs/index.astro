@@ -1,0 +1,171 @@
+---
+import { getCollection } from "astro:content"
+import type { MarkdownHeading } from "astro"
+import DocsLayout from "@/layouts/DocsLayout.astro"
+import { DOCS_HOME, DOCS_HOME_PATH, homeFirstPage, homeSections, homeStart } from "@/lib/docs-home"
+import { buildSidebar } from "@/lib/docs-sidebar"
+import { getOrderedDocs, pageRefOf } from "@/lib/get-docs"
+import { inlineCodeSegments } from "@/lib/inline-code"
+
+const ordered = await getOrderedDocs()
+const refs = (await getCollection("docs")).map(pageRefOf)
+const start = homeStart(refs)
+const sections = homeSections(ordered)
+const first = homeFirstPage(ordered)
+const headings: MarkdownHeading[] = [
+  ...(start.length > 0 ? [{ depth: 2, slug: "start-here", text: "Start here" }] : []),
+  ...sections.map((section) => ({ depth: 2, slug: section.id, text: section.label })),
+]
+---
+
+<DocsLayout
+  title={DOCS_HOME.title}
+  description={DOCS_HOME.description}
+  sidebar={buildSidebar(ordered, DOCS_HOME_PATH)}
+  section={null}
+  headings={headings}
+  prevNext={first ? { next: first } : {}}
+  markdownUrl="/llms.txt"
+>
+  {
+    start.length > 0 && (
+      <>
+        <h2 id="start-here">Start here</h2>
+        <div class="home-start" data-pagefind-ignore>
+          {start.map((link) => (
+            <a class="home-card" href={link.href}>
+              <span class="home-card-title">{link.title}</span>
+              <span class="home-card-text">{link.description}</span>
+            </a>
+          ))}
+        </div>
+      </>
+    )
+  }
+  {
+    sections.map((section) => (
+      <>
+        <h2 id={section.id}>{section.label}</h2>
+        <ul class="home-list" data-pagefind-ignore>
+          {section.links.map((link) => (
+            <li>
+              <a class="home-link" href={link.href}>
+                {link.title}
+              </a>
+              <p class="home-text">
+                {inlineCodeSegments(link.description).map((segment) =>
+                  segment.code ? <code>{segment.text}</code> : segment.text,
+                )}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </>
+    ))
+  }
+</DocsLayout>
+
+<style>
+  .home-start {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .home-card {
+    display: block;
+    padding: 16px 20px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-decoration: none;
+    transition:
+      border-color 120ms,
+      background-color 120ms;
+  }
+
+  .home-card:hover {
+    border-color: var(--border-strong);
+    background: var(--muted-bg);
+  }
+
+  .home-card-title {
+    display: block;
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: 500;
+    color: var(--fg);
+  }
+
+  .home-card-text {
+    display: block;
+    margin-top: 4px;
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--mfg);
+  }
+
+  .home-list {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    margin: 20px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .home-link {
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: 500;
+    color: var(--fg);
+    text-decoration: none;
+  }
+
+  .home-link:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--border-strong);
+    text-underline-offset: 4px;
+  }
+
+  .home-text {
+    margin: 2px 0 0;
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--mfg);
+  }
+
+  .home-text code {
+    padding: 0.2em 0.4em;
+    border-radius: 5px;
+    background: color-mix(in oklab, var(--fg) 6%, transparent);
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    color: var(--fg);
+  }
+
+  .home-card:focus-visible,
+  .home-link:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+
+  @media (min-width: 40rem) {
+    .home-start {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .home-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 32px;
+      row-gap: 20px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-card {
+      transition: none;
+    }
+  }
+</style>

@@ -1,6 +1,6 @@
 ---
 import type { DocLinks } from "../../lib/doc-links"
-import { docsEntryHref, GITHUB_URL, headerNav, isCurrentPage } from "../../lib/site-nav"
+import { getStartedHref, GITHUB_URL, headerNav, isCurrentPage } from "../../lib/site-nav"
 import GitHubIcon from "./GitHubIcon.astro"
 import ThemeToggle from "./ThemeToggle.astro"
 import Wordmark from "./Wordmark.astro"
@@ -11,7 +11,7 @@ interface Props {
 }
 
 const { links, minimal = false } = Astro.props
-const getStartedHref = docsEntryHref(links)
+const getStarted = getStartedHref(links)
 const navItems = headerNav(links)
 const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? "page" : undefined)
 ---
@@ -43,8 +43,8 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
           <GitHubIcon />GitHub
         </a>
         <ThemeToggle />
-        {getStartedHref && (
-          <a class="btn btn-primary get-started hide-sm" href={getStartedHref}>
+        {getStarted && (
+          <a class="btn btn-primary get-started hide-sm" href={getStarted}>
             Get started
           </a>
         )}
@@ -92,8 +92,8 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
         <a class="menu-link" href={GITHUB_URL}>
           <GitHubIcon />GitHub
         </a>
-        {getStartedHref && (
-          <a class="btn btn-primary menu-cta" href={getStartedHref}>
+        {getStarted && (
+          <a class="btn btn-primary menu-cta" href={getStarted}>
             Get started
           </a>
         )}
