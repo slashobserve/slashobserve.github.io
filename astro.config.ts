@@ -5,6 +5,7 @@ import { satteri } from "@astrojs/markdown-satteri"
 import tailwindcss from "@tailwindcss/vite"
 import { tableScroll } from "./src/lib/markdown/table-scroll"
 import { codeFigure } from "./src/lib/shiki/code-figure"
+import { promql } from "./src/lib/shiki/promql"
 
 export default defineConfig({
   site: "https://slashobserve.com",
@@ -16,7 +17,8 @@ export default defineConfig({
     shikiConfig: {
       themes: { light: "github-light", dark: "github-dark" },
       defaultColor: false,
-      langAlias: { curl: "bash", console: "bash", shellsession: "shellscript" },
+      langs: [promql],
+      langAlias: { clickhouse: "sql", curl: "bash", console: "bash", shellsession: "shellscript" },
       transformers: [codeFigure],
     },
   },
