@@ -149,6 +149,21 @@ describe("nested groups", () => {
     ])
   })
 
+  test("puts the HTTP API group between Configuration and the ObserveSpec group", () => {
+    const [section] = orderPages([
+      page("reference/observespec", "ObserveSpec schema", { order: 0 }),
+      page("reference/observespec/field-options", "Field options", { order: 300 }),
+      page("reference/configuration", "Configuration"),
+      page("reference/api/dashboards", "Dashboards", { order: 107 }),
+      page("reference/api", "HTTP API", { order: 0 }),
+    ])
+    expect(section!.items.map(describeItem)).toEqual([
+      "Configuration",
+      { group: "HTTP API", items: ["Dashboards"] },
+      { group: "ObserveSpec schema", items: ["Field options"] },
+    ])
+  })
+
   test("builds subgroups that start with the index link under its nav label", () => {
     const [section] = buildSidebar(ordered, "/docs/reference/configuration/")
     const group = section!.items[1] as DocsSubgroup
