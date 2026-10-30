@@ -16,7 +16,7 @@ export const PAGE_ORDER: Record<string, readonly string[]> = {
   teams: ["roles", "folders", "saved-prompts"],
   concepts: ["observespec", "agent", "datasources-and-variables", "versions"],
   operate: ["production", "upgrades-and-backups", "security-model"],
-  reference: ["configuration", "datasources-file", "observespec"],
+  reference: ["configuration", "datasources-file", "api", "observespec"],
 }
 
 const DOCS_PREFIX = "/docs/"

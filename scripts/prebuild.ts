@@ -3,10 +3,13 @@ import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises"
 import path from "node:path"
 import type { CorpusEntry } from "../src/lib/import-corpus"
 import { assertSiteSafe } from "./reference/markdown"
+import { apiPages } from "./reference/openapi"
 import { observespecPages, type Example } from "./reference/observespec"
 import { summarizeGolden } from "./sync/corpus"
 import { transformPage } from "./sync/markdown"
 import {
+  API_DIR,
+  API_SOURCE,
   CORPUS_GOLDEN_SOURCE,
   CORPUS_OUT,
   DOCS_OUT,
@@ -26,9 +29,13 @@ function coreDir(): string {
 }
 
 function requireCore(core: string): void {
-  const missing = ["docs", SCHEMA_SOURCE, SPEC_EXAMPLES_SOURCE, CORPUS_GOLDEN_SOURCE].filter(
-    (entry) => !existsSync(path.join(core, entry)),
-  )
+  const missing = [
+    "docs",
+    SCHEMA_SOURCE,
+    SPEC_EXAMPLES_SOURCE,
+    CORPUS_GOLDEN_SOURCE,
+    `${API_SOURCE}/openapi.yaml`,
+  ].filter((entry) => !existsSync(path.join(core, entry)))
   if (missing.length === 0) return
   throw new Error(
     `core repo not found at ${core} (missing ${missing.join(", ")}): set SLASHOBSERVE_CORE_DIR to a checkout of slashobserve/slashobserve, or clone it next to this repo as ../slashobserve`,
@@ -86,8 +93,27 @@ async function readExamples(examplesDir: string): Promise<Example[]> {
   )
 }
 
-function collidesWithGenerated(rel: string): boolean {
-  return rel === `${OBSERVESPEC_DIR}.md` || rel.startsWith(`${OBSERVESPEC_DIR}/`)
+async function readApiFiles(apiDir: string): Promise<Map<string, unknown>> {
+  const pathsDir = path.join(apiDir, "paths")
+  const names = (await readdir(pathsDir, { withFileTypes: true }))
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".yaml"))
+    .map((entry) => entry.name)
+    .sort()
+  const entries = [
+    ["openapi.yaml", path.join(apiDir, "openapi.yaml")],
+    ...names.map((name) => [`paths/${name}`, path.join(pathsDir, name)]),
+  ] as const
+  return new Map(
+    await Promise.all(
+      entries.map(async ([key, file]) => [key, Bun.YAML.parse(await readFile(file, "utf8"))] as const),
+    ),
+  )
+}
+
+function collidesWithGenerated(rel: string): string | null {
+  if (rel === `${OBSERVESPEC_DIR}.md` || rel.startsWith(`${OBSERVESPEC_DIR}/`)) return "ObserveSpec"
+  if (rel === `${API_DIR}.md` || rel.startsWith(`${API_DIR}/`)) return "HTTP API"
+  return null
 }
 
 function coreCommit(core: string): string {
@@ -112,9 +138,11 @@ async function prebuild(): Promise<string> {
   const rels = await listDocs(docsDir)
   const invalid = rels.flatMap((rel) => invalidDocPath(rel) ?? [])
   if (invalid.length > 0) throw new Error(invalid.join("\n"))
-  const collision = rels.find(collidesWithGenerated)
-  if (collision !== undefined) {
-    throw new Error(`docs/${collision} collides with the generated ObserveSpec reference; rename the core page`)
+  for (const rel of rels) {
+    const generated = collidesWithGenerated(rel)
+    if (generated !== null) {
+      throw new Error(`docs/${rel} collides with the generated ${generated} reference; rename the core page`)
+    }
   }
 
   const schemaSource = path.join(core, SCHEMA_SOURCE)
@@ -147,6 +175,8 @@ async function prebuild(): Promise<string> {
     commit,
   )
   reference.forEach(assertSiteSafe)
+  const api = apiPages(await readApiFiles(path.join(core, API_SOURCE)), commit)
+  api.forEach(assertSiteSafe)
 
   await rm(DOCS_OUT, { recursive: true, force: true })
   await rm(path.dirname(SCHEMA_OUT), { recursive: true, force: true })
@@ -160,13 +190,18 @@ async function prebuild(): Promise<string> {
     await mkdir(path.dirname(out), { recursive: true })
     await writeFile(out, page.markdown)
   }
+  for (const page of api) {
+    const out = outputPathFor(`${API_DIR}/${page.path}`)
+    await mkdir(path.dirname(out), { recursive: true })
+    await writeFile(out, page.markdown)
+  }
   for (const rel of assets) await copyInto(path.join(docsDir, rel), outputPathFor(rel))
   await copyInto(schemaSource, SCHEMA_OUT)
 
   await mkdir(path.dirname(CORPUS_OUT), { recursive: true })
   await writeFile(CORPUS_OUT, JSON.stringify({ core: commit, entries: corpus }, null, 2) + "\n")
 
-  return `Prebuild: ${plural(pages.length, "page")} (${plural(dated, "dated page")}), ${plural(assets.length, "asset")}, ${plural(reference.length, "ObserveSpec reference page")}, the ObserveSpec schema and ${plural(corpus.length, "corpus file")} from ${core} (${commit})`
+  return `Prebuild: ${plural(pages.length, "page")} (${plural(dated, "dated page")}), ${plural(assets.length, "asset")}, ${plural(reference.length, "ObserveSpec reference page")}, ${plural(api.length, "HTTP API reference page")}, the ObserveSpec schema and ${plural(corpus.length, "corpus file")} from ${core} (${commit})`
 }
 
 try {

@@ -36,7 +36,7 @@ Docs content is written in the core repo `slashobserve/slashobserve` under `docs
 ## Core repo
 
 The prebuild reads the core repo from `SLASHOBSERVE_CORE_DIR`, else `../slashobserve`, copies `docs/**/*.md` into `src/content/docs/` with relative `.md` links rewritten to site URLs, and dates each page from core's git history (skipped on a shallow clone).
-The prebuild also writes the ObserveSpec reference into `src/content/docs/reference/observespec/` from core's schema and `spec/examples/`; those pages set `generatedFrom`, `navLabel` and `order`, which core pages must not set.
+The prebuild also writes the ObserveSpec reference into `src/content/docs/reference/observespec/` from core's schema and `spec/examples/`, and the HTTP API reference into `src/content/docs/reference/api/` from core's `api/openapi.yaml` and `api/paths/`; those pages set `generatedFrom`, `navLabel` and `order`, which core pages must not set.
 Every core docs page has front matter with `title` and `description`, no body `#` heading, and relative `.md` links.
 CI checks out the ref in `core-ref.txt` into `.core/` with the `CORE_REPO_TOKEN` secret.
 Never hand-write docs pages in this repo; a docs change is a change to the core repo's `docs/`.
