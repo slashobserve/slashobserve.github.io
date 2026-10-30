@@ -56,15 +56,18 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 - Colours only through the tokens in `src/styles/tokens.css`, never a raw hex in a component.
 - Light and dark both work through `data-theme` on `<html>` and the `slashobserve-theme` localStorage key.
 - Primary buttons use `--primary` (black in light mode).
-- Blue is for the slash, eyebrows, icon chips and the step indicator; small blue text uses `--brand-text`, which a unit test holds to WCAG AA over the halo in both themes.
+- The palette is monochrome: `--brand` and `--brand-text` are ink (near black in light, near white in dark) and serve focus rings, eyebrows, icon chips and the step indicator; a unit test keeps them neutral grey and holds focus rings to 3:1 and small text to AA.
+- The wordmark slash takes the text colour, never an accent.
+- Blue appears only as chart series colours (`--s1`) in product depictions; status colours and code highlighting keep their hues.
+- Dark sections use `--band-bg`, `--band-code` and `--band-line` with `--ink-*` text, so they stay visible in dark mode; focus rings inside them use `--ink-fg`.
 - `src/styles/marketing.css` is wrapped in `@layer site`, so unlayered component styles win over it without specificity tricks.
 - The header has two navs built from `headerNav(links)`: the desktop nav, hidden at 860px and below, and a phone menu panel opened by the hamburger.
   A new nav item shows in both, each link with `aria-current="page"` on its own page.
 - Never use gradient-filled text or buttons, backdrop blur, numbered section labels, emoji, stock illustrations or coloured left-border callouts.
 - Docs stay calm: flat background, 1px borders.
 - Tailwind utilities appear only in the docs components.
-- The design source for the marketing pages is the Website design canvas at `../docs/site/canvas/project/*.dc.html` in the SlashObserve workspace.
-- Its markup, spacing and type scale are the spec; its copy is data.
+- The design source for the marketing pages other than the home page is the Website design canvas at `../docs/site/canvas/project/*.dc.html` in the SlashObserve workspace; its markup, spacing and type scale are the spec and its copy is data, except that the palette is monochrome.
+- The home page has its own layout in `src/components/home/` and `src/styles/home.css`; a redesign keeps every line of its copy and every link.
 - The docs follow their own design in the site's brand, not the canvas.
 
 ## Code rules

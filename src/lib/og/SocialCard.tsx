@@ -43,7 +43,7 @@ export function SocialCardImage({ section, title, colors }: Props) {
       />
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ display: "flex", fontSize: 44, fontWeight: 600, letterSpacing: "-0.035em" }}>
-          <span style={{ color: colors.brand }}>/</span>
+          <span style={{ color: colors.fg }}>/</span>
           <span>observe</span>
         </div>
         <div

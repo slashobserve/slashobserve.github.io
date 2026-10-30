@@ -53,3 +53,36 @@ describe("eyebrow colours", () => {
     })
   }
 })
+
+describe("monochrome palette", () => {
+  for (const theme of ["light", "dark"] as const) {
+    const t = themeTokens(readTokensCss(), theme)
+    const colour = (name: string) => parseColor(t[name])
+
+    test(`focus ring has 3:1 against the page surfaces in ${theme}`, () => {
+      for (const surface of ["--bg", "--surface", "--muted-bg"]) {
+        expect(contrastRatio(colour("--brand"), colour(surface))).toBeGreaterThanOrEqual(3)
+      }
+    })
+
+    test(`band text passes AA on the band surfaces in ${theme}`, () => {
+      for (const text of ["--ink-fg", "--ink-mfg"]) {
+        for (const surface of ["--band-bg", "--band-code"]) {
+          expect(contrastRatio(colour(text), colour(surface))).toBeGreaterThanOrEqual(4.5)
+        }
+      }
+      expect(contrastRatio(colour("--ink-code"), colour("--band-code"))).toBeGreaterThanOrEqual(4.5)
+    })
+
+    test(`band stands out from the page in ${theme}`, () => {
+      expect(contrastRatio(colour("--band-bg"), colour("--bg"))).toBeGreaterThanOrEqual(1.1)
+    })
+
+    test(`accent tokens are neutral grey in ${theme}`, () => {
+      for (const name of ["--brand", "--brand-text", "--brand-muted", "--sel"]) {
+        const { r, g, b } = colour(name)
+        expect(Math.max(r, g, b) - Math.min(r, g, b)).toBeLessThanOrEqual(12)
+      }
+    })
+  }
+})
