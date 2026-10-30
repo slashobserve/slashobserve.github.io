@@ -2,14 +2,18 @@ import { existsSync } from "node:fs"
 import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises"
 import path from "node:path"
 import type { CorpusEntry } from "../src/lib/import-corpus"
+import { assertSiteSafe } from "./reference/markdown"
+import { observespecPages, type Example } from "./reference/observespec"
 import { summarizeGolden } from "./sync/corpus"
 import { transformPage } from "./sync/markdown"
 import {
   CORPUS_GOLDEN_SOURCE,
   CORPUS_OUT,
   DOCS_OUT,
+  OBSERVESPEC_DIR,
   SCHEMA_OUT,
   SCHEMA_SOURCE,
+  SPEC_EXAMPLES_SOURCE,
   invalidDocPath,
   outputPathFor,
 } from "./sync/paths"
@@ -22,7 +26,7 @@ function coreDir(): string {
 }
 
 function requireCore(core: string): void {
-  const missing = ["docs", SCHEMA_SOURCE, CORPUS_GOLDEN_SOURCE].filter(
+  const missing = ["docs", SCHEMA_SOURCE, SPEC_EXAMPLES_SOURCE, CORPUS_GOLDEN_SOURCE].filter(
     (entry) => !existsSync(path.join(core, entry)),
   )
   if (missing.length === 0) return
@@ -69,6 +73,23 @@ async function summarizeGoldens(goldenDir: string): Promise<CorpusEntry[]> {
   )
 }
 
+async function readExamples(examplesDir: string): Promise<Example[]> {
+  const files = (await readdir(examplesDir, { withFileTypes: true }))
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
+    .map((entry) => entry.name)
+    .sort()
+  return Promise.all(
+    files.map(async (file) => ({
+      file,
+      spec: JSON.parse(await readFile(path.join(examplesDir, file), "utf8")),
+    })),
+  )
+}
+
+function collidesWithGenerated(rel: string): boolean {
+  return rel === `${OBSERVESPEC_DIR}.md` || rel.startsWith(`${OBSERVESPEC_DIR}/`)
+}
+
 function coreCommit(core: string): string {
   const result = Bun.spawnSync(["git", "-C", core, "rev-parse", "--short", "HEAD"])
   return result.exitCode === 0 ? result.stdout.toString().trim() : "unknown"
@@ -91,9 +112,14 @@ async function prebuild(): Promise<string> {
   const rels = await listDocs(docsDir)
   const invalid = rels.flatMap((rel) => invalidDocPath(rel) ?? [])
   if (invalid.length > 0) throw new Error(invalid.join("\n"))
+  const collision = rels.find(collidesWithGenerated)
+  if (collision !== undefined) {
+    throw new Error(`docs/${collision} collides with the generated ObserveSpec reference; rename the core page`)
+  }
 
   const schemaSource = path.join(core, SCHEMA_SOURCE)
-  const schemaId = JSON.parse(await readFile(schemaSource, "utf8")).$id
+  const schema = JSON.parse(await readFile(schemaSource, "utf8"))
+  const schemaId = schema.$id
   if (schemaId !== SCHEMA_ID) {
     throw new Error(`${SCHEMA_SOURCE} has $id ${schemaId}, expected ${SCHEMA_ID}`)
   }
@@ -114,6 +140,13 @@ async function prebuild(): Promise<string> {
   const dated = pages.filter((rel) => dates.has(rel)).length
 
   const corpus = await summarizeGoldens(path.join(core, CORPUS_GOLDEN_SOURCE))
+  const commit = coreCommit(core)
+  const reference = observespecPages(
+    schema,
+    await readExamples(path.join(core, SPEC_EXAMPLES_SOURCE)),
+    commit,
+  )
+  reference.forEach(assertSiteSafe)
 
   await rm(DOCS_OUT, { recursive: true, force: true })
   await rm(path.dirname(SCHEMA_OUT), { recursive: true, force: true })
@@ -122,14 +155,18 @@ async function prebuild(): Promise<string> {
     await mkdir(path.dirname(out), { recursive: true })
     await writeFile(out, text)
   }
+  for (const page of reference) {
+    const out = outputPathFor(`${OBSERVESPEC_DIR}/${page.path}`)
+    await mkdir(path.dirname(out), { recursive: true })
+    await writeFile(out, page.markdown)
+  }
   for (const rel of assets) await copyInto(path.join(docsDir, rel), outputPathFor(rel))
   await copyInto(schemaSource, SCHEMA_OUT)
 
-  const commit = coreCommit(core)
   await mkdir(path.dirname(CORPUS_OUT), { recursive: true })
   await writeFile(CORPUS_OUT, JSON.stringify({ core: commit, entries: corpus }, null, 2) + "\n")
 
-  return `Prebuild: ${plural(pages.length, "page")} (${plural(dated, "dated page")}), ${plural(assets.length, "asset")}, the ObserveSpec schema and ${plural(corpus.length, "corpus file")} from ${core} (${commit})`
+  return `Prebuild: ${plural(pages.length, "page")} (${plural(dated, "dated page")}), ${plural(assets.length, "asset")}, ${plural(reference.length, "ObserveSpec reference page")}, the ObserveSpec schema and ${plural(corpus.length, "corpus file")} from ${core} (${commit})`
 }
 
 try {
