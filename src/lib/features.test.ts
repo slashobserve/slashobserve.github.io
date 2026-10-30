@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test"
 import { resolveDocLinks } from "./doc-links"
 import { featureGroups } from "./features"
 
-const today = resolveDocLinks(new Set(["docs/self-hosting"]))
+const today = resolveDocLinks(new Set(["docs/teams/roles", "docs/teams/folders"]))
 const noDocs = resolveDocLinks(new Set())
 
 function findItem(groups: ReturnType<typeof featureGroups>, title: string) {
@@ -12,8 +12,8 @@ function findItem(groups: ReturnType<typeof featureGroups>, title: string) {
 describe("featureGroups", () => {
   test("links an item to the docs section that covers it and leaves the others plain", () => {
     const groups = featureGroups(today, 21)
-    expect(findItem(groups, "Roles")?.href).toBe("/docs/self-hosting/#roles")
-    expect(findItem(groups, "Folders")?.href).toBe("/docs/self-hosting/#folders-and-access")
+    expect(findItem(groups, "Roles")?.href).toBe("/docs/teams/roles/")
+    expect(findItem(groups, "Folders")?.href).toBe("/docs/teams/folders/")
     expect(findItem(groups, "Queries checked before saving")?.href).toBeNull()
     expect(findItem(groups, "Share links")?.href).toBeNull()
   })

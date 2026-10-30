@@ -1,48 +1,29 @@
 import { describe, expect, test } from "bun:test"
 import { DOC_LINK_CANDIDATES, resolveDocLinks } from "./doc-links"
 
-const today = new Set(["docs/self-hosting"])
-const afterSplit = new Set([
-  "docs/self-hosting",
+const corePages = new Set([
   "docs/get-started/quick-start",
   "docs/get-started/install",
   "docs/use/import-grafana",
   "docs/use/mcp",
-  "docs/reference",
+  "docs/use/cli",
   "docs/teams/roles",
   "docs/teams/folders",
   "docs/connect/oidc",
   "docs/connect/llm-providers",
-  "docs/use/cli",
   "docs/connect/prometheus",
+  "docs/reference/configuration",
 ])
 
 describe("resolveDocLinks", () => {
-  test("falls back to headings of the single self-hosting page", () => {
-    expect(resolveDocLinks(today)).toEqual({
-      quickStart: "/docs/self-hosting/#quick-start",
-      install: "/docs/self-hosting/#run-your-own-deployment",
-      importGuide: "/docs/self-hosting/#import-grafana-dashboards",
-      mcp: "/docs/self-hosting/#mcp",
-      selfHost: "/docs/self-hosting/",
-      reference: null,
-      roles: "/docs/self-hosting/#roles",
-      folders: "/docs/self-hosting/#folders-and-access",
-      oidc: "/docs/self-hosting/#sign-in-with-oidc",
-      llm: "/docs/self-hosting/#llm-providers",
-      cli: "/docs/self-hosting/#cli",
-      datasources: "/docs/self-hosting/#datasources-file",
-    })
-  })
-
-  test("prefers the split pages once they exist", () => {
-    expect(resolveDocLinks(afterSplit)).toEqual({
+  test("links every key to its core page", () => {
+    expect(resolveDocLinks(corePages)).toEqual({
       quickStart: "/docs/get-started/quick-start/",
       install: "/docs/get-started/install/",
       importGuide: "/docs/use/import-grafana/",
       mcp: "/docs/use/mcp/",
-      selfHost: "/docs/self-hosting/",
-      reference: "/docs/reference/",
+      selfHost: "/docs/get-started/install/",
+      reference: "/docs/reference/configuration/",
       roles: "/docs/teams/roles/",
       folders: "/docs/teams/folders/",
       oidc: "/docs/connect/oidc/",
@@ -52,6 +33,13 @@ describe("resolveDocLinks", () => {
     })
   })
 
+  test("returns null for a page that is not in core", () => {
+    const withoutRoles = new Set([...corePages].filter((id) => id !== "docs/teams/roles"))
+    const links = resolveDocLinks(withoutRoles)
+    expect(links.roles).toBeNull()
+    expect(links.folders).toBe("/docs/teams/folders/")
+  })
+
   test("returns null for every key when no docs exist", () => {
     const values = Object.values(resolveDocLinks(new Set()))
     expect(values).toHaveLength(Object.keys(DOC_LINK_CANDIDATES).length)
@@ -59,6 +47,11 @@ describe("resolveDocLinks", () => {
   })
 
   test("ignores ids that only share a prefix with a candidate", () => {
-    expect(resolveDocLinks(new Set(["docs/self-hosting-extra"])).selfHost).toBeNull()
+    expect(resolveDocLinks(new Set(["docs/get-started/install-extra"])).selfHost).toBeNull()
+  })
+
+  test("no longer links into the retired single self-hosting page", () => {
+    const values = Object.values(resolveDocLinks(new Set(["docs/self-hosting"])))
+    expect(values.every((value) => value === null)).toBe(true)
   })
 })
