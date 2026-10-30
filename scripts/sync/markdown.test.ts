@@ -107,6 +107,13 @@ describe("transformPage", () => {
     )
   })
 
+  test.each(["navLabel", "order", "generatedFrom"])("throws when the front matter sets %s", (key) => {
+    const source = `---\ntitle: T\ndescription: D\n${key}: x\n---\nText\n`
+    expect(() => transformPage(source, "connect/a.md", null)).toThrow(
+      `connect/a.md: front matter must not set ${key}; the site owns navigation`,
+    )
+  })
+
   test("throws for a body heading", () => {
     expect(() => transformPage(`${FRONT}\n# Again\n`, "connect/a.md", null)).toThrow(
       "connect/a.md: remove the # heading; the title comes from front matter",

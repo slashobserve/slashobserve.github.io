@@ -2,7 +2,7 @@
 import type { HTMLAttributes } from "astro/types"
 import { cn } from "@/lib/cn"
 import type { DocsGroup } from "@/lib/docs-sidebar"
-import SidebarLink from "./SidebarLink.astro"
+import SidebarItems from "./SidebarItems.astro"
 
 interface Props extends HTMLAttributes<"div"> {
   items: DocsGroup[]
@@ -28,13 +28,7 @@ const labelId = (label: string, index: number) =>
           <p class="group-label" id={labelId(group.label, index)}>
             {group.label}
           </p>
-          <ul aria-labelledby={labelId(group.label, index)}>
-            {group.links.map((link) => (
-              <li>
-                <SidebarLink label={link.label} href={link.href} isCurrent={link.isCurrent} />
-              </li>
-            ))}
-          </ul>
+          <SidebarItems items={group.items} labelledby={labelId(group.label, index)} />
         </li>
       ))
     }
@@ -106,8 +100,64 @@ const labelId = (label: string, index: number) =>
     outline-offset: -2px;
   }
 
+  [data-nb-sidebar] :global(.subgroup-summary) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    box-sizing: border-box;
+    min-height: 32px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--mfg);
+    cursor: pointer;
+    list-style: none;
+    transition:
+      color 120ms,
+      background-color 120ms;
+  }
+
+  [data-nb-sidebar] :global(.subgroup-summary::-webkit-details-marker) {
+    display: none;
+  }
+
+  [data-nb-sidebar] :global(.subgroup-summary:hover) {
+    color: var(--fg);
+    background: var(--muted-bg);
+  }
+
+  [data-nb-sidebar] :global(.subgroup-summary.current) {
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  [data-nb-sidebar] :global(.subgroup-summary:focus-visible) {
+    outline: 2px solid var(--brand);
+    outline-offset: -2px;
+  }
+
+  [data-nb-sidebar] :global(.chevron) {
+    flex: none;
+    color: var(--mfg);
+    transition: transform 120ms;
+  }
+
+  [data-nb-sidebar] :global(.subgroup[open] > .subgroup-summary .chevron) {
+    transform: rotate(90deg);
+  }
+
+  [data-nb-sidebar] :global(.subgroup > ul) {
+    margin: 1px 0 0 12px;
+    padding-left: 8px;
+    border-left: 1px solid var(--border);
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    [data-nb-sidebar] :global(li > a) {
+    [data-nb-sidebar] :global(li > a),
+    [data-nb-sidebar] :global(.subgroup-summary),
+    [data-nb-sidebar] :global(.chevron) {
       transition: none;
     }
   }
