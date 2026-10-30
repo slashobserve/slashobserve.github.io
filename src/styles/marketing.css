@@ -1,7 +1,8 @@
 @layer site {
 html{scroll-padding-top:80px}
 body{margin:0}
-.site{position:relative;isolation:isolate;overflow-x:clip;background:var(--bg);color:var(--fg);font-family:var(--font-sans);font-size:15px;line-height:1.55;min-height:100vh;-webkit-font-smoothing:antialiased}
+.site{position:relative;isolation:isolate;background:var(--bg);color:var(--fg);font-family:var(--font-sans);font-size:15px;line-height:1.55;min-height:100vh;-webkit-font-smoothing:antialiased}
+.site>main{overflow-x:clip}
 :where(.site) a{color:var(--fg)}
 :where(.site) a:hover{color:var(--mfg)}
 :where(.site) button{font:inherit;color:inherit;cursor:pointer}
