@@ -116,15 +116,11 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
     position: sticky;
     top: 0;
     z-index: 30;
-    border-bottom: 1px solid transparent;
-    transition:
-      background-color 160ms ease,
-      border-color 160ms ease;
+    transition: background-color 160ms ease;
   }
 
   .header-bar[data-scrolled] {
     background: var(--bg);
-    border-bottom-color: var(--border);
   }
 
   .full {
