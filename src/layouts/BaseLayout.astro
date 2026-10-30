@@ -8,6 +8,8 @@ import { ClientRouter } from "astro:transitions";
 import AgentDirective from "@/components/AgentDirective.astro";
 import { SearchDialog } from "@/components/ui/search";
 import ThemeScript from "../components/site/ThemeScript.astro";
+import { CARD_HEIGHT, CARD_WIDTH } from "../lib/og/cards";
+import { docCard } from "../lib/og/doc-cards";
 
 interface Props {
   title: string;
@@ -22,6 +24,8 @@ const { title, description, markdownUrl, lastUpdated } = Astro.props;
 
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 const fullTitle = `${title} | ${SITE_NAME}`;
+const card = docCard(Astro.url.pathname, title);
+const cardUrl = new URL(card.image, Astro.site).href;
 const mdUrl = new URL(markdownUrl, Astro.site).href;
 const llmsUrl = new URL("/llms.txt", Astro.site).href;
 const modified = lastUpdated?.toISOString();
@@ -61,11 +65,16 @@ const structuredData = JSON.stringify({
     <meta property="og:locale" content="en" />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={pageUrl} />
+    <meta property="og:image" content={cardUrl} />
+    <meta property="og:image:width" content={String(CARD_WIDTH)} />
+    <meta property="og:image:height" content={String(CARD_HEIGHT)} />
+    <meta property="og:image:alt" content={`${card.section}: ${card.title}`} />
     {modified && <meta property="article:modified_time" content={modified} />}
 
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={cardUrl} />
 
     <script type="application/ld+json" set:html={structuredData} />
 

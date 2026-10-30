@@ -18,7 +18,7 @@ Docs content is written in the core repo `slashobserve/slashobserve` under `docs
 
 ## Layout
 
-- `src/pages/`: home, /grafana, /features, 404, and `og/[card].png.ts` for social cards.
+- `src/pages/`: home, /grafana, /features, 404, the /docs/ landing page, `og/[card].png.ts` for marketing social cards and `og/docs/[...slug].png.ts` for one card per docs page.
 - `src/components/site/`: shared header, footer, wordmark, theme toggle and halo.
 - `src/components/home/`: home page sections.
 - `src/components/grafana/` and `src/components/features/`: those pages' sections.
@@ -77,7 +77,7 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 
 ## Testing and gates
 
-- Unit tests with `bun test` for pure logic only: path mapping, link rewriting and front matter checks, docs dates, link checking, sidebar ordering and prev/next, generated reference pages, link resolution, table scroll, code figure, agent text, loop state, corpus summaries, the feature list, nav, token contrast and the social card registry.
+- Unit tests with `bun test` for pure logic only: path mapping, link rewriting and front matter checks, docs dates, link checking, sidebar ordering and prev/next, generated reference pages, link resolution, table scroll, code figure, agent text, loop state, corpus summaries, the feature list, nav, token contrast, docs landing sections and the social card registry and docs card mapping.
 - No e2e or visual tests.
 - Before calling work done, run `bun run build`, `bun run check`, `bun run check:links` and `bun run test`.
 
