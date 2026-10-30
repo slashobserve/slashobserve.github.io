@@ -101,8 +101,8 @@
 }
 
 :root {
-  --font-sans: "Geist Variable", system-ui, sans-serif;
-  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro", "Geist Variable", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, "Geist Mono Variable", monospace;
   --ink-bg: #0b0c10;
   --ink-fg: #f5f6f7;
   --ink-mfg: #a4a9b0;

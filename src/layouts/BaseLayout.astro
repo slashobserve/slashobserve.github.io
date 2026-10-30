@@ -1,7 +1,6 @@
 ---
 import "@fontsource-variable/geist";
 import "@fontsource-variable/geist-mono";
-import geistLatin from "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url";
 import "../styles/globals.css";
 import "../styles/prose.css";
 import { ClientRouter } from "astro:transitions";
@@ -46,7 +45,6 @@ const structuredData = JSON.stringify({
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="preload" href={geistLatin} as="font" type="font/woff2" crossorigin />
 
     <ThemeScript />
 

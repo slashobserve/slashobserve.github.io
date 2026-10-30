@@ -48,7 +48,7 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 - Importer numbers on /grafana come from `src/generated/import-corpus.json`, which the prebuild builds from the core goldens in `pkg/grafana/testdata/golden`.
 - /features lists only what core main ships; add an item when its feature merges.
 - The canvas's `[N]` placeholders stay out of the page until a generator fills them.
-- No analytics, cookies or third-party requests; fonts are self-hosted.
+- No analytics, cookies or third-party requests. Text uses the system SF Pro stack (SF Mono for code) with self-hosted Geist as the fallback off Apple devices; social cards render in Geist because SF Pro may not be embedded.
 - No pricing, enterprise or blog pages.
 
 ## Design rules

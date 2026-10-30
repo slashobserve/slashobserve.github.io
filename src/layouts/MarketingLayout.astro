@@ -3,7 +3,6 @@ import "@fontsource-variable/geist"
 import "@fontsource-variable/geist-mono"
 import "../styles/tokens.css"
 import "../styles/marketing.css"
-import geistLatin from "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url"
 import Halo from "../components/site/Halo.astro"
 import SiteFooter from "../components/site/SiteFooter.astro"
 import SiteHeader from "../components/site/SiteHeader.astro"
@@ -50,7 +49,6 @@ const card = cardFor(Astro.url.pathname)
     {canonical && <link rel="canonical" href={pageUrl} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <ThemeScript />
-    <link rel="preload" as="font" type="font/woff2" crossorigin href={geistLatin} />
     <slot name="head" />
   </head>
   <body>
