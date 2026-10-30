@@ -19,7 +19,7 @@ Docs content is written in the core repo `slashobserve/slashobserve` under `docs
 ## Layout
 
 - `src/pages/`: home, /grafana, /features, 404, the /docs/ landing page, `og/[card].png.ts` for marketing social cards and `og/docs/[...slug].png.ts` for one card per docs page.
-- `src/components/site/`: shared header, footer, wordmark, theme toggle and halo.
+- `src/components/site/`: shared header, footer, wordmark, theme toggle, halo, page hero and closing frame.
 - `src/components/home/`: home page sections.
 - `src/components/grafana/` and `src/components/features/`: those pages' sections.
 - `src/components/docs/` and `src/components/ui/`: the docs shell, sidebar, TOC, search and pager.
@@ -66,8 +66,8 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 - Never use gradient-filled text or buttons, backdrop blur, numbered section labels, emoji, stock illustrations or coloured left-border callouts.
 - Docs stay calm: flat background, 1px borders.
 - Tailwind utilities appear only in the docs components.
-- The design source for the marketing pages other than the home page is the Website design canvas at `../docs/site/canvas/project/*.dc.html` in the SlashObserve workspace; its markup, spacing and type scale are the spec and its copy is data, except that the palette is monochrome.
-- The home page has its own layout in `src/components/home/` and `src/styles/home.css`; a redesign keeps every line of its copy and every link.
+- The marketing pages (home, /features, /grafana, 404) share the home's design language; the Website design canvas at `../docs/site/canvas/project/*.dc.html` is no longer their layout spec, and its copy is data.
+- Shared marketing styles live in `src/styles/marketing.css`: `.section-y` spacing, the `.h2` scale, opt-in `data-reveal` (run by `MarketingLayout`), `.band-muted` and `.band-ink`; `src/components/site/PageHero.astro` opens a page and `Finale.astro` closes it. A redesign keeps every line of copy and every link.
 - The docs follow their own design in the site's brand, not the canvas.
 
 ## Code rules

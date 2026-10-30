@@ -9,7 +9,6 @@ import Hero from "../components/home/Hero.astro"
 import WorksWith from "../components/home/WorksWith.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
 import { getDocLinks } from "../lib/get-doc-links"
-import "../styles/home.css"
 
 const links = await getDocLinks()
 ---
@@ -19,19 +18,12 @@ const links = await getDocLinks()
   description="SlashObserve builds Grafana-style dashboards from a sentence, on the Prometheus and ClickHouse you already run. Open source and self-hosted."
   halo
 >
-  <div class="home">
-    <Hero links={links} />
-    <WorksWith />
-    <FourQuestions />
-    <GrafanaImport links={links} />
-    <FeatureCards />
-    <ForAgents links={links} />
-    <Architecture />
-    <ClosingCta links={links} />
-  </div>
+  <Hero links={links} />
+  <WorksWith />
+  <FourQuestions />
+  <GrafanaImport links={links} />
+  <FeatureCards />
+  <ForAgents links={links} />
+  <Architecture />
+  <ClosingCta links={links} />
 </MarketingLayout>
-
-<script>
-  import { reveal } from "../lib/client/reveal"
-  reveal()
-</script>

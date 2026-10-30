@@ -11,7 +11,7 @@ const { links } = Astro.props
 ---
 
 <footer>
-  <div class="wrap g1-sm grid">
+  <div class="wrap grid">
     <div class="brand">
       <Wordmark size={20} />
       <span class="hint tagline">
@@ -41,11 +41,11 @@ const { links } = Astro.props
   }
 
   .grid {
-    padding-top: 48px;
-    padding-bottom: 48px;
+    padding-top: 64px;
+    padding-bottom: 64px;
     display: grid;
-    grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
-    gap: 32px;
+    grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
+    gap: 40px;
   }
 
   .columns {
@@ -68,8 +68,10 @@ const { links } = Astro.props
   }
 
   .title {
+    font-size: 13px;
     font-weight: 500;
-    margin-bottom: 6px;
+    color: var(--fg);
+    margin-bottom: 8px;
   }
 
   .tagline {
@@ -77,6 +79,19 @@ const { links } = Astro.props
   }
 
   .column .navlink {
-    padding: 3px 0;
+    padding: 4px 0;
+  }
+
+  @media (max-width: 860px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 32px 24px;
+      padding-top: 48px;
+      padding-bottom: 48px;
+    }
+
+    .brand {
+      grid-column: 1 / -1;
+    }
   }
 </style>

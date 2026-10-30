@@ -1,5 +1,6 @@
 ---
 import type { DocLinks } from "../../lib/doc-links"
+import Finale from "../site/Finale.astro"
 
 interface Props {
   links: DocLinks
@@ -8,79 +9,31 @@ interface Props {
 const { links } = Astro.props
 ---
 
-<section class="closing">
-  <div class="wrap inner" data-reveal>
-    <h2 class="h2">Your next dashboard is one sentence away.</h2>
-    <p>
-      Run the demo on your laptop with Docker and an LLM key, or import a Grafana dashboard you
-      already have.
-    </p>
-    <div class="actions">
-      {
-        links.quickStart && (
-          <a class="btn btn-primary" href={links.quickStart}>
-            Run the demo
-          </a>
-        )
-      }
-      {
-        links.importGuide && (
-          <a class="btn" href={links.importGuide}>
-            Import from Grafana
-          </a>
-        )
-      }
-    </div>
+<Finale>
+  <h2 class="h2">Your next dashboard is one sentence away.</h2>
+  <p>
+    Run the demo on your laptop with Docker and an LLM key, or import a Grafana dashboard you
+    already have.
+  </p>
+  <div class="actions">
+    {
+      links.quickStart && (
+        <a class="btn btn-primary" href={links.quickStart}>
+          Run the demo
+        </a>
+      )
+    }
+    {
+      links.importGuide && (
+        <a class="btn" href={links.importGuide}>
+          Import from Grafana
+        </a>
+      )
+    }
   </div>
-</section>
+</Finale>
 
 <style>
-  .closing {
-    position: relative;
-    isolation: isolate;
-    padding: 160px 0 128px;
-  }
-
-  .closing::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background-image:
-      radial-gradient(50% 70% at 50% 100%, var(--halo), transparent 70%),
-      linear-gradient(var(--gridline) 1px, transparent 1px),
-      linear-gradient(90deg, var(--gridline) 1px, transparent 1px);
-    background-size:
-      auto,
-      56px 56px,
-      56px 56px;
-    -webkit-mask-image: radial-gradient(60% 80% at 50% 100%, black, transparent 80%);
-    mask-image: radial-gradient(60% 80% at 50% 100%, black, transparent 80%);
-  }
-
-  .inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 24px;
-  }
-
-  .inner .h2 {
-    font-size: 64px;
-    line-height: 1.02;
-    letter-spacing: -0.04em;
-    max-width: 900px;
-  }
-
-  p {
-    margin: 0;
-    font-size: 20px;
-    color: var(--mfg);
-    max-width: 52ch;
-  }
-
   .actions {
     display: flex;
     gap: 10px;
@@ -89,26 +42,7 @@ const { links } = Astro.props
     margin-top: 8px;
   }
 
-  @media (max-width: 1023px) {
-    .inner .h2 {
-      font-size: 48px;
-    }
-  }
-
   @media (max-width: 860px) {
-    .closing {
-      padding: 96px 0 80px;
-    }
-
-    .inner .h2 {
-      font-size: 36px;
-      line-height: 1.08;
-    }
-
-    p {
-      font-size: 17px;
-    }
-
     .actions {
       display: grid;
       grid-template-columns: minmax(0, 1fr);
