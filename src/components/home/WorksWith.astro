@@ -20,8 +20,8 @@ const items = [
 ]
 ---
 
-<section class="band">
-  <div class="wrap row">
+<section class="wrap logos">
+  <div class="row" data-reveal>
     <span class="hint">Works with what you run</span>
     <ul>
       {
@@ -39,27 +39,30 @@ const items = [
 </section>
 
 <style>
-  .band {
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
+  .logos {
+    padding-top: 72px;
+    padding-bottom: 16px;
   }
 
   .row {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 40px;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding-top: 28px;
-    padding-bottom: 28px;
+    gap: 24px;
+  }
+
+  .row .hint {
+    font-size: 15px;
+    font-weight: 500;
   }
 
   ul {
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-wrap: wrap;
-    gap: 12px 40px;
+    justify-content: center;
+    align-items: center;
+    gap: 14px 36px;
+    width: 100%;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -80,5 +83,32 @@ const items = [
     height: 20px;
     width: 20px;
     flex: none;
+  }
+
+  @media (min-width: 1280px) {
+    ul {
+      flex-wrap: nowrap;
+      justify-content: space-between;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .logos {
+      padding-top: 48px;
+      padding-bottom: 8px;
+    }
+
+    ul {
+      gap: 12px 24px;
+    }
+
+    li {
+      font-size: 15px;
+    }
+
+    svg {
+      height: 18px;
+      width: 18px;
+    }
   }
 </style>
