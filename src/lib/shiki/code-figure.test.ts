@@ -37,4 +37,10 @@ describe("codeFigure", () => {
     expect(pre.properties["data-nb-lang"]).toBe("text")
     expect((figure as { properties: Record<string, string> }).properties["data-nb-lang"]).toBe("text")
   })
+
+  test.each(["plaintext", "plain", "txt"])("labels the %s alias as text", (alias) => {
+    const { pre, figure } = run(alias)
+    expect(pre.properties["data-nb-lang"]).toBe("text")
+    expect((figure as { properties: Record<string, string> }).properties["data-nb-lang"]).toBe("text")
+  })
 })
