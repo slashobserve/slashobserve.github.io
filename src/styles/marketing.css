@@ -8,7 +8,7 @@ body{margin:0}
 :where(.site) :focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:4px}
 .mono{font-family:var(--font-mono)}
 .wrap{max-width:1160px;margin:0 auto;padding-left:24px;padding-right:24px;box-sizing:border-box}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 18px;border:1px solid var(--border);border-radius:8px;background:var(--surface);font-size:14px;font-weight:500;text-decoration:none;color:var(--fg);white-space:nowrap}
+.btn{display:inline-block;align-content:center;text-align:center;text-box:trim-both cap alphabetic;min-height:44px;padding:0 18px;border:1px solid var(--border);border-radius:8px;background:var(--surface);font-size:14px;font-weight:500;text-decoration:none;color:var(--fg);white-space:nowrap}
 .btn-primary{border-color:var(--primary);background:var(--primary);color:var(--pfg)}
 .btn-primary:hover{color:var(--pfg);opacity:.9}
 .card{border:1px solid var(--border);border-radius:12px;background:var(--surface);box-shadow:var(--shadow-card)}
