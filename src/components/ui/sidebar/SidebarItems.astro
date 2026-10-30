@@ -1,0 +1,46 @@
+---
+import type { DocsItem } from "@/lib/docs-sidebar"
+import SidebarLink from "./SidebarLink.astro"
+
+interface Props {
+  items: DocsItem[]
+  labelledby?: string
+}
+
+const { items, labelledby } = Astro.props
+---
+
+<ul aria-labelledby={labelledby}>
+  {
+    items.map((item) =>
+      "items" in item ? (
+        <li>
+          <details class="subgroup" open={item.containsCurrent}>
+            <summary class:list={["subgroup-summary", { current: item.containsCurrent }]}>
+              <span>{item.label}</span>
+              <svg
+                class="chevron"
+                viewBox="0 0 12 12"
+                width="12"
+                height="12"
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M4.5 3 7.5 6 4.5 9" />
+              </svg>
+            </summary>
+            <Astro.self items={item.items} />
+          </details>
+        </li>
+      ) : (
+        <li>
+          <SidebarLink label={item.label} href={item.href} isCurrent={item.isCurrent} />
+        </li>
+      ),
+    )
+  }
+</ul>

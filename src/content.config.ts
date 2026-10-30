@@ -9,6 +9,9 @@ export const collections = {
       title: z.string(),
       description: z.string(),
       lastUpdated: z.coerce.date().optional(),
+      navLabel: z.string().optional(),
+      order: z.number().int().optional(),
+      generatedFrom: z.string().optional(),
     }),
   }),
 }
