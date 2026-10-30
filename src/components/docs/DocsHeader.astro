@@ -86,7 +86,7 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
 
   .brand {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     flex: none;
   }
 
@@ -103,6 +103,7 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
   }
 
   .divider {
+    align-self: center;
     width: 1px;
     height: 20px;
     margin-inline: 12px;
@@ -111,6 +112,7 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
 
   .docs-link {
     font-size: 15px;
+    line-height: 1;
     font-weight: 500;
     color: var(--fg);
   }
