@@ -29,16 +29,18 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
   ) : (
     <div class="header-bar" data-site-bar>
       <header class="wrap full" data-site-header>
-        <a class="home" href="/" aria-label="SlashObserve home">
-          <Wordmark size={21} />
-        </a>
-        <nav aria-label="Main" class="main-nav hide-sm">
-          {navItems.map((item) => (
-            <a class="navlink" href={item.href} aria-current={currentFor(item.href)}>
-              {item.label}
-            </a>
-          ))}
-        </nav>
+        <div class="brand-row">
+          <a class="home" href="/" aria-label="SlashObserve home">
+            <Wordmark size={21} />
+          </a>
+          <nav aria-label="Main" class="main-nav hide-sm">
+            {navItems.map((item) => (
+              <a class="navlink" href={item.href} aria-current={currentFor(item.href)}>
+                {item.label}
+              </a>
+            ))}
+          </nav>
+        </div>
         <div class="actions">
           <a class="navlink github hide-sm" href={GITHUB_URL}>
             <GitHubIcon />GitHub
@@ -136,6 +138,11 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
     gap: 12px;
   }
 
+  .brand-row {
+    display: flex;
+    align-items: baseline;
+  }
+
   .home {
     text-decoration: none;
     color: var(--fg);
@@ -175,7 +182,8 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
   }
 
   .get-started {
-    min-height: 38px;
+    box-sizing: border-box;
+    min-height: 36px;
     padding: 0 14px;
   }
 
