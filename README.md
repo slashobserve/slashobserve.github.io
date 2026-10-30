@@ -43,7 +43,7 @@ bun run check:links
 - `src/components/`: Astro and React components, grouped by page.
 - `src/layouts/`: base, marketing and docs layouts.
 - `src/styles/`: global, marketing, docs and prose styles, with the colour tokens in `tokens.css`.
-- `scripts/prebuild.ts` and `scripts/sync/`: copy core's docs and schema into the site and build the importer corpus summary.
+- `scripts/prebuild.ts` and `scripts/sync/`: copy core's docs and schema into the site and build the importer corpus and option coverage summaries.
 - `scripts/check-links.ts` and `scripts/links/`: the link check.
 - `core-ref.txt`: the core ref that CI builds from.
 

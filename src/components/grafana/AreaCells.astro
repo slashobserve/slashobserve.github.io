@@ -1,0 +1,38 @@
+---
+import { formatCount, percentDown } from "../../lib/numbers"
+import SplitBar from "./SplitBar.astro"
+
+interface Props {
+  options: number
+  converts: number
+  gaps: number
+}
+
+const { options, converts, gaps } = Astro.props
+const cells = [
+  ["Options", options],
+  ["Imports", converts],
+  ["Gaps", gaps],
+] as const
+---
+
+<span class="cv-nums">
+  {
+    cells.map(([label, value]) => (
+      <span class="cv-num">
+        <span class="cv-lbl">{label}</span>
+        <span class="cv-val">{formatCount(value)}</span>
+      </span>
+    ))
+  }
+</span>
+<span class="cv-cov">
+  <span class="sr-only">Coverage</span>
+  <SplitBar
+    segments={[
+      { count: converts, tone: "ink" },
+      { count: gaps, tone: "line" },
+    ]}
+  />
+  <span class="cv-pct">{percentDown(converts, options)}%</span>
+</span>

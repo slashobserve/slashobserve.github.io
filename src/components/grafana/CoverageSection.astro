@@ -1,0 +1,120 @@
+---
+import "./coverage.css"
+import type { CoverageSummary } from "../../lib/import-coverage"
+import type { CorpusRow } from "../../lib/import-corpus"
+import { formatCount, percentDown } from "../../lib/numbers"
+import CoverageAreas from "./CoverageAreas.astro"
+import CoverageCorpus from "./CoverageCorpus.astro"
+
+interface Props {
+  coverage: CoverageSummary
+  rows: CorpusRow[]
+  total: CorpusRow | null
+}
+
+const { coverage, rows, total } = Astro.props
+const { totals } = coverage
+const optionsLine = `${formatCount(totals.converts)} of ${formatCount(totals.options)} options across ${formatCount(totals.areas)} areas. ${formatCount(totals.gaps)} known gaps.`
+const excludedLine = `${formatCount(totals.excluded)} options for features left out on purpose are not counted.`
+const panelsLine =
+  total === null
+    ? ""
+    : `${formatCount(total.imported)} of ${formatCount(total.panels)} panels in ${formatCount(total.dashboards - total.rejected)} public dashboards.`
+---
+
+<section id="coverage" class="band-muted">
+  <div class="wrap section-y coverage">
+    <div class="split-head" data-reveal>
+      <h2 class="h2">Grafana feature coverage</h2>
+      <p>
+        Every option in {coverage.version} is catalogued and checked against the importer on every
+        change, and so is a corpus of public dashboards. These numbers come from that run.
+      </p>
+    </div>
+    <div class="figures" data-reveal>
+      <div class="figure">
+        <p class="figure-num">{percentDown(totals.converts, totals.options)}%</p>
+        <p class="figure-label">of Grafana options import</p>
+        <p class="hint figure-sub">{optionsLine}</p>
+        {totals.excluded > 0 && <p class="hint figure-sub">{excludedLine}</p>}
+      </div>
+      {
+        total && (
+          <div class="figure">
+            <p class="figure-num">{percentDown(total.imported, total.panels)}%</p>
+            <p class="figure-label">of panels in public dashboards import fully</p>
+            <p class="hint figure-sub">{panelsLine}</p>
+          </div>
+        )
+      }
+    </div>
+    <CoverageAreas groups={coverage.groups} />
+    {total && <CoverageCorpus rows={rows} total={total} />}
+  </div>
+</section>
+
+<style>
+  .coverage {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    scroll-margin-top: 24px;
+  }
+
+  .figures {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .figure {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 32px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+  }
+
+  .figure p {
+    margin: 0;
+  }
+
+  .figure-num {
+    font-size: 64px;
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .figure-label {
+    margin-top: 8px;
+    font-size: 17px;
+    font-weight: 500;
+  }
+
+  .figure-sub {
+    margin-top: 4px;
+  }
+
+  @media (max-width: 860px) {
+    .coverage {
+      gap: 40px;
+    }
+
+    .figures {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .figure {
+      padding: 24px;
+    }
+
+    .figure-num {
+      font-size: 48px;
+    }
+  }
+</style>

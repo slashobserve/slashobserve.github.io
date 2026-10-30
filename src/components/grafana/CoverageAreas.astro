@@ -1,0 +1,70 @@
+---
+import type { CoverageGroup } from "../../lib/import-coverage"
+import { isExpandable } from "../../lib/disclosure"
+import { formatCount } from "../../lib/numbers"
+import AreaCells from "./AreaCells.astro"
+import BarLegend from "./BarLegend.astro"
+import Chevron from "./Chevron.astro"
+
+interface Props {
+  groups: CoverageGroup[]
+}
+
+const { groups } = Astro.props
+---
+
+<section class="cv-block" aria-labelledby="cv-areas-title" data-reveal>
+  <div class="cv-block-head">
+    <h3 id="cv-areas-title" class="cv-h3">By feature area</h3>
+    <BarLegend
+      items={[
+        { label: "Imports", tone: "ink" },
+        { label: "Gap", tone: "line" },
+      ]}
+    />
+  </div>
+  <div class="table-frame cv-table cv-areas">
+    <div class="cv-row cv-head" aria-hidden="true">
+      <span>Area</span>
+      <span class="cv-nums">
+        <span class="cv-num">Options</span>
+        <span class="cv-num">Imports</span>
+        <span class="cv-num">Gaps</span>
+      </span>
+      <span>Coverage</span>
+    </div>
+    {
+      groups.map((group) => {
+        const expandable = isExpandable(group.areas.length)
+        const Group = expandable ? "details" : "div"
+        const Head = expandable ? "summary" : "div"
+        return (
+          <Group class="cv-group">
+            <Head class:list={["cv-row", { "cv-sum": expandable }]}>
+              <span class="cv-name">
+                {expandable ? <Chevron /> : <span class="cv-chev-gap" aria-hidden="true" />}
+                <span>
+                  {group.label}
+                  <span class="hint">
+                    , {formatCount(group.areas.length)} {group.areas.length === 1 ? "area" : "areas"}
+                  </span>
+                </span>
+              </span>
+              <AreaCells options={group.options} converts={group.converts} gaps={group.gaps} />
+            </Head>
+            {expandable && (
+              <ul class="cv-list" role="list">
+                {group.areas.map((area) => (
+                  <li class="cv-row cv-child">
+                    <span class="cv-name">{area.label}</span>
+                    <AreaCells options={area.options} converts={area.converts} gaps={area.gaps} />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Group>
+        )
+      })
+    }
+  </div>
+</section>

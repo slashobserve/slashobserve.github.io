@@ -1,0 +1,39 @@
+---
+import { formatCount } from "../../lib/numbers"
+import SplitBar from "./SplitBar.astro"
+
+interface Props {
+  panels: number
+  imported: number
+  partial: number
+  placeholders: number
+}
+
+const { panels, imported, partial, placeholders } = Astro.props
+const cells = [
+  ["Panels", panels],
+  ["Imported", imported],
+  ["Partial", partial],
+  ["Placeholders", placeholders],
+] as const
+---
+
+<span class="cv-nums">
+  {
+    cells.map(([label, value]) => (
+      <span class="cv-num">
+        <span class="cv-lbl">{label}</span>
+        <span class="cv-val">{formatCount(value)}</span>
+      </span>
+    ))
+  }
+</span>
+<span class="cv-split">
+  <SplitBar
+    segments={[
+      { count: imported, tone: "ink" },
+      { count: partial, tone: "mid" },
+      { count: placeholders, tone: "line" },
+    ]}
+  />
+</span>

@@ -1,0 +1,98 @@
+---
+import type { CorpusRow } from "../../lib/import-corpus"
+import { isExpandable } from "../../lib/disclosure"
+import { formatCount } from "../../lib/numbers"
+import BarLegend from "./BarLegend.astro"
+import Chevron from "./Chevron.astro"
+import CorpusCells from "./CorpusCells.astro"
+
+interface Props {
+  rows: CorpusRow[]
+  total: CorpusRow
+}
+
+const { rows, total } = Astro.props
+---
+
+<section class="cv-block" aria-labelledby="cv-corpus-title" data-reveal>
+  <div class="cv-block-head">
+    <h3 id="cv-corpus-title" class="cv-h3">Public dashboards</h3>
+    <BarLegend
+      items={[
+        { label: "Imported", tone: "ink" },
+        { label: "Partial", tone: "mid" },
+        { label: "Placeholder", tone: "line" },
+      ]}
+    />
+  </div>
+  <div class="table-frame cv-table cv-corpus">
+    <div class="cv-row cv-head" aria-hidden="true">
+      <span>Dashboard</span>
+      <span>Source</span>
+      <span class="cv-nums">
+        <span class="cv-num">Panels</span>
+        <span class="cv-num">Imported</span>
+        <span class="cv-num">Partial</span>
+        <span class="cv-num">Placeholders</span>
+      </span>
+      <span>Split</span>
+    </div>
+    {
+      [...rows, total].map((row, index) => {
+        const isTotal = index === rows.length
+        const expandable = isTotal || isExpandable(row.listed.length)
+        const Group = expandable ? "details" : "div"
+        const Head = expandable ? "summary" : "div"
+        return (
+          <Group class:list={["cv-group", { "cv-total": isTotal }]}>
+            <Head class:list={["cv-row", { "cv-sum": expandable }]}>
+              <span class="cv-name">
+                {expandable ? <Chevron /> : <span class="cv-chev-gap" aria-hidden="true" />}
+                <span>
+                  {row.label}
+                  {!isTotal && row.dashboards > 1 && (
+                    <span class="hint">, {formatCount(row.dashboards)} dashboards</span>
+                  )}
+                </span>
+              </span>
+              <span class="cv-source hint">{row.source}</span>
+              <CorpusCells
+                panels={row.panels}
+                imported={row.imported}
+                partial={row.partial}
+                placeholders={row.placeholders}
+              />
+            </Head>
+            {expandable && (
+              <ul class="cv-list" role="list">
+                {row.listed.map((dashboard) => (
+                  <li class="cv-row cv-child">
+                    <span class="cv-name">{dashboard.title}</span>
+                    <span class="cv-source hint">{dashboard.source}</span>
+                    <CorpusCells
+                      panels={dashboard.panels}
+                      imported={dashboard.imported}
+                      partial={dashboard.partial}
+                      placeholders={dashboard.placeholders}
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Group>
+        )
+      })
+    }
+  </div>
+  <p class="hint cv-note">
+    Imported: everything came across. Partial: the panel imports, and the import report lists what
+    did not. Placeholder: the panel is kept in place with the reason it could not be imported.
+  </p>
+  {
+    total.rejected > 0 && (
+      <p class="hint cv-note">
+        {total.rejected} corpus files were rejected as invalid input and are not counted.
+      </p>
+    )
+  }
+</section>

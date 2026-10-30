@@ -1,0 +1,13 @@
+---
+import type { BarTone } from "./bar-tone"
+
+interface Props {
+  segments: { count: number; tone: BarTone }[]
+}
+
+const shown = Astro.props.segments.filter((segment) => segment.count > 0)
+---
+
+<span class="cv-bar" aria-hidden="true">
+  {shown.map((segment) => <span class={`cv-seg cv-${segment.tone}`} style={`flex-grow:${segment.count}`} />)}
+</span>

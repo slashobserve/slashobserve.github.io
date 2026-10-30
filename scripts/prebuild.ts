@@ -5,13 +5,16 @@ import type { CorpusEntry } from "../src/lib/import-corpus"
 import { assertSiteSafe } from "./reference/markdown"
 import { apiPages } from "./reference/openapi"
 import { observespecPages, type Example } from "./reference/observespec"
+import { summarizeConformance, type AreaInput } from "./sync/conformance"
 import { summarizeGolden } from "./sync/corpus"
 import { transformPage } from "./sync/markdown"
 import {
   API_DIR,
   API_SOURCE,
+  CONFORMANCE_SOURCE,
   CORPUS_GOLDEN_SOURCE,
   CORPUS_OUT,
+  COVERAGE_OUT,
   DOCS_OUT,
   OBSERVESPEC_DIR,
   SCHEMA_OUT,
@@ -34,6 +37,7 @@ function requireCore(core: string): void {
     SCHEMA_SOURCE,
     SPEC_EXAMPLES_SOURCE,
     CORPUS_GOLDEN_SOURCE,
+    CONFORMANCE_SOURCE,
     `${API_SOURCE}/openapi.yaml`,
   ].filter((entry) => !existsSync(path.join(core, entry)))
   if (missing.length === 0) return
@@ -77,6 +81,26 @@ async function summarizeGoldens(goldenDir: string): Promise<CorpusEntry[]> {
     rels.map(async (rel) =>
       summarizeGolden(rel, JSON.parse(await readFile(path.join(goldenDir, rel), "utf8"))),
     ),
+  )
+}
+
+async function readConformance(conformanceDir: string): Promise<AreaInput[]> {
+  const areas = (await readdir(conformanceDir, { withFileTypes: true }))
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+  return Promise.all(
+    areas.map(async (area) => {
+      const areaDir = path.join(conformanceDir, area)
+      const catalogFile = path.join(areaDir, "catalog.json")
+      if (!existsSync(catalogFile)) throw new Error(`${area}: catalog.json missing in ${areaDir}`)
+      const gapsDir = path.join(areaDir, "gaps")
+      const gapFiles = existsSync(gapsDir)
+        ? (await readdir(gapsDir, { withFileTypes: true }))
+            .filter((entry) => entry.isFile())
+            .map((entry) => entry.name)
+        : []
+      return { area, catalog: JSON.parse(await readFile(catalogFile, "utf8")), gapFiles }
+    }),
   )
 }
 
@@ -168,6 +192,9 @@ async function prebuild(): Promise<string> {
   const dated = pages.filter((rel) => dates.has(rel)).length
 
   const corpus = await summarizeGoldens(path.join(core, CORPUS_GOLDEN_SOURCE))
+  const conformance = summarizeConformance(
+    await readConformance(path.join(core, CONFORMANCE_SOURCE)),
+  )
   const commit = coreCommit(core)
   const reference = observespecPages(
     schema,
@@ -201,7 +228,9 @@ async function prebuild(): Promise<string> {
   await mkdir(path.dirname(CORPUS_OUT), { recursive: true })
   await writeFile(CORPUS_OUT, JSON.stringify({ core: commit, entries: corpus }, null, 2) + "\n")
 
-  return `Prebuild: ${plural(pages.length, "page")} (${plural(dated, "dated page")}), ${plural(assets.length, "asset")}, ${plural(reference.length, "ObserveSpec reference page")}, ${plural(api.length, "HTTP API reference page")}, the ObserveSpec schema and ${plural(corpus.length, "corpus file")} from ${core} (${commit})`
+  await writeFile(COVERAGE_OUT, JSON.stringify({ core: commit, ...conformance }, null, 2) + "\n")
+
+  return `Prebuild: ${plural(pages.length, "page")} (${plural(dated, "dated page")}), ${plural(assets.length, "asset")}, ${plural(reference.length, "ObserveSpec reference page")}, ${plural(api.length, "HTTP API reference page")}, the ObserveSpec schema, ${plural(corpus.length, "corpus file")} and ${plural(conformance.areas.length, "conformance area")} from ${core} (${commit})`
 }
 
 try {

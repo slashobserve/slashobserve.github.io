@@ -1,0 +1,20 @@
+---
+import type { BarTone } from "./bar-tone"
+
+interface Props {
+  items: { label: string; tone: BarTone }[]
+}
+
+const { items } = Astro.props
+---
+
+<ul class="cv-legend" role="list">
+  {
+    items.map((item) => (
+      <li>
+        <span class={`cv-swatch cv-${item.tone}`} aria-hidden="true" />
+        {item.label}
+      </li>
+    ))
+  }
+</ul>

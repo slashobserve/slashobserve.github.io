@@ -12,17 +12,25 @@ export type CorpusEntry =
   | ({ source: string; file: string; title: string } & CorpusCounts)
   | { source: string; file: string; inputError: string }
 
+export type CorpusDashboard = {
+  title: string
+  source: string
+  file: string
+} & CorpusCounts
+
 export type CorpusRow = {
   label: string
   source: string
   dashboards: number
   rejected: number
+  listed: CorpusDashboard[]
 } & CorpusCounts
 
 type EntryKey = { source: string; file: string }
 
 export const CORPUS_PATH = "src/generated/import-corpus.json"
 export const OWN_SOURCE = "slashobserve"
+export const OTHER_ROW_LABEL = "Other public dashboards"
 
 export const CORPUS_ROWS: readonly {
   label: string
@@ -57,6 +65,7 @@ function sumRow(label: string, source: string, entries: readonly CorpusEntry[]):
     source,
     dashboards: entries.length,
     rejected: 0,
+    listed: [],
     panels: 0,
     imported: 0,
     partial: 0,
@@ -67,26 +76,42 @@ function sumRow(label: string, source: string, entries: readonly CorpusEntry[]):
       row.rejected += 1
       continue
     }
+    row.listed.push({
+      title: entry.title,
+      source: entry.source,
+      file: entry.file,
+      panels: entry.panels,
+      imported: entry.imported,
+      partial: entry.partial,
+      placeholders: entry.placeholders,
+    })
     row.panels += entry.panels
     row.imported += entry.imported
     row.partial += entry.partial
     row.placeholders += entry.placeholders
   }
+  row.listed.sort((a, b) => a.title.localeCompare(b.title) || a.file.localeCompare(b.file))
   return row
+}
+
+function sourceOf(entries: readonly CorpusEntry[]): string {
+  const sources = new Set(entries.map((entry) => entry.source))
+  return sources.size === 1 ? [...sources][0] : `${sources.size} sources`
 }
 
 export function corpusTable(entries: readonly CorpusEntry[]): {
   rows: CorpusRow[]
   total: CorpusRow | null
 } {
-  const rows = CORPUS_ROWS.map((row) =>
-    sumRow(
-      row.label,
-      row.source,
-      entries.filter((entry) => row.includes(entry)),
-    ),
-  ).filter((row) => row.dashboards > 0)
   const publicEntries = entries.filter((entry) => entry.source !== OWN_SOURCE)
+  const claimed = new Set<CorpusEntry>()
+  const rows = CORPUS_ROWS.map((row) => {
+    const mine = publicEntries.filter((entry) => !claimed.has(entry) && row.includes(entry))
+    mine.forEach((entry) => claimed.add(entry))
+    return sumRow(row.label, row.source, mine)
+  }).filter((row) => row.dashboards > 0)
+  const rest = publicEntries.filter((entry) => !claimed.has(entry))
+  if (rest.length > 0) rows.push(sumRow(OTHER_ROW_LABEL, sourceOf(rest), rest))
   const total =
     publicEntries.length === 0
       ? null
