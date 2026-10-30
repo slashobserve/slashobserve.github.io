@@ -1,4 +1,5 @@
 import type { DocLinks } from "./doc-links"
+import { DOCS_HOME_PATH } from "./docs-home"
 
 export type NavItem = { label: string; href: string }
 
@@ -11,8 +12,12 @@ export const PRODUCT_LINKS: NavItem[] = [
   { label: "Coming from Grafana", href: GRAFANA_PATH },
 ]
 
-export function docsEntryHref(links: DocLinks): string | null {
+export function getStartedHref(links: DocLinks): string | null {
   return links.quickStart ?? links.selfHost
+}
+
+export function docsHomeHref(links: DocLinks): string | null {
+  return getStartedHref(links) === null ? null : DOCS_HOME_PATH
 }
 
 function navItems(entries: [label: string, href: string | null][]): NavItem[] {
@@ -27,7 +32,7 @@ export function headerNav(links: DocLinks): NavItem[] {
   return [
     ...PRODUCT_LINKS,
     ...navItems([
-      ["Docs", docsEntryHref(links)],
+      ["Docs", docsHomeHref(links)],
       ["Self-host", links.selfHost],
     ]),
   ]
@@ -42,6 +47,7 @@ export function footerColumns(links: DocLinks): { title: string; items: NavItem[
     {
       title: "Docs",
       items: navItems([
+        ["Overview", docsHomeHref(links)],
         ["Quick start", links.quickStart],
         ["Install", links.install],
         ["Reference", links.reference],

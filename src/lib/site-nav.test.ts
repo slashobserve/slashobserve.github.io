@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import { resolveDocLinks } from "./doc-links"
-import { PRODUCT_LINKS, footerColumns, headerNav, isCurrentPage } from "./site-nav"
+import { PRODUCT_LINKS, docsHomeHref, footerColumns, getStartedHref, headerNav, isCurrentPage } from "./site-nav"
 
 const withoutReference = new Set(["docs/get-started/quick-start", "docs/get-started/install"])
 const withReference = new Set([...withoutReference, "docs/reference/configuration"])
@@ -19,20 +19,38 @@ describe("headerNav", () => {
     expect(headerNav(resolveDocLinks(withReference))).toEqual([
       features,
       grafana,
-      { label: "Docs", href: "/docs/get-started/quick-start/" },
+      { label: "Docs", href: "/docs/" },
       { label: "Self-host", href: "/docs/get-started/install/" },
     ])
   })
 
-  test("points Docs at the install page when there is no quick start", () => {
-    expect(headerNav(resolveDocLinks(new Set(["docs/get-started/install"])))[2]).toEqual({
-      label: "Docs",
-      href: "/docs/get-started/install/",
-    })
-  })
-
   test("keeps only Features and Coming from Grafana when no docs exist", () => {
     expect(headerNav(resolveDocLinks(new Set()))).toEqual([features, grafana])
+  })
+})
+
+describe("getStartedHref", () => {
+  test("points at the quick start", () => {
+    expect(getStartedHref(resolveDocLinks(withReference))).toBe("/docs/get-started/quick-start/")
+  })
+
+  test("points at the install page when there is no quick start", () => {
+    expect(getStartedHref(resolveDocLinks(new Set(["docs/get-started/install"])))).toBe("/docs/get-started/install/")
+  })
+
+  test("is null when there is neither", () => {
+    expect(getStartedHref(resolveDocLinks(new Set()))).toBeNull()
+  })
+})
+
+describe("docsHomeHref", () => {
+  test("points at the docs overview when docs exist", () => {
+    expect(docsHomeHref(resolveDocLinks(withReference))).toBe("/docs/")
+    expect(docsHomeHref(resolveDocLinks(new Set(["docs/get-started/install"])))).toBe("/docs/")
+  })
+
+  test("is null when no docs exist", () => {
+    expect(docsHomeHref(resolveDocLinks(new Set()))).toBeNull()
   })
 })
 
@@ -45,12 +63,12 @@ describe("footerColumns", () => {
   test("omits Reference while it does not exist", () => {
     const columns = footerColumns(resolveDocLinks(withoutReference))
     expect(columns.map((column) => column.title)).toEqual(["Product", "Docs", "Project"])
-    expect(columns[1].items.map((item) => item.label)).toEqual(["Quick start", "Install"])
+    expect(columns[1].items.map((item) => item.label)).toEqual(["Overview", "Quick start", "Install"])
   })
 
   test("includes Reference once it exists", () => {
     const docs = footerColumns(resolveDocLinks(withReference)).find((column) => column.title === "Docs")
-    expect(docs?.items.map((item) => item.label)).toEqual(["Quick start", "Install", "Reference"])
+    expect(docs?.items.map((item) => item.label)).toEqual(["Overview", "Quick start", "Install", "Reference"])
   })
 
   test("keeps the product pages and the project column when no docs exist", () => {
