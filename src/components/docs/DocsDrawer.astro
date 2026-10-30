@@ -177,6 +177,7 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
     const controller = new AbortController()
     const { signal } = controller
     let closeTimer: ReturnType<typeof setTimeout> | undefined
+    let isOpen = false
 
     const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches
 
@@ -201,6 +202,22 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
       if (tree && rail && tree.parentElement !== rail) rail.prepend(tree)
     }
 
+    const finishClose = () => {
+      if (!isOpen) return
+      isOpen = false
+      clearTimer()
+      dialog.dataset.state = "closed"
+      moveTreeToRail()
+      unlockScroll()
+      trigger.setAttribute("aria-expanded", "false")
+      trigger.focus()
+    }
+
+    const openObserver = new MutationObserver(() => {
+      if (!dialog.open) finishClose()
+    })
+    openObserver.observe(dialog, { attributes: true, attributeFilter: ["open"] })
+
     const openSidebar = () => {
       clearTimer()
       if (dialog.open) {
@@ -210,6 +227,7 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
 
       moveTreeToDrawer()
       dialog.showModal()
+      isOpen = true
       dialog.dataset.state = "closed"
       lockScroll()
       trigger.setAttribute("aria-expanded", "true")
@@ -248,14 +266,11 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
     )
 
     dialog.addEventListener(
-      "close",
-      () => {
-        clearTimer()
-        dialog.dataset.state = "closed"
-        moveTreeToRail()
-        unlockScroll()
-        trigger.setAttribute("aria-expanded", "false")
-        trigger.focus()
+      "keydown",
+      (event) => {
+        if (event.key !== "Escape" || event.isComposing) return
+        event.preventDefault()
+        closeSidebar()
       },
       { signal },
     )
@@ -284,10 +299,12 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
 
     return () => {
       controller.abort()
+      openObserver.disconnect()
       clearTimer()
       moveTreeToRail()
       trigger.setAttribute("aria-expanded", "false")
-      if (dialog.open) unlockScroll()
+      if (isOpen) unlockScroll()
+      isOpen = false
     }
   })
 </script>
