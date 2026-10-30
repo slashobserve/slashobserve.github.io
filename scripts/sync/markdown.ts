@@ -3,6 +3,7 @@ import { CORE_EDIT_BRANCH, CORE_REPO_URL, routeFor } from "./paths"
 
 type Split = { front: string[] | null; rest: string[] }
 
+const SITE_OWNED_KEYS = ["navLabel", "order", "generatedFrom"]
 const FENCE = /^ {0,3}(`{3,}|~{3,})(.*)$/
 const SCHEME = /^[a-z][a-z0-9+.-]*:/i
 const CODE_SPAN = /(?<!`)(`+)(?!`)[\s\S]*?(?<!`)\1(?!`)/g
@@ -98,6 +99,10 @@ export function transformPage(source: string, rel: string, updated: string | nul
   const hasField = (name: string) => block.some((line) => line.startsWith(`${name}:`))
   if (!hasField("title") || !hasField("description")) {
     throw new Error(`${rel}: front matter must set title and description`)
+  }
+  const owned = SITE_OWNED_KEYS.find((key) => hasField(key))
+  if (owned !== undefined) {
+    throw new Error(`${rel}: front matter must not set ${owned}; the site owns navigation`)
   }
   const mask = fenceMask(rest)
   if (rest.some((line, i) => !mask[i] && /^# /.test(line))) {
