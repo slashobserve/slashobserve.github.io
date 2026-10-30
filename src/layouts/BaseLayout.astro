@@ -1,0 +1,92 @@
+---
+import "@fontsource-variable/geist";
+import "@fontsource-variable/geist-mono";
+import geistLatin from "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url";
+import "../styles/globals.css";
+import "../styles/prose.css";
+import { ClientRouter } from "astro:transitions";
+import AgentDirective from "@/components/AgentDirective.astro";
+import { SearchDialog } from "@/components/ui/search";
+import ThemeScript from "../components/site/ThemeScript.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  markdownUrl: string;
+  lastUpdated?: Date;
+}
+
+const SITE_NAME = "SlashObserve";
+
+const { title, description, markdownUrl, lastUpdated } = Astro.props;
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+const fullTitle = `${title} | ${SITE_NAME}`;
+const mdUrl = new URL(markdownUrl, Astro.site).href;
+const llmsUrl = new URL("/llms.txt", Astro.site).href;
+const modified = lastUpdated?.toISOString();
+const structuredData = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: fullTitle,
+  description,
+  url: pageUrl,
+  inLanguage: "en",
+  isPartOf: { "@type": "WebSite", name: SITE_NAME, url: new URL("/", Astro.site).href },
+  ...(modified ? { dateModified: modified } : {}),
+}).replaceAll("<", "\\u003c");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" href={geistLatin} as="font" type="font/woff2" crossorigin />
+
+    <ThemeScript />
+
+    <title>{fullTitle}</title>
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={pageUrl} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="text/markdown" href={mdUrl} />
+    <link rel="alternate" type="text/plain" href={llmsUrl} title="LLM index" />
+
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content="en" />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={pageUrl} />
+    {modified && <meta property="article:modified_time" content={modified} />}
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+
+    <script type="application/ld+json" set:html={structuredData} />
+
+    <ClientRouter />
+  </head>
+  <body class="min-h-screen bg-background text-foreground antialiased">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:start-2 focus:top-2 focus:z-100 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground focus:no-underline focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
+    >
+      Skip to content
+    </a>
+    <AgentDirective markdownUrl={mdUrl} llmsUrl={llmsUrl} />
+    <slot />
+    <SearchDialog />
+
+    <script>
+      import { codeCopy } from "@/lib/client/code-copy";
+      import { headingAnchors } from "@/lib/client/heading-anchors";
+      codeCopy();
+      headingAnchors();
+    </script>
+  </body>
+</html>

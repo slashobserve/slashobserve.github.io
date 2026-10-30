@@ -1,0 +1,89 @@
+---
+import { inlineCodeSegments } from "@/lib/inline-code"
+
+interface Props {
+  section: string | null
+  title: string
+  description?: string
+}
+
+const { section, title, description } = Astro.props
+const lead = description ? inlineCodeSegments(description) : []
+---
+
+<div class="docs-intro">
+  {
+    section && (
+      <p class="eyebrow" data-pagefind-meta="section">
+        {section}
+      </p>
+    )
+  }
+  <h1>{title}</h1>
+  {
+    lead.length > 0 && (
+      <p class="lead">
+        {lead.map((segment) => (segment.code ? <code>{segment.text}</code> : segment.text))}
+      </p>
+    )
+  }
+</div>
+
+<style is:global>
+  .docs-intro {
+    padding-top: 24px;
+    padding-bottom: 40px;
+  }
+
+  .docs-intro .eyebrow {
+    margin: 0 0 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brand-text);
+  }
+
+  .docs-intro h1 {
+    margin: 0;
+    font-size: 30px;
+    line-height: 38px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: var(--fg);
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+  }
+
+  .docs-intro .lead {
+    max-width: 40rem;
+    margin: 12px 0 0;
+    font-size: 18px;
+    line-height: 28px;
+    color: var(--mfg);
+    text-wrap: pretty;
+  }
+
+  .docs-intro .lead code {
+    padding: 0.2em 0.4em;
+    border-radius: 5px;
+    background: color-mix(in oklab, var(--fg) 6%, transparent);
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    color: var(--fg);
+  }
+
+  @media (min-width: 48rem) {
+    .docs-intro h1 {
+      font-size: 36px;
+      line-height: 44px;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .docs-intro {
+      padding-top: 40px;
+    }
+  }
+</style>

@@ -1,90 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { rewriteLinks, transformPage, withFrontMatter } from "./markdown"
-
-const SELF_HOSTING_START = `# Self-hosting SlashObserve
-
-This guide covers running the Community Edition yourself.
-
-## What you run
-`
-
-const EDIT_URL = (rel: string) =>
-  `editUrl: "https://github.com/slashobserve/slashobserve/edit/main/docs/${rel}"`
-
-describe("withFrontMatter", () => {
-  test("derives the title from the first heading and removes it", () => {
-    const page = withFrontMatter(SELF_HOSTING_START, "self-hosting.md")
-    expect(page.title).toBe("Self-hosting SlashObserve")
-    expect(page.body).toBe(
-      [
-        "---",
-        'title: "Self-hosting SlashObserve"',
-        EDIT_URL("self-hosting.md"),
-        "---",
-        "This guide covers running the Community Edition yourself.",
-        "",
-        "## What you run",
-        "",
-      ].join("\n"),
-    )
-  })
-
-  test("keeps existing front matter and adds editUrl once", () => {
-    const source = '---\ntitle: "Prometheus"\ndescription: Connect it\n---\n\n# Body heading\n'
-    const page = withFrontMatter(source, "connect/prometheus.md")
-    expect(page.title).toBe("Prometheus")
-    expect(page.body).toBe(
-      [
-        "---",
-        EDIT_URL("connect/prometheus.md"),
-        'title: "Prometheus"',
-        "description: Connect it",
-        "---",
-        "",
-        "# Body heading",
-        "",
-      ].join("\n"),
-    )
-  })
-
-  test("strips single quotes from an existing title", () => {
-    expect(withFrontMatter("---\ntitle: 'Hello'\n---\nText\n", "a.md").title).toBe("Hello")
-  })
-
-  test("leaves a block that already has title and editUrl alone", () => {
-    const source = `---\ntitle: Plain\neditUrl: https://example.com/e\n---\nText\n`
-    expect(withFrontMatter(source, "a.md").body).toBe(source)
-  })
-
-  test("adds a missing title to existing front matter from the heading", () => {
-    const page = withFrontMatter("---\ndescription: d\n---\n# Heading\n\nText\n", "a.md")
-    expect(page.body).toBe(
-      ['---', 'title: "Heading"', EDIT_URL("a.md"), "description: d", "---", "Text", ""].join("\n"),
-    )
-  })
-
-  test("throws naming the file when there is no title anywhere", () => {
-    expect(() => withFrontMatter("Just text\n\n## Sub\n", "connect/none.md")).toThrow(
-      "connect/none.md: no title: add front matter with title or start the file with a # heading",
-    )
-  })
-
-  test("does not take a heading inside a fenced block as the title", () => {
-    const source = "```sh\n# comment\n```\n\n# Real title\n"
-    const page = withFrontMatter(source, "a.md")
-    expect(page.title).toBe("Real title")
-    expect(page.body).toContain("```sh\n# comment\n```")
-  })
-
-  test("throws when the only heading is inside a fenced block", () => {
-    expect(() => withFrontMatter("~~~\n# comment\n~~~\n", "a.md")).toThrow("a.md: no title")
-  })
-
-  test("quotes titles that need YAML escaping", () => {
-    const page = withFrontMatter('# Say "hi": now\n', "a.md")
-    expect(page.body).toContain('title: "Say \\"hi\\": now"')
-  })
-})
+import { rewriteLinks, transformPage } from "./markdown"
 
 describe("rewriteLinks", () => {
   test.each([
@@ -163,17 +78,43 @@ describe("rewriteLinks", () => {
 })
 
 describe("transformPage", () => {
-  test("adds front matter and rewrites links in one pass", () => {
-    const source = "# Quick start\n\nNext: [Prometheus](../connect/prometheus.md#tls)\n"
-    expect(transformPage(source, "get-started/quick-start.md")).toBe(
-      [
-        "---",
-        'title: "Quick start"',
-        EDIT_URL("get-started/quick-start.md"),
-        "---",
-        "Next: [Prometheus](/docs/connect/prometheus/#tls)",
-        "",
-      ].join("\n"),
+  const FRONT = '---\ntitle: "Quick start"\ndescription: Run it\n---\n'
+
+  test("rewrites links and keeps the front matter", () => {
+    const source = `${FRONT}\nNext: [Prometheus](../connect/prometheus.md#tls)\n`
+    expect(transformPage(source, "get-started/quick-start.md", null)).toBe(
+      `${FRONT}\nNext: [Prometheus](/docs/connect/prometheus/#tls)\n`,
     )
+  })
+
+  test("appends lastUpdated as the last front matter line", () => {
+    expect(transformPage(`${FRONT}\nText\n`, "a.md", "2026-10-30T04:30:00+00:00")).toBe(
+      '---\ntitle: "Quick start"\ndescription: Run it\nlastUpdated: 2026-10-30T04:30:00+00:00\n---\n\nText\n',
+    )
+  })
+
+  test("adds no lastUpdated line without a date", () => {
+    expect(transformPage(`${FRONT}\nText\n`, "a.md", null)).not.toContain("lastUpdated")
+  })
+
+  test.each([
+    ["no front matter", "Text\n"],
+    ["a missing description", "---\ntitle: T\n---\nText\n"],
+    ["a missing title", "---\ndescription: D\n---\nText\n"],
+  ])("throws naming the file for %s", (_, source) => {
+    expect(() => transformPage(source, "connect/a.md", null)).toThrow(
+      "connect/a.md: front matter must set title and description",
+    )
+  })
+
+  test("throws for a body heading", () => {
+    expect(() => transformPage(`${FRONT}\n# Again\n`, "connect/a.md", null)).toThrow(
+      "connect/a.md: remove the # heading; the title comes from front matter",
+    )
+  })
+
+  test("allows a # comment inside a fenced block", () => {
+    const source = `${FRONT}\n\`\`\`sh\n# comment\n\`\`\`\n`
+    expect(transformPage(source, "a.md", null)).toBe(source)
   })
 })

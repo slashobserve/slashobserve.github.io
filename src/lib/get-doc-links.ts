@@ -3,5 +3,5 @@ import { resolveDocLinks, type DocLinks } from "./doc-links"
 
 export async function getDocLinks(): Promise<DocLinks> {
   const entries = await getCollection("docs")
-  return resolveDocLinks(new Set(entries.map((entry) => entry.id)))
+  return resolveDocLinks(new Set(entries.map((entry) => `docs/${entry.id}`)))
 }

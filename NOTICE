@@ -3,3 +3,8 @@ Copyright 2026 The SlashObserve Authors
 
 This product is licensed under the Apache License, Version 2.0.
 See the LICENSE file for the full license text.
+
+This product includes code adapted from Cloudflare Nimbus (https://github.com/cloudflare/nimbus),
+Copyright (c) 2025 Cloudflare, Inc., licensed under the MIT License.
+
+This product includes icons from Phosphor Icons (https://phosphoricons.com), licensed under the MIT License.

@@ -1,0 +1,104 @@
+---
+import Icon from "@/components/ui/icon/Icon.astro";
+---
+
+<button
+  data-slot="search-trigger"
+  data-search-trigger
+  type="button"
+  class="docs-icon-btn search-trigger"
+  aria-keyshortcuts="Control+K /"
+>
+  <Icon name="magnifying-glass" class="search-trigger-icon" />
+  <span class="search-trigger-label">Search docs</span>
+  <kbd aria-hidden="true" dir="ltr" class="search-trigger-key"><span data-shortcut-key>Ctrl K</span></kbd>
+</button>
+
+<style>
+  .search-trigger :global(.search-trigger-icon) {
+    flex: none;
+    width: 18px;
+    height: 18px;
+  }
+
+  .search-trigger-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .search-trigger-key {
+    display: none;
+  }
+
+  @media (min-width: 64rem) {
+    .search-trigger {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      height: 36px;
+      padding: 0 6px 0 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--muted-bg);
+      font: inherit;
+      font-size: 14px;
+      color: var(--mfg);
+      cursor: pointer;
+      transition: border-color 120ms, color 120ms;
+    }
+
+    .search-trigger:hover {
+      border-color: var(--border-strong);
+      color: var(--fg);
+    }
+
+    .search-trigger :global(.search-trigger-icon) {
+      width: 16px;
+      height: 16px;
+    }
+
+    .search-trigger-label {
+      position: static;
+      flex: 1;
+      width: auto;
+      height: auto;
+      margin: 0;
+      overflow: visible;
+      clip: auto;
+      text-align: left;
+      line-height: 20px;
+    }
+
+    .search-trigger-key {
+      display: inline-flex;
+      align-items: center;
+      height: 20px;
+      padding: 0 5px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--bg);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--mfg);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .search-trigger {
+        transition: none;
+      }
+    }
+  }
+</style>
+
+<script>
+  import "./search-trigger.client";
+</script>

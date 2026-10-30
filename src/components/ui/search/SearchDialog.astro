@@ -1,0 +1,257 @@
+---
+import Icon from "@/components/ui/icon/Icon.astro";
+import { Dialog, DialogClose, DialogContent } from "@/components/ui/dialog";
+---
+
+<Dialog data-slot="search-dialog" aria-label="Search documentation" data-search-dialog>
+  <DialogContent>
+    <div class="search-input-row">
+      <Icon name="magnifying-glass" class="search-input-icon" />
+      <input
+        data-search-input
+        role="combobox"
+        aria-label="Search docs"
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        aria-autocomplete="list"
+        aria-controls="search-listbox"
+        type="text"
+        placeholder="Search docs"
+        class="search-input"
+        autocomplete="off"
+        spellcheck="false"
+        autocorrect="off"
+        autocapitalize="none"
+      />
+      <DialogClose class="search-esc search-key" aria-label="Close search">Esc</DialogClose>
+      <DialogClose class="search-cancel">Cancel</DialogClose>
+    </div>
+
+    <div class="search-body">
+      <p data-search-empty role="status" class="search-status">Search pages and headings.</p>
+      <div data-search-results role="listbox" id="search-listbox" aria-label="Results" aria-orientation="vertical" hidden></div>
+    </div>
+
+    <div class="search-footer" aria-hidden="true">
+      <span><kbd class="search-key">↑</kbd> <kbd class="search-key">↓</kbd> to navigate</span>
+      <span><kbd class="search-key">↵</kbd> to open</span>
+      <span><kbd class="search-key">Esc</kbd> to close</span>
+    </div>
+  </DialogContent>
+</Dialog>
+
+<style is:global>
+  [data-search-dialog] .search-input-row {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 12px;
+    height: 56px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  [data-search-dialog] .search-input-icon {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    color: var(--mfg);
+  }
+
+  [data-search-dialog] .search-input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--fg);
+  }
+
+  [data-search-dialog] .search-input::placeholder {
+    color: var(--mfg);
+  }
+
+  [data-search-dialog] .search-input:focus {
+    outline: none;
+  }
+
+  [data-search-dialog] .search-key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--mfg);
+  }
+
+  [data-search-dialog] .search-esc {
+    display: none;
+    cursor: pointer;
+    transition: border-color 120ms, color 120ms;
+  }
+
+  [data-search-dialog] .search-esc:hover {
+    border-color: var(--border-strong);
+    color: var(--fg);
+  }
+
+  [data-search-dialog] .search-cancel {
+    flex: none;
+    min-height: 44px;
+    padding: 0 4px;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    font-size: 15px;
+    color: var(--fg);
+    cursor: pointer;
+  }
+
+  [data-search-dialog] .search-body {
+    flex: 1;
+    min-height: 0;
+    padding: 8px;
+    overflow-y: auto;
+  }
+
+  [data-search-dialog] .search-status {
+    margin: 0;
+    padding: 40px 16px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--mfg);
+  }
+
+  [data-search-dialog] .search-footer {
+    display: none;
+  }
+
+  [data-search-dialog] .search-option {
+    display: block;
+    margin-bottom: 2px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  [data-search-dialog] .search-option:hover,
+  [data-search-dialog] .search-option[data-highlighted],
+  [data-search-dialog] .search-option:focus-within {
+    background: var(--muted-bg);
+  }
+
+  [data-search-dialog] .search-section {
+    margin: 0 0 2px;
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--mfg);
+  }
+
+  [data-search-dialog] .search-title {
+    display: block;
+    overflow: hidden;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 22px;
+    color: var(--fg);
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  [data-search-dialog] .search-title:focus-visible,
+  [data-search-dialog] .search-sub:focus-visible {
+    outline: none;
+  }
+
+  [data-search-dialog] .search-snippet {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    margin: 0;
+    overflow: hidden;
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--mfg);
+  }
+
+  [data-search-dialog] .search-snippet mark {
+    background: transparent;
+    font-weight: 600;
+    color: var(--fg);
+  }
+
+  [data-search-dialog] .search-subs {
+    margin-top: 6px;
+  }
+
+  [data-search-dialog] .search-sub {
+    display: block;
+    overflow: hidden;
+    padding: 4px 0 4px 12px;
+    border-left: 1px solid var(--border);
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--mfg);
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color 120ms;
+  }
+
+  [data-search-dialog] .search-sub::before {
+    content: "#";
+    margin-right: 6px;
+    color: var(--border-strong);
+  }
+
+  [data-search-dialog] .search-sub:hover {
+    color: var(--fg);
+  }
+
+  @media (min-width: 48rem) {
+    [data-search-dialog] .search-esc {
+      display: inline-flex;
+    }
+    [data-search-dialog] .search-cancel {
+      display: none;
+    }
+    [data-search-dialog] .search-body {
+      flex: none;
+      max-height: min(60vh, 30rem);
+    }
+    [data-search-dialog] .search-footer {
+      display: flex;
+      flex: none;
+      align-items: center;
+      gap: 16px;
+      height: 40px;
+      padding: 0 16px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--mfg);
+    }
+    [data-search-dialog] .search-footer span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+  }
+</style>
+
+<script>
+  import "./search.client";
+</script>

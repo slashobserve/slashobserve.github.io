@@ -1,0 +1,108 @@
+---
+import { cn } from "@/lib/cn";
+import type { HTMLAttributes } from "astro/types";
+import type { PrevNext } from "@/lib/docs-sidebar";
+
+interface Props extends HTMLAttributes<"nav"> {
+  prevNext?: PrevNext;
+}
+
+const { prevNext, class: className, ...attrs } = Astro.props;
+const prev = prevNext?.prev;
+const next = prevNext?.next;
+---
+
+{(prev || next) && (
+  <nav aria-label="Previous and next pages" data-slot="pagination" class={cn("pager", className)} {...attrs}>
+    {prev && (
+      <a href={prev.href} rel="prev" class="pager-card pager-prev">
+        <span class="pager-label"><span aria-hidden="true" class="pager-arrow">←</span> Previous</span>
+        <span class="pager-title">{prev.label}</span>
+      </a>
+    )}
+    {next && (
+      <a href={next.href} rel="next" class="pager-card pager-next">
+        <span class="pager-label">Next <span aria-hidden="true" class="pager-arrow">→</span></span>
+        <span class="pager-title">{next.label}</span>
+      </a>
+    )}
+  </nav>
+)}
+
+<style>
+  .pager {
+    display: grid;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .pager-card {
+    display: block;
+    min-width: 0;
+    padding: 16px 20px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-decoration: none;
+    transition: border-color 120ms, background-color 120ms;
+  }
+
+  .pager-card:hover {
+    border-color: var(--border-strong);
+    background: var(--muted-bg);
+  }
+
+  .pager-next {
+    text-align: right;
+  }
+
+  .pager-label {
+    display: block;
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--mfg);
+  }
+
+  .pager-arrow {
+    display: inline-block;
+    transition: transform 120ms;
+  }
+
+  .pager-prev:hover .pager-arrow {
+    transform: translateX(-2px);
+  }
+
+  .pager-next:hover .pager-arrow {
+    transform: translateX(2px);
+  }
+
+  .pager-title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    margin-top: 4px;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 22px;
+    color: var(--fg);
+  }
+
+  @media (min-width: 40rem) {
+    .pager {
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .pager-next {
+      grid-column: 2;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pager-card,
+    .pager-arrow {
+      transition: none;
+    }
+  }
+</style>

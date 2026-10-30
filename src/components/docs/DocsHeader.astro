@@ -1,0 +1,191 @@
+---
+import GitHubIcon from "@/components/site/GitHubIcon.astro"
+import ThemeToggle from "@/components/site/ThemeToggle.astro"
+import Wordmark from "@/components/site/Wordmark.astro"
+import SearchTrigger from "@/components/ui/search/SearchTrigger.astro"
+import { getDocLinks } from "@/lib/get-doc-links"
+import { docsEntryHref, GITHUB_URL, headerNav, isCurrentPage } from "@/lib/site-nav"
+
+const links = await getDocLinks()
+const docsHref = docsEntryHref(links)
+const siteNav = headerNav(links).filter((item) => !item.href.startsWith("/docs/"))
+const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? "page" : undefined)
+---
+
+<header class="docs-header">
+  <div class="inner">
+    <div class="brand">
+      <a class="home" href="/" aria-label="SlashObserve home">
+        <Wordmark size={20} />
+      </a>
+      {
+        docsHref && (
+          <>
+            <span class="divider" aria-hidden="true" />
+            <a class="docs-link" href={docsHref}>
+              Docs
+            </a>
+          </>
+        )
+      }
+    </div>
+    <div class="search">
+      <SearchTrigger />
+    </div>
+    <nav aria-label="Main" class="main-nav">
+      {
+        siteNav.map((item) => (
+          <a class="navlink" href={item.href} aria-current={currentFor(item.href)}>
+            {item.label}
+          </a>
+        ))
+      }
+      <a class="navlink github" href={GITHUB_URL}>
+        <GitHubIcon size={15} />GitHub
+      </a>
+    </nav>
+    <div class="theme">
+      <ThemeToggle bordered />
+    </div>
+    <button type="button" class="docs-icon-btn menu-btn" data-menu-btn aria-label="Open navigation">
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+      >
+        <path d="M4 7h16M4 12h16M4 17h16" />
+      </svg>
+    </button>
+  </div>
+</header>
+
+<style>
+  .docs-header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    box-sizing: border-box;
+    height: var(--nb-header-height);
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .inner {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+    max-width: var(--docs-frame-max);
+    margin-inline: auto;
+    padding-inline: var(--docs-pad);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    flex: none;
+  }
+
+  .home,
+  .docs-link,
+  .navlink {
+    text-decoration: none;
+  }
+
+  .home {
+    display: inline-flex;
+    align-items: center;
+    color: var(--fg);
+  }
+
+  .divider {
+    width: 1px;
+    height: 20px;
+    margin-inline: 12px;
+    background: var(--border);
+  }
+
+  .docs-link {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--fg);
+  }
+
+  .search {
+    display: flex;
+    margin-left: auto;
+  }
+
+  .main-nav {
+    display: none;
+  }
+
+  .theme {
+    display: flex;
+  }
+
+  .navlink {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--mfg);
+    white-space: nowrap;
+    transition: color 120ms;
+  }
+
+  .navlink:hover,
+  .navlink[aria-current="page"] {
+    color: var(--fg);
+  }
+
+  .home:focus-visible,
+  .docs-link:focus-visible,
+  .navlink:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+
+  @media (min-width: 64rem) {
+    .inner {
+      gap: 0;
+    }
+
+    .brand {
+      width: calc(var(--nb-sidebar-width) + var(--docs-gap));
+    }
+
+    .search {
+      flex: 0 1 17.5rem;
+      margin-left: 0;
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      margin-left: auto;
+    }
+
+    .theme {
+      margin-left: 12px;
+    }
+
+    .menu-btn {
+      display: none;
+    }
+  }
+
+  @media (min-width: 90rem) {
+    .search {
+      flex-basis: 22.5rem;
+    }
+  }
+</style>

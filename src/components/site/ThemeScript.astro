@@ -1,14 +1,27 @@
-<script is:inline>
-  (function () {
+---
+import { THEME_STORAGE_KEY } from "../../lib/theme"
+---
+
+<script is:inline define:vars={{ storageKey: THEME_STORAGE_KEY }}>
+  function applyStoredTheme() {
     var stored = null
     try {
-      stored = localStorage.getItem("starlight-theme")
+      stored = localStorage.getItem(storageKey)
     } catch (error) {}
-    document.documentElement.dataset.theme =
+    var theme =
       stored === "light" || stored === "dark"
         ? stored
         : matchMedia("(prefers-color-scheme: light)").matches
           ? "light"
           : "dark"
-  })()
+    document.documentElement.dataset.theme = theme
+    document.documentElement.style.colorScheme = theme
+  }
+
+  applyStoredTheme()
+
+  if (!window.__soThemeBound) {
+    window.__soThemeBound = true
+    document.addEventListener("astro:after-swap", applyStoredTheme)
+  }
 </script>

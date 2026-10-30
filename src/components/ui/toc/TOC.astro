@@ -1,0 +1,92 @@
+---
+import { cn } from "@/lib/cn";
+import type { HTMLAttributes } from "astro/types";
+import type { MarkdownHeading } from "astro";
+
+interface Props extends HTMLAttributes<"div"> {
+  headings: MarkdownHeading[];
+}
+
+const { headings, class: className, ...attrs } = Astro.props;
+const INDENT_PX = 12;
+---
+
+{headings.length > 0 && (
+  <div data-slot="toc" data-nb-toc class={cn("toc-container", className)} {...attrs}>
+    <h2 class="mb-3 text-[13px] leading-5 font-semibold text-[var(--fg)]">On this page</h2>
+    <nav aria-label="Table of contents" class="relative">
+      <svg
+        data-nb-toc-rail
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
+        fill="none"
+      >
+        <path
+          data-nb-toc-rail-active
+          class="stroke-brand opacity-0 transition-[stroke-dasharray,stroke-dashoffset,opacity] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] data-[ready=true]:opacity-100 data-[initial=true]:transition-opacity motion-reduce:transition-opacity"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+      </svg>
+
+      <ul class="flex list-none flex-col m-0 p-0">
+        {headings.map((h, i) => {
+          const prevDepth = i > 0 ? headings[i - 1].depth : h.depth;
+          const nextDepth = i < headings.length - 1 ? headings[i + 1].depth : h.depth;
+          const indent = h.depth - 2;
+          const goingDeeper = h.depth > prevDepth;
+          const goingShallower = nextDepth < h.depth;
+
+          return (
+            <li>
+              {goingDeeper && (
+                <svg
+                  aria-hidden="true"
+                  class="block h-2 text-border rtl:-scale-x-100"
+                  style={`margin-inline-start: calc(${(prevDepth - 2) * INDENT_PX}px - 1px); width: ${(h.depth - prevDepth) * INDENT_PX}px;`}
+                  viewBox="0 0 1 1"
+                  preserveAspectRatio="none"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  overflow="visible"
+                >
+                  <path d="M 0 0 C 0 0.5, 1 0.5, 1 1" vector-effect="non-scaling-stroke" />
+                </svg>
+              )}
+              <a
+                href={`#${h.slug}`}
+                data-nb-toc-link
+                data-nb-slug={h.slug}
+                class="grid grid-cols-1 border-s-2 border-border py-1 ps-[14px] text-[13px] leading-5 text-[var(--mfg)] no-underline transition-colors duration-[120ms] hover:text-[var(--fg)] aria-[current=true]:font-medium aria-[current=true]:text-[var(--fg)] motion-reduce:transition-none"
+                style={`margin-inline-start: calc(${indent * INDENT_PX}px - 2px);`}
+              >
+                <span class="col-start-1 row-start-1 [overflow-wrap:anywhere]">{h.text}</span>
+                <span aria-hidden="true" class="col-start-1 row-start-1 invisible font-medium [overflow-wrap:anywhere]">{h.text}</span>
+              </a>
+              {goingShallower && (
+                <svg
+                  aria-hidden="true"
+                  class="block h-2 text-border rtl:-scale-x-100"
+                  style={`margin-inline-start: calc(${(nextDepth - 2) * INDENT_PX}px - 1px); width: ${(h.depth - nextDepth) * INDENT_PX}px;`}
+                  viewBox="0 0 1 1"
+                  preserveAspectRatio="none"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  overflow="visible"
+                >
+                  <path d="M 1 0 C 1 0.5, 0 0.5, 0 1" vector-effect="non-scaling-stroke" />
+                </svg>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  </div>
+)}
+
+<script>
+  import "./toc.client";
+</script>

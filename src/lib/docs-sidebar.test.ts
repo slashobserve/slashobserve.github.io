@@ -1,110 +1,128 @@
 import { describe, expect, test } from "bun:test"
-import { buildSidebar, sectionLabel } from "./docs-sidebar"
+import {
+  buildSidebar,
+  orderPages,
+  prevNext,
+  sectionLabel,
+  sectionOf,
+  type DocsPageRef,
+} from "./docs-sidebar"
 
-const slugs = (dir: string, pages: string[]) => pages.map((page) => ({ slug: `docs/${dir}/${page}` }))
+function page(id: string, title: string): DocsPageRef {
+  return { id, title, description: "", href: `/docs/${id}/` }
+}
 
-describe("buildSidebar", () => {
-  test("lists the single self-hosting page as a slug", () => {
-    expect(buildSidebar(["self-hosting"], {})).toEqual([{ slug: "docs/self-hosting" }])
+const titles = (pages: DocsPageRef[]) => pages.map((entry) => entry.title)
+
+describe("sectionOf and sectionLabel", () => {
+  test("read the section from a docs path", () => {
+    expect(sectionOf("/docs/get-started/quick-start/")).toBe("get-started")
+    expect(sectionLabel("/docs/reference/configuration/")).toBe("Reference")
   })
 
-  test("is empty when nothing is synced", () => {
-    expect(buildSidebar([], {})).toEqual([])
-  })
-
-  test("skips the index page", () => {
-    expect(buildSidebar(["index", "self-hosting"], {})).toEqual([{ slug: "docs/self-hosting" }])
-  })
-
-  test("puts sections in canvas order and root pages last", () => {
-    const scrambled = Object.fromEntries(
-      ["project", "use", "reference", "get-started", "operate", "connect", "concepts", "teams"].map(
-        (dir) => [dir, ["page"]],
-      ),
-    )
-    expect(buildSidebar(["self-hosting"], scrambled)).toEqual([
-      { label: "Get started", items: slugs("get-started", ["page"]) },
-      { label: "Connect", items: slugs("connect", ["page"]) },
-      { label: "Use", items: slugs("use", ["page"]) },
-      { label: "Teams", items: slugs("teams", ["page"]) },
-      { label: "Concepts", items: slugs("concepts", ["page"]) },
-      { label: "Operate", items: slugs("operate", ["page"]) },
-      { label: "Reference", items: slugs("reference", ["page"]) },
-      { label: "Project", items: slugs("project", ["page"]) },
-      { slug: "docs/self-hosting" },
-    ])
-  })
-
-  test("appends unknown directories after the known ones, sorted, in sentence case", () => {
-    expect(buildSidebar([], { "how-to": ["a"], use: ["cli"], faq: ["b"] })).toEqual([
-      { label: "Use", items: slugs("use", ["cli"]) },
-      { label: "Faq", items: slugs("faq", ["b"]) },
-      { label: "How to", items: slugs("how-to", ["a"]) },
-    ])
-  })
-
-  test.each([
-    [
-      "get-started",
-      ["first-dashboard", "install", "quick-start", "what-is-slashobserve"],
-      ["what-is-slashobserve", "quick-start", "install", "first-dashboard"],
-    ],
-    [
-      "connect",
-      ["oidc", "llm-providers", "clickhouse", "prometheus"],
-      ["prometheus", "clickhouse", "oidc", "llm-providers"],
-    ],
-    [
-      "use",
-      ["mcp", "cli", "import-grafana", "edit-panel", "review", "chat"],
-      ["chat", "review", "edit-panel", "import-grafana", "cli", "mcp"],
-    ],
-    [
-      "concepts",
-      ["zeta", "versions", "datasources-and-variables", "agent", "observespec"],
-      ["observespec", "agent", "datasources-and-variables", "versions", "zeta"],
-    ],
-    ["teams", ["saved-prompts", "folders", "roles"], ["roles", "folders", "saved-prompts"]],
-    [
-      "operate",
-      ["security-model", "logging", "upgrades-and-backups", "service-account-keys", "outbound-access", "production"],
-      ["production", "upgrades-and-backups", "security-model", "logging", "outbound-access", "service-account-keys"],
-    ],
-    ["reference", ["datasources-file", "configuration"], ["configuration", "datasources-file"]],
-  ])("orders %s pages by the canvas, then unknown pages alphabetically", (dir, pages, expected) => {
-    expect(buildSidebar([], { [dir]: pages })).toEqual([
-      { label: expect.any(String), items: slugs(dir, expected) },
-    ])
-  })
-
-  test("skips ordered pages that are not synced and keeps the rest in order", () => {
-    expect(buildSidebar([], { "get-started": ["install", "zeta", "alpha"] })).toEqual([
-      { label: "Get started", items: slugs("get-started", ["install", "alpha", "zeta"]) },
-    ])
-  })
-
-  test("maps a section index page to the section slug", () => {
-    expect(buildSidebar([], { reference: ["index", "configuration", "api/index", "api/routes"] })).toEqual([
-      {
-        label: "Reference",
-        items: [
-          { slug: "docs/reference/configuration" },
-          { slug: "docs/reference/api" },
-          { slug: "docs/reference/api/routes" },
-          { slug: "docs/reference" },
-        ],
-      },
-    ])
+  test("return null outside the docs or for an unknown section", () => {
+    expect(sectionOf("/features/")).toBeNull()
+    expect(sectionLabel("/features/")).toBeNull()
+    expect(sectionLabel("/docs/unknown/page/")).toBeNull()
+    expect(sectionOf("/docs/")).toBeNull()
   })
 })
 
-describe("sectionLabel", () => {
-  test.each([
-    ["docs/connect/prometheus", "Connect"],
-    ["docs/get-started/quick-start", "Get started"],
-    ["docs/self-hosting", "Docs"],
-    ["docs/how-to/migrate", "How to"],
-  ])("labels %s as %s", (entryId, label) => {
-    expect(sectionLabel(entryId)).toBe(label)
+describe("orderPages", () => {
+  test("puts known sections in site order with sentence-case labels", () => {
+    const ordered = orderPages([
+      page("connect/oidc", "OIDC"),
+      page("get-started/install", "Install"),
+      page("concepts/agent", "Agent"),
+    ])
+    expect(ordered.map((group) => group.label)).toEqual(["Get started", "Connect", "Concepts"])
+  })
+
+  test("sorts listed pages by PAGE_ORDER", () => {
+    const [first] = orderPages([
+      page("get-started/install", "Run your own deployment"),
+      page("get-started/quick-start", "Quick start"),
+      page("get-started/what-is-slashobserve", "What is SlashObserve"),
+    ])
+    expect(titles(first!.pages)).toEqual(["What is SlashObserve", "Quick start", "Run your own deployment"])
+  })
+
+  test("puts unlisted pages after listed ones, by title", () => {
+    const [first] = orderPages([
+      page("operate/outbound-access", "Outbound access"),
+      page("operate/logging", "Logging"),
+      page("operate/security-model", "Security model"),
+      page("operate/production", "Production"),
+    ])
+    expect(titles(first!.pages)).toEqual(["Production", "Security model", "Logging", "Outbound access"])
+  })
+
+  test("puts unknown sections after known ones by directory, and root pages last", () => {
+    const ordered = orderPages([
+      page("overview", "Overview"),
+      page("zeta-things/a", "A"),
+      page("extra-stuff/thing", "Thing"),
+      page("use/chat", "Chat"),
+    ])
+    expect(ordered.map((group) => group.label)).toEqual(["Use", "Extra stuff", "Zeta things", "Docs"])
+  })
+
+  test("returns no groups for no pages", () => {
+    expect(orderPages([])).toEqual([])
+  })
+})
+
+describe("buildSidebar", () => {
+  const ordered = orderPages([
+    page("get-started/quick-start", "Quick start"),
+    page("get-started/install", "Install"),
+    page("connect/prometheus", "Prometheus"),
+  ])
+
+  test("lists links by title and marks only the matching href as current", () => {
+    const sidebar = buildSidebar(ordered, "/docs/get-started/install/")
+    expect(sidebar).toEqual([
+      {
+        label: "Get started",
+        links: [
+          { label: "Quick start", href: "/docs/get-started/quick-start/", isCurrent: false },
+          { label: "Install", href: "/docs/get-started/install/", isCurrent: true },
+        ],
+      },
+      {
+        label: "Connect",
+        links: [{ label: "Prometheus", href: "/docs/connect/prometheus/", isCurrent: false }],
+      },
+    ])
+  })
+
+  test("marks nothing current for an unknown href", () => {
+    const links = buildSidebar(ordered, "/docs/nope/").flatMap((group) => group.links)
+    expect(links.some((link) => link.isCurrent)).toBe(false)
+  })
+})
+
+describe("prevNext", () => {
+  const ordered = orderPages([
+    page("get-started/quick-start", "Quick start"),
+    page("get-started/install", "Install"),
+    page("connect/prometheus", "Prometheus"),
+    page("connect/clickhouse", "ClickHouse"),
+  ])
+
+  test("crosses a section boundary", () => {
+    expect(prevNext(ordered, "/docs/get-started/install/")).toEqual({
+      prev: { label: "Quick start", href: "/docs/get-started/quick-start/" },
+      next: { label: "Prometheus", href: "/docs/connect/prometheus/" },
+    })
+  })
+
+  test("has no previous page for the first and no next page for the last", () => {
+    expect(prevNext(ordered, "/docs/get-started/quick-start/").prev).toBeUndefined()
+    expect(prevNext(ordered, "/docs/connect/clickhouse/").next).toBeUndefined()
+  })
+
+  test("is empty for an unknown href", () => {
+    expect(prevNext(ordered, "/docs/nope/")).toEqual({})
   })
 })

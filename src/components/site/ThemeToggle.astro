@@ -49,11 +49,24 @@ const { bordered = false } = Astro.props
   }
 
   .theme-toggle.bordered {
+    position: relative;
     width: 36px;
     height: 36px;
     border: 1px solid var(--border);
     border-radius: 6px;
     background: var(--bg);
+    color: var(--fg);
+  }
+
+  .theme-toggle.bordered::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
+
+  .theme-toggle.bordered:hover {
+    border-color: var(--border-strong);
+    background: var(--muted-bg);
   }
 
   .theme-toggle:focus-visible {
@@ -63,46 +76,44 @@ const { bordered = false } = Astro.props
 </style>
 
 <script>
-  const STORAGE_KEY = "starlight-theme"
-  const toggles = document.querySelectorAll<HTMLButtonElement>(".theme-toggle")
+  import { nextTheme, parseTheme, resolveTheme, THEME_STORAGE_KEY, type Theme } from "../../lib/theme"
+
   const lightQuery = matchMedia("(prefers-color-scheme: light)")
 
-  function readStoredTheme(): string | null {
-    try {
-      return localStorage.getItem(STORAGE_KEY)
-    } catch {
-      return null
-    }
+  function currentTheme(): Theme {
+    return parseTheme(document.documentElement.dataset.theme) ?? "dark"
   }
 
-  function storeTheme(theme: string) {
-    try {
-      localStorage.setItem(STORAGE_KEY, theme)
-    } catch {}
-  }
-
-  function currentTheme(): "light" | "dark" {
-    return document.documentElement.dataset.theme === "light" ? "light" : "dark"
-  }
-
-  function applyTheme(theme: "light" | "dark") {
+  function setTheme(theme: Theme) {
     document.documentElement.dataset.theme = theme
-    const other = theme === "light" ? "dark" : "light"
-    for (const toggle of toggles) toggle.setAttribute("aria-label", `Switch to ${other} theme`)
+    document.documentElement.style.colorScheme = theme
+    refreshLabels()
   }
 
-  applyTheme(currentTheme())
-
-  for (const toggle of toggles) {
-    toggle.addEventListener("click", () => {
-      const next = currentTheme() === "light" ? "dark" : "light"
-      applyTheme(next)
-      storeTheme(next)
-    })
+  function refreshLabels() {
+    const label = `Switch to ${nextTheme(currentTheme())} theme`
+    for (const toggle of document.querySelectorAll(".theme-toggle")) toggle.setAttribute("aria-label", label)
   }
+
+  document.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element) || !event.target.closest(".theme-toggle")) return
+    const next = nextTheme(currentTheme())
+    setTheme(next)
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, next)
+    } catch {}
+  })
+
+  document.addEventListener("astro:after-swap", refreshLabels)
 
   lightQuery.addEventListener("change", (event) => {
-    if (readStoredTheme()) return
-    applyTheme(event.matches ? "light" : "dark")
+    let stored: string | null = null
+    try {
+      stored = localStorage.getItem(THEME_STORAGE_KEY)
+    } catch {}
+    if (parseTheme(stored)) return
+    setTheme(resolveTheme(null, event.matches))
   })
+
+  refreshLabels()
 </script>

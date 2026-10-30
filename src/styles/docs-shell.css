@@ -1,0 +1,70 @@
+html:root {
+  --nb-header-height: 4rem;
+  --nb-sidebar-width: 15.5rem;
+  --nb-toc-width: 13rem;
+  --nb-content-max: 45rem;
+  --docs-gap: 2.5rem;
+  --docs-frame-max: 96rem;
+  --docs-pad: 1.25rem;
+}
+
+@media (min-width: 48rem) {
+  html:root {
+    --docs-pad: 2rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  html:root {
+    --docs-pad: 1.5rem;
+  }
+}
+
+@media (min-width: 90rem) {
+  html:root {
+    --nb-sidebar-width: 16.5rem;
+    --nb-toc-width: 14.5rem;
+    --docs-gap: 3.5rem;
+    --docs-pad: 2rem;
+  }
+}
+
+.docs-icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  cursor: pointer;
+  transition:
+    border-color 120ms,
+    background-color 120ms;
+}
+
+.docs-icon-btn:hover {
+  border-color: var(--border-strong);
+  background: var(--muted-bg);
+}
+
+.docs-icon-btn::before {
+  content: "";
+  position: absolute;
+  inset: -0.25rem;
+}
+
+.docs-icon-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.docs-icon-btn:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}

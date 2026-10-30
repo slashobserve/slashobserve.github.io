@@ -1,7 +1,5 @@
 import { posix } from "node:path"
-import { CORE_EDIT_BRANCH, CORE_REPO_URL, editUrlFor, routeFor } from "./paths"
-
-export type SyncedPage = { body: string; title: string }
+import { CORE_EDIT_BRANCH, CORE_REPO_URL, routeFor } from "./paths"
 
 type Split = { front: string[] | null; rest: string[] }
 
@@ -43,48 +41,6 @@ function fenceMask(lines: string[]): boolean[] {
     mask.push(true)
   }
   return mask
-}
-
-function unquote(value: string): string {
-  const match = /^(["'])(.*)\1$/.exec(value.trim())
-  return match ? (match[2] ?? "") : value.trim()
-}
-
-function takeHeading(rest: string[]): { title: string; rest: string[] } | null {
-  const mask = fenceMask(rest)
-  const index = rest.findIndex((line, i) => !mask[i] && /^# (.+)$/.test(line))
-  if (index === -1) return null
-  const title = (rest[index] ?? "").slice(2).trim()
-  const drop = rest[index + 1] === "" ? 2 : 1
-  return { title, rest: [...rest.slice(0, index), ...rest.slice(index + drop)] }
-}
-
-export function withFrontMatter(source: string, rel: string): SyncedPage {
-  const { front, rest } = splitFrontMatter(source)
-  const block = front ?? []
-  const titleLine = block.find((line) => /^title:/.test(line))
-
-  let title: string
-  let body = rest
-  if (titleLine !== undefined) {
-    title = unquote(titleLine.slice("title:".length))
-  } else {
-    const heading = takeHeading(rest)
-    if (heading === null) {
-      throw new Error(
-        `${rel}: no title: add front matter with title or start the file with a # heading`,
-      )
-    }
-    title = heading.title
-    body = heading.rest
-  }
-
-  const missing: string[] = []
-  if (titleLine === undefined) missing.push(`title: ${JSON.stringify(title)}`)
-  if (!block.some((line) => /^editUrl:/.test(line))) {
-    missing.push(`editUrl: ${JSON.stringify(editUrlFor(rel))}`)
-  }
-  return { title, body: joinPage([...missing, ...block], body) }
 }
 
 function rewriteTarget(target: string, rel: string): string {
@@ -136,6 +92,17 @@ export function rewriteLinks(source: string, rel: string): string {
   return front === null ? rewritten.join("\n") : joinPage(front, rewritten)
 }
 
-export function transformPage(source: string, rel: string): string {
-  return rewriteLinks(withFrontMatter(source, rel).body, rel)
+export function transformPage(source: string, rel: string, updated: string | null): string {
+  const { front, rest } = splitFrontMatter(source)
+  const block = front ?? []
+  const hasField = (name: string) => block.some((line) => line.startsWith(`${name}:`))
+  if (!hasField("title") || !hasField("description")) {
+    throw new Error(`${rel}: front matter must set title and description`)
+  }
+  const mask = fenceMask(rest)
+  if (rest.some((line, i) => !mask[i] && /^# /.test(line))) {
+    throw new Error(`${rel}: remove the # heading; the title comes from front matter`)
+  }
+  const dated = updated === null ? block : [...block, `lastUpdated: ${updated}`]
+  return rewriteLinks(joinPage(dated, rest), rel)
 }

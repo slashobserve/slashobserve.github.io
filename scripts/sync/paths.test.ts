@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { editUrlFor, invalidDocPath, outputPathFor, routeFor } from "./paths"
+import { invalidDocPath, outputPathFor, routeFor } from "./paths"
 
 describe("invalidDocPath", () => {
   test.each([
@@ -27,9 +27,9 @@ describe("invalidDocPath", () => {
 
 describe("outputPathFor", () => {
   test.each([
-    ["connect/prometheus.md", "src/content/docs/docs/connect/prometheus.md"],
-    ["self-hosting.md", "src/content/docs/docs/self-hosting.md"],
-    ["get-started/img/flow.png", "src/content/docs/docs/get-started/img/flow.png"],
+    ["connect/prometheus.md", "src/content/docs/connect/prometheus.md"],
+    ["self-hosting.md", "src/content/docs/self-hosting.md"],
+    ["get-started/img/flow.png", "src/content/docs/get-started/img/flow.png"],
   ])("maps %s", (rel, expected) => {
     expect(outputPathFor(rel)).toBe(expected)
   })
@@ -43,13 +43,5 @@ describe("routeFor", () => {
     ["index.md", "/docs/"],
   ])("routes %s", (rel, expected) => {
     expect(routeFor(rel)).toBe(expected)
-  })
-})
-
-describe("editUrlFor", () => {
-  test("points at the file on the main branch of the core repo", () => {
-    expect(editUrlFor("connect/prometheus.md")).toBe(
-      "https://github.com/slashobserve/slashobserve/edit/main/docs/connect/prometheus.md",
-    )
   })
 })

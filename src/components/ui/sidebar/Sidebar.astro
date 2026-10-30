@@ -1,0 +1,114 @@
+---
+import type { HTMLAttributes } from "astro/types"
+import { cn } from "@/lib/cn"
+import type { DocsGroup } from "@/lib/docs-sidebar"
+import SidebarLink from "./SidebarLink.astro"
+
+interface Props extends HTMLAttributes<"div"> {
+  items: DocsGroup[]
+  persist?: boolean
+}
+
+const { items, persist = false, class: className, ...attrs } = Astro.props
+const labelId = (label: string, index: number) =>
+  `nb-sidebar-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${index}`
+---
+
+<div
+  data-slot="sidebar"
+  data-nb-sidebar
+  data-nb-sidebar-persist={persist ? "" : undefined}
+  class={cn(className)}
+  {...attrs}
+>
+  <ul class="top-level">
+    {
+      items.map((group, index) => (
+        <li>
+          <p class="group-label" id={labelId(group.label, index)}>
+            {group.label}
+          </p>
+          <ul aria-labelledby={labelId(group.label, index)}>
+            {group.links.map((link) => (
+              <li>
+                <SidebarLink label={link.label} href={link.href} isCurrent={link.isCurrent} />
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<script>
+  import "./sidebar.client"
+</script>
+
+<style>
+  [data-nb-sidebar] :global(ul) {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  [data-nb-sidebar] :global(ul ul) {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  [data-nb-sidebar] :global(.top-level > li + li) {
+    margin-top: 24px;
+  }
+
+  [data-nb-sidebar] :global(.group-label) {
+    margin: 0 0 6px;
+    padding: 0 12px;
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: 600;
+    color: var(--fg);
+  }
+
+  [data-nb-sidebar] :global(li > a) {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-height: 32px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 20px;
+    text-decoration: none;
+    transition:
+      color 120ms,
+      background-color 120ms;
+  }
+
+  [data-nb-sidebar] :global(li > a) {
+    color: var(--mfg);
+  }
+
+  [data-nb-sidebar] :global(li > a:hover) {
+    color: var(--fg);
+    background: var(--muted-bg);
+  }
+
+  [data-nb-sidebar] :global(li > a[aria-current="page"]) {
+    color: var(--fg);
+    font-weight: 500;
+    background: var(--sel);
+  }
+
+  [data-nb-sidebar] :global(li > a:focus-visible) {
+    outline: 2px solid var(--brand);
+    outline-offset: -2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-nb-sidebar] :global(li > a) {
+      transition: none;
+    }
+  }
+</style>

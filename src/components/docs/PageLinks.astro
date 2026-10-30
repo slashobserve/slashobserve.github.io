@@ -1,0 +1,82 @@
+---
+import GitHubIcon from "@/components/site/GitHubIcon.astro"
+
+interface Props {
+  editUrl?: string
+  markdownUrl?: string
+  lastUpdated?: Date
+}
+
+const { editUrl, markdownUrl, lastUpdated } = Astro.props
+const updated = lastUpdated
+  ? {
+      iso: lastUpdated.toISOString(),
+      label: new Intl.DateTimeFormat("en", { dateStyle: "medium" }).format(lastUpdated),
+    }
+  : null
+---
+
+{
+  (editUrl || markdownUrl || updated) && (
+    <div class="links">
+      <div class="actions">
+        {editUrl && (
+          <a href={editUrl} target="_blank" rel="noopener">
+            <GitHubIcon size={14} />
+            Edit this page on GitHub
+          </a>
+        )}
+        {markdownUrl && <a href={markdownUrl}>View as Markdown</a>}
+      </div>
+      {updated && (
+        <p class="updated">
+          Last updated <time datetime={updated.iso}>{updated.label}</time>
+        </p>
+      )}
+    </div>
+  )
+}
+
+<style>
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 24px;
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--mfg);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+  }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--mfg);
+    text-decoration: none;
+    transition: color 120ms;
+  }
+
+  a:hover {
+    color: var(--fg);
+  }
+
+  a:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+
+  .updated {
+    margin: 0;
+  }
+</style>

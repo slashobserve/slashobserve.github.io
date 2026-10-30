@@ -1,0 +1,53 @@
+---
+import { cn } from "@/lib/cn";
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"div"> {}
+
+const { class: className, "data-slot": slot = "dialog-content", ...attrs } = Astro.props;
+---
+
+<div data-slot={slot} class="dialog-frame pointer-events-none flex h-full items-start justify-center">
+  <div class={cn("dialog-box pointer-events-auto flex flex-col overflow-hidden", className)} {...attrs}>
+    <slot />
+  </div>
+</div>
+
+<style>
+  .dialog-box {
+    width: 100%;
+    height: 100dvh;
+    background: var(--bg);
+    color: var(--fg);
+  }
+
+  @media (min-width: 48rem) {
+    .dialog-frame {
+      padding-top: 12vh;
+    }
+    .dialog-box {
+      width: min(40rem, 100vw - 2rem);
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow-elev);
+    }
+  }
+
+  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+    :global(.dialog[open]) .dialog-box {
+      animation: dialog-box-in 150ms ease-out;
+    }
+  }
+
+  @keyframes dialog-box-in {
+    from {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+</style>

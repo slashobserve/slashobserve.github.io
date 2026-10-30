@@ -1,0 +1,49 @@
+---
+import Icon from "@/components/ui/icon/Icon.astro";
+import { cn } from "@/lib/cn";
+import type { HTMLAttributes } from "astro/types";
+import type { MarkdownHeading } from "astro";
+
+interface Props extends HTMLAttributes<"nav"> {
+  headings: MarkdownHeading[];
+}
+
+const { headings, class: className, ...attrs } = Astro.props;
+
+const hasHeadings = headings.length > 0;
+const NBSP = " ";
+---
+
+{
+  hasHeadings && (
+    <nav
+      data-slot="mobile-toc"
+      data-nb-mobile-toc
+      aria-label="On this page"
+      class={cn("relative", className)}
+      {...attrs}
+    >
+      <select
+        data-nb-mobile-toc-select
+        aria-label="Jump to a section on this page"
+        class="h-9 w-full appearance-none rounded-md border border-border bg-[var(--bg)] ps-3 pe-9 text-[13px] leading-5 font-medium text-[var(--fg)] transition-colors duration-[120ms] hover:border-[var(--border-strong)] focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-[var(--brand)] motion-reduce:transition-none"
+      >
+        <option value="_top">On this page</option>
+        {headings.filter((heading) => heading.slug).map((heading) => (
+          <option value={heading.slug}>
+            {`${NBSP.repeat(Math.max(0, heading.depth - 2) * 2)}${heading.text}`}
+          </option>
+        ))}
+      </select>
+      <Icon
+        name="caret-down"
+        aria-hidden="true"
+        class="pointer-events-none absolute end-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--mfg)]"
+      />
+    </nav>
+  )
+}
+
+<script>
+  import "./mobile-toc.client";
+</script>

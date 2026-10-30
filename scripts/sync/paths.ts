@@ -1,6 +1,6 @@
 export const CORE_REPO_URL = "https://github.com/slashobserve/slashobserve"
 export const CORE_EDIT_BRANCH = "main"
-export const DOCS_OUT = "src/content/docs/docs"
+export const DOCS_OUT = "src/content/docs"
 export const SCHEMA_SOURCE = "spec/schema/observespec.v0.json"
 export const SCHEMA_OUT = "public/schemas/observespec.v0.json"
 export const CORPUS_GOLDEN_SOURCE = "pkg/grafana/testdata/golden"
@@ -30,8 +30,4 @@ export function routeFor(rel: string): string {
   const segments = rel.replace(/\.md$/, "").split("/")
   if (segments[segments.length - 1] === "index") segments.pop()
   return segments.length === 0 ? "/docs/" : `/docs/${segments.join("/")}/`
-}
-
-export function editUrlFor(rel: string): string {
-  return `${CORE_REPO_URL}/edit/${CORE_EDIT_BRANCH}/docs/${rel}`
 }

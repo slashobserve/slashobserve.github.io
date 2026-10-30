@@ -1,0 +1,219 @@
+---
+import "../styles/docs-shell.css"
+import BaseLayout from "./BaseLayout.astro"
+import DocsDrawer from "@/components/docs/DocsDrawer.astro"
+import DocsFooter from "@/components/docs/DocsFooter.astro"
+import DocsHeader from "@/components/docs/DocsHeader.astro"
+import PageIntro from "@/components/docs/PageIntro.astro"
+import PageLinks from "@/components/docs/PageLinks.astro"
+import { Pagination } from "@/components/ui/pagination"
+import { Sidebar } from "@/components/ui/sidebar"
+import { MobileTOC, TOC } from "@/components/ui/toc"
+import type { DocsGroup, PrevNext } from "@/lib/docs-sidebar"
+import type { MarkdownHeading } from "astro"
+
+interface Props {
+  title: string
+  description: string
+  sidebar: DocsGroup[]
+  section: string | null
+  headings: MarkdownHeading[]
+  prevNext: PrevNext
+  markdownUrl: string
+  editUrl: string
+  lastUpdated?: Date
+}
+
+const { title, description, sidebar, section, headings, prevNext, markdownUrl, editUrl, lastUpdated } =
+  Astro.props
+
+const hasHeadings = headings.length > 0
+---
+
+<BaseLayout title={title} description={description} markdownUrl={markdownUrl} lastUpdated={lastUpdated}>
+  <DocsHeader />
+  <div class="docs-frame">
+    <aside class="docs-sidebar" aria-label="Docs">
+      <div data-nb-sidebar-tree>
+        <nav aria-label="Docs pages">
+          <Sidebar items={sidebar} persist />
+        </nav>
+      </div>
+    </aside>
+    <main id="main-content" tabindex="-1" transition:name="nb-content" class="docs-main">
+      {
+        hasHeadings && (
+          <div class="docs-toc-bar">
+            <MobileTOC headings={headings} />
+          </div>
+        )
+      }
+      <article class="docs-article" data-pagefind-body>
+        <PageIntro section={section} title={title} description={description} />
+        <div class="docs-content"><slot /></div>
+      </article>
+      <div class="docs-end">
+        <PageLinks editUrl={editUrl} markdownUrl={markdownUrl} lastUpdated={lastUpdated} />
+        <Pagination prevNext={prevNext} />
+        <DocsFooter />
+      </div>
+    </main>
+    <aside class="docs-rail" aria-label="On this page" data-nb-toc-scroll-host>
+      {hasHeadings && <TOC headings={headings} />}
+    </aside>
+  </div>
+  <DocsDrawer />
+
+  <script is:inline>
+    (function () {
+      function centerActive(sidebar, active) {
+        const sr = sidebar.getBoundingClientRect();
+        const ar = active.getBoundingClientRect();
+        sidebar.scrollTop += ar.top - sr.top - sr.height / 2 + ar.height / 2;
+      }
+
+      function restore() {
+        try {
+          const sidebar = document.querySelector("[data-nb-sidebar-tree]");
+          if (!sidebar) return;
+          const content = sidebar.querySelector("[data-nb-sidebar]");
+          if (!content) return;
+
+          const state = JSON.parse(sessionStorage.getItem("sidebar-state") || "null");
+          const active = sidebar.querySelector("[aria-current='page']");
+
+          if (sidebar.clientHeight === 0) return;
+          if (state && typeof state.scroll === "number") {
+            sidebar.scrollTop = state.scroll;
+            if (active) {
+              const sr = sidebar.getBoundingClientRect();
+              const ar = active.getBoundingClientRect();
+              if (ar.top < sr.top || ar.bottom > sr.bottom) centerActive(sidebar, active);
+            }
+          } else if (active) {
+            centerActive(sidebar, active);
+          }
+        } catch (_) {}
+      }
+
+      restore();
+      if (!window.__nbSidebarRestoreBound) {
+        window.__nbSidebarRestoreBound = true;
+        document.addEventListener("astro:after-swap", restore);
+      }
+    })();
+  </script>
+</BaseLayout>
+
+<style>
+  .docs-frame {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    box-sizing: border-box;
+    max-width: var(--docs-frame-max);
+    margin-inline: auto;
+    padding-inline: var(--docs-pad);
+  }
+
+  .docs-sidebar,
+  .docs-rail {
+    display: none;
+  }
+
+  .docs-main {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: calc(100dvh - var(--nb-header-height));
+  }
+
+  .docs-article,
+  .docs-end {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: var(--nb-content-max);
+    margin-inline: auto;
+  }
+
+  .docs-end {
+    margin-top: auto;
+  }
+
+  .docs-toc-bar {
+    position: sticky;
+    top: var(--nb-header-height);
+    z-index: 20;
+    box-sizing: border-box;
+    margin-inline: calc(var(--docs-pad) * -1);
+    padding: 4px var(--docs-pad);
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .docs-toc-bar > :global(nav) {
+    max-width: var(--nb-content-max);
+    margin-inline: auto;
+  }
+
+  @media (min-width: 64rem) {
+    .docs-frame {
+      grid-template-columns: var(--nb-sidebar-width) minmax(0, 1fr);
+      column-gap: var(--docs-gap);
+    }
+
+    .docs-sidebar {
+      grid-column: 1;
+      grid-row: 1;
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: var(--nb-header-height);
+      align-self: start;
+      height: calc(100dvh - var(--nb-header-height));
+    }
+
+    .docs-sidebar > :global([data-nb-sidebar-tree]) {
+      flex: 1;
+      min-height: 0;
+      margin-inline-start: -0.75rem;
+      padding: 32px 0 48px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .docs-main {
+      grid-column: 2;
+    }
+
+    .docs-toc-bar {
+      margin-inline-start: 0;
+      padding-inline-start: 0;
+    }
+  }
+
+  @media (min-width: 80rem) {
+    .docs-frame {
+      grid-template-columns: var(--nb-sidebar-width) minmax(0, 1fr) var(--nb-toc-width);
+    }
+
+    .docs-rail {
+      grid-column: 3;
+      grid-row: 1;
+      display: block;
+      position: sticky;
+      top: var(--nb-header-height);
+      align-self: start;
+      box-sizing: border-box;
+      height: calc(100dvh - var(--nb-header-height));
+      padding: 40px 0 48px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .docs-toc-bar {
+      display: none;
+    }
+  }
+</style>
