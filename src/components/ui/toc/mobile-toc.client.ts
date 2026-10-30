@@ -12,7 +12,8 @@ function initMobileToc(root: HTMLElement): () => void {
   const select = root.querySelector<HTMLSelectElement>(
     "[data-nb-mobile-toc-select]",
   );
-  if (!select) return () => {};
+  const label = root.querySelector<HTMLElement>("[data-nb-mobile-toc-label]");
+  if (!select || !label) return () => {};
 
   type Heading = { slug: string; el: HTMLElement };
   const headings: Heading[] = Array.from(select.options)
@@ -26,14 +27,23 @@ function initMobileToc(root: HTMLElement): () => void {
   let suppress = false;
   let suppressTimer: ReturnType<typeof setTimeout> | undefined;
 
+  function syncLabel() {
+    const option = select!.selectedOptions[0];
+    if (!option) return;
+    label!.textContent = option.text.trim();
+    label!.toggleAttribute("data-muted", option.value === "_top");
+  }
+
   function setActive(slug: string) {
     if (select!.value !== slug) select!.value = slug;
+    syncLabel();
   }
 
   select.addEventListener(
     "change",
     () => {
       const slug = select.value;
+      syncLabel();
       suppress = true;
       clearTimeout(suppressTimer);
       suppressTimer = setTimeout(() => {
@@ -51,6 +61,8 @@ function initMobileToc(root: HTMLElement): () => void {
     },
     { signal: controller.signal },
   );
+
+  syncLabel();
 
   if (headings.length === 0) {
     return () => {
@@ -70,14 +82,10 @@ function initMobileToc(root: HTMLElement): () => void {
     }
 
     const bandTop = window.innerHeight * BAND_TOP;
-    const firstTop = headings[0].el.getBoundingClientRect().top;
-    const lastTop =
-      headings[headings.length - 1].el.getBoundingClientRect().top;
-    if (firstTop > bandTop) {
-      setActive("_top");
-    } else if (lastTop < bandTop) {
-      setActive(headings[headings.length - 1].slug);
-    }
+    const passed = headings.filter(
+      (h) => h.el.getBoundingClientRect().top < bandTop,
+    );
+    setActive(passed.length > 0 ? passed[passed.length - 1].slug : "_top");
   }
 
   const observer = new IntersectionObserver(
@@ -96,9 +104,23 @@ function initMobileToc(root: HTMLElement): () => void {
   for (const { el } of headings) observer.observe(el);
   resolve();
 
+  let frame = 0;
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        resolve();
+      });
+    },
+    { passive: true, signal: controller.signal },
+  );
+
   return () => {
     controller.abort();
     observer.disconnect();
+    cancelAnimationFrame(frame);
     clearTimeout(suppressTimer);
   };
 }

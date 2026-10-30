@@ -41,15 +41,15 @@ const hasHeadings = headings.length > 0
       </div>
     </aside>
     <main id="main-content" tabindex="-1" transition:name="nb-content" class="docs-main">
-      {
-        hasHeadings && (
-          <div class="docs-toc-bar">
-            <MobileTOC headings={headings} />
-          </div>
-        )
-      }
       <article class="docs-article" data-pagefind-body>
         <PageIntro section={section} title={title} description={description} />
+        {
+          hasHeadings && (
+            <div class="docs-toc-bar" data-pagefind-ignore>
+              <MobileTOC headings={headings} />
+            </div>
+          )
+        }
         <div class="docs-content"><slot /></div>
       </article>
       <div class="docs-end">
@@ -147,7 +147,8 @@ const hasHeadings = headings.length > 0
     z-index: 20;
     box-sizing: border-box;
     margin-inline: calc(var(--docs-pad) * -1);
-    padding: 4px var(--docs-pad);
+    margin-bottom: 24px;
+    padding-inline: var(--docs-pad);
     background: var(--bg);
     border-bottom: 1px solid var(--border);
   }

@@ -20,13 +20,40 @@ const NBSP = " ";
       data-slot="mobile-toc"
       data-nb-mobile-toc
       aria-label="On this page"
-      class={cn("relative", className)}
+      class={cn(
+        "relative flex h-11 items-center gap-3 rounded-md [-webkit-tap-highlight-color:transparent] has-[select:focus-visible]:outline-2 has-[select:focus-visible]:outline-offset-0 has-[select:focus-visible]:outline-[var(--brand)]",
+        className,
+      )}
       {...attrs}
     >
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 16 16"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        class="pointer-events-none h-4 w-4 flex-none text-[var(--mfg)]"
+      >
+        <path d="M2.5 4h11M2.5 8h11M2.5 12h7" />
+      </svg>
+      <span
+        data-nb-mobile-toc-label
+        data-muted
+        aria-hidden="true"
+        class="pointer-events-none min-w-0 flex-1 truncate text-sm leading-5 font-medium text-[var(--fg)] data-[muted]:text-[var(--mfg)]"
+      >
+        On this page
+      </span>
+      <Icon
+        name="caret-down"
+        aria-hidden="true"
+        class="pointer-events-none h-4 w-4 flex-none text-[var(--mfg)]"
+      />
       <select
         data-nb-mobile-toc-select
         aria-label="Jump to a section on this page"
-        class="h-9 w-full appearance-none rounded-md border border-border bg-[var(--bg)] ps-3 pe-9 text-[13px] leading-5 font-medium text-[var(--fg)] transition-colors duration-[120ms] hover:border-[var(--border-strong)] focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-[var(--brand)] motion-reduce:transition-none"
+        class="absolute inset-0 h-full w-full cursor-pointer appearance-none opacity-0 text-base"
       >
         <option value="_top">On this page</option>
         {headings.filter((heading) => heading.slug).map((heading) => (
@@ -35,11 +62,6 @@ const NBSP = " ";
           </option>
         ))}
       </select>
-      <Icon
-        name="caret-down"
-        aria-hidden="true"
-        class="pointer-events-none absolute end-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--mfg)]"
-      />
     </nav>
   )
 }
