@@ -218,15 +218,6 @@ body {
 	line-height: 1;
 }
 
-.nb-code-figure:is(
-		[data-nb-lang="text"],
-		[data-nb-lang="plaintext"],
-		[data-nb-lang="plain"],
-		[data-nb-lang="txt"]
-	)::before {
-	content: "";
-}
-
 .nb-code-copy {
 	position: absolute;
 	top: 0.25rem;
