@@ -1,5 +1,6 @@
 ---
 import FeatureGroup from "../components/features/FeatureGroup.astro"
+import ClosingCta from "../components/home/ClosingCta.astro"
 import PageHero from "../components/site/PageHero.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
 import { featureGroups } from "../lib/features"
@@ -23,10 +24,12 @@ const groups = featureGroups(links, dataPanelTypeCount(readSyncedSchema()))
   <div class="wrap section-y groups">
     {groups.map((group, index) => <FeatureGroup group={group} id={`group-${index}`} />)}
   </div>
+  <ClosingCta links={links} />
 </MarketingLayout>
 
 <style>
   .groups {
     padding-top: 0;
+    padding-bottom: 0;
   }
 </style>

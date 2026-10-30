@@ -39,19 +39,18 @@ const after = at < 0 ? "" : feature.title.slice(at + code.length)
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    padding: 20px;
-    border: 1px solid var(--border);
-    border-radius: 12px;
+    gap: 8px;
+    padding: 28px;
     background: var(--surface);
-    box-shadow: var(--shadow-card);
+    transition: background-color 160ms ease;
   }
 
   h3 {
     margin: 0;
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 600;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
+    line-height: 1.3;
   }
 
   p {
@@ -61,7 +60,7 @@ const after = at < 0 ? "" : feature.title.slice(at + code.length)
   }
 
   .word {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   a {
@@ -73,11 +72,10 @@ const after = at < 0 ? "" : feature.title.slice(at + code.length)
     content: "";
     position: absolute;
     inset: 0;
-    border-radius: 12px;
   }
 
   .item:has(a:hover) {
-    border-color: var(--border-strong);
+    background: var(--muted-bg);
   }
 
   a:focus-visible {
@@ -86,10 +84,17 @@ const after = at < 0 ? "" : feature.title.slice(at + code.length)
 
   .item:has(a:focus-visible) {
     outline: 2px solid var(--brand);
-    outline-offset: 2px;
+    outline-offset: -2px;
+    border-radius: 15px;
   }
 
   .arrow {
     color: var(--mfg);
+  }
+
+  @media (max-width: 860px) {
+    .item {
+      padding: 24px;
+    }
   }
 </style>
