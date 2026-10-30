@@ -21,7 +21,7 @@
     position: relative;
     overflow: hidden;
     border-radius: 18px;
-    background: var(--ink-bg);
+    background: var(--band-bg);
     color: var(--ink-fg);
     padding: 56px 48px;
     display: flex;
@@ -61,13 +61,17 @@
     flex: 1 1 360px;
     min-width: 0;
     max-width: 480px;
-    background: var(--ink-surface);
-    border-color: var(--ink-line);
+    background: var(--band-code);
+    border-color: var(--band-line);
     color: var(--ink-code);
   }
 
+  .panel :focus-visible {
+    outline-color: var(--ink-fg);
+  }
+
   .prompt {
-    color: var(--term-accent);
+    color: var(--ink-mfg);
   }
 
   @media (max-width: 860px) {

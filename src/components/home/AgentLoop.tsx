@@ -43,7 +43,7 @@ const followUpGroupStyle: CSSProperties = {
   borderTop: "1px dashed var(--ink-border)",
 }
 
-const promptMarkStyle: CSSProperties = { color: "var(--term-accent)", marginRight: 8 }
+const promptMarkStyle: CSSProperties = { color: "var(--term-dim)", marginRight: 8 }
 
 const browserBarStyle: CSSProperties = {
   borderBottom: "1px solid var(--border)",
