@@ -18,7 +18,7 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
 
 {
   minimal ? (
-    <header class="minimal">
+    <header class="wrap minimal">
       <a class="home" href="/" aria-label="SlashObserve home">
         <Wordmark size={21} />
       </a>
@@ -132,12 +132,8 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
   }
 
   .minimal {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 32px;
     min-height: 64px;
     gap: 12px;
-    box-sizing: border-box;
   }
 
   .home {

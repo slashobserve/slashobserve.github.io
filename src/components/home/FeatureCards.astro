@@ -6,7 +6,7 @@ const exampleQuery = 'rate(http_requests_total{pod=~"$pod"}[$__rate_interval])'
 const tiles = Array.from({ length: 8 }, (_, index) => index === 3)
 ---
 
-<section class="band">
+<section class="band-muted">
   <div class="wrap section-y inner">
     <div class="heading" data-reveal>
       <h2 class="h2">Everything you need to replace your Grafana.</h2>
@@ -73,12 +73,6 @@ const tiles = Array.from({ length: 8 }, (_, index) => index === 3)
 </section>
 
 <style>
-  .band {
-    background: var(--muted-bg);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-
   .inner {
     display: flex;
     flex-direction: column;
