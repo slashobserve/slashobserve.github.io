@@ -22,7 +22,7 @@
   --grid: #eef0f2;
   --halo: rgba(10,10,10,0.05);
   --halo2: rgba(10,10,10,0.025);
-  --gridline: rgba(10,10,10,0.045);
+  --gridline: rgba(10,10,10,0.14);
   --shadow-card: 0 6px 24px 0 rgba(150,165,190,0.14);
   --shadow-elev: 0 0 0 1px rgba(10,20,40,0.06),0 18px 40px -12px rgba(16,32,64,0.22);
   --chrome: #f7f8f9;
@@ -55,7 +55,7 @@
   --grid: #202327;
   --halo: rgba(255,255,255,0.06);
   --halo2: rgba(255,255,255,0.025);
-  --gridline: rgba(255,255,255,0.05);
+  --gridline: rgba(255,255,255,0.16);
   --shadow-card: 0 3px 12px 0 rgba(0,0,0,0.3);
   --shadow-elev: 0 0 0 1px rgba(255,255,255,0.06),0 18px 40px -12px rgba(0,0,0,0.6);
   --chrome: #121315;
@@ -89,7 +89,7 @@
     --grid: #202327;
     --halo: rgba(255,255,255,0.06);
     --halo2: rgba(255,255,255,0.025);
-    --gridline: rgba(255,255,255,0.05);
+    --gridline: rgba(255,255,255,0.16);
     --shadow-card: 0 3px 12px 0 rgba(0,0,0,0.3);
     --shadow-elev: 0 0 0 1px rgba(255,255,255,0.06),0 18px 40px -12px rgba(0,0,0,0.6);
     --chrome: #121315;

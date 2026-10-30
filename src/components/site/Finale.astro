@@ -19,12 +19,10 @@
     pointer-events: none;
     background-image:
       radial-gradient(50% 70% at 50% 100%, var(--halo), transparent 70%),
-      linear-gradient(var(--gridline) 1px, transparent 1px),
-      linear-gradient(90deg, var(--gridline) 1px, transparent 1px);
+      radial-gradient(circle, var(--gridline) 1px, transparent 1.5px);
     background-size:
       auto,
-      56px 56px,
-      56px 56px;
+      24px 24px;
     -webkit-mask-image: radial-gradient(60% 80% at 50% 100%, black, transparent 80%);
     mask-image: radial-gradient(60% 80% at 50% 100%, black, transparent 80%);
   }
