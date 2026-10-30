@@ -77,16 +77,27 @@ const parts = ["Agent", "Query proxy", "MCP", "API"]
   <div class="commands g1-sm" data-reveal>
     <div class="command">
       <span class="hint label">Try it with the demo stack</span>
-      <pre class="code">{demoCommands}</pre>
+      <pre class="code">{demoCommands.split("\n").map((line) => <span class="line">{line}</span>)}</pre>
     </div>
     <div class="command">
       <span class="hint label">Run your own deployment</span>
-      <pre class="code">{deployCommand}</pre>
+      <pre class="code">{deployCommand.split("\n").map((line) => <span class="line">{line}</span>)}</pre>
     </div>
   </div>
 </section>
 
 <style>
+  .code {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .line {
+    display: block;
+    padding-left: 4ch;
+    text-indent: -4ch;
+  }
+
   .block {
     display: flex;
     flex-direction: column;
@@ -194,7 +205,7 @@ const parts = ["Agent", "Query proxy", "MCP", "API"]
 
   .commands {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
     gap: 24px;
   }
 
