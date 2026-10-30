@@ -29,7 +29,12 @@ body{margin:0}
 .tab{border:0;background:transparent;padding:7px 12px;border-radius:7px;font-size:14px;color:var(--mfg)}
 .tab-on{background:var(--surface);color:var(--fg);box-shadow:0 0 0 1px var(--border)}
 .step{display:inline-flex;align-items:center;gap:10px;border:0;background:transparent;padding:6px 0;font-size:14px;color:var(--mfg)}
-.step i{display:inline-block;width:22px;height:2px;border-radius:2px;background:var(--border-strong)}
+.step i{position:relative;overflow:hidden;display:inline-block;width:32px;height:2px;border-radius:2px;background:var(--border-strong)}
+.step-on.step-playing i{background:var(--border-strong)}
+.step-fill{position:absolute;inset:0;background:var(--brand);transform-origin:left center;animation-name:step-fill;animation-timing-function:linear;animation-fill-mode:forwards}
+@keyframes step-fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media (prefers-reduced-motion: no-preference){.loop-enter{animation:loop-enter 280ms cubic-bezier(0.22,1,0.36,1) both}}
+@keyframes loop-enter{from{opacity:0;transform:translateY(6px)}}
 .step-on{color:var(--fg)}.step-on i{background:var(--brand)}
 .ichip{display:grid;place-items:center;width:40px;height:40px;border-radius:8px;background:var(--brand-muted);color:var(--brand);flex:none}
 .logo-word{font-size:17px;font-weight:600;letter-spacing:-0.02em;color:var(--mfg);white-space:nowrap}
