@@ -27,7 +27,7 @@ const ordered = await getOrderedDocs()
   headings={headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3)}
   prevNext={prevNext(ordered, href)}
   markdownUrl={`${href}index.md`}
-  editUrl={editUrlFor(entry)}
+  editUrl={entry.data.generatedFrom ? undefined : editUrlFor(entry)}
   lastUpdated={entry.data.lastUpdated}
 >
   <Content />
