@@ -86,7 +86,7 @@ export const FEATURE_GROUPS: readonly { title: string; items: readonly FeatureSp
       },
       {
         title: "Import report",
-        body: "Nothing is dropped silently: unsupported panels become placeholders with a reason.",
+        body: "Panel by panel, every Grafana option shows as mapped to the ObserveSpec field it became, excluded with the reason, or reported.",
         doc: "importGuide",
       },
     ],
