@@ -90,7 +90,7 @@
 }
 
 .cv-corpus {
-  --cv-cols: minmax(0, 1.5fr) minmax(0, 1fr) 64px 76px 64px 100px 120px;
+  --cv-cols: minmax(0, 1.5fr) minmax(0, 1fr) 64px 76px 64px 100px 176px;
 }
 
 .cv-corpus .cv-row {
@@ -204,15 +204,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-.cv-split {
-  display: flex;
-  min-width: 0;
-}
-
-.cv-split .cv-bar {
-  flex: 1;
-}
-
 .cv-list {
   margin: 0;
   padding: 0;
@@ -246,7 +237,7 @@
   }
 
   .cv-corpus {
-    --cv-cols: minmax(0, 1.5fr) minmax(0, 1fr) 60px 70px 60px 96px 80px;
+    --cv-cols: minmax(0, 1.5fr) minmax(0, 1fr) 60px 70px 60px 96px 132px;
   }
 
   .cv-row,
@@ -283,8 +274,7 @@
     display: none;
   }
 
-  .cv-cov,
-  .cv-split {
+  .cv-cov {
     order: -1;
   }
 

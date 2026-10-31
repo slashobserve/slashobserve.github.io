@@ -1,5 +1,5 @@
 ---
-import { formatCount } from "../../lib/numbers"
+import { formatCount, percentDown } from "../../lib/numbers"
 import SplitBar from "./SplitBar.astro"
 
 interface Props {
@@ -28,7 +28,8 @@ const cells = [
     ))
   }
 </span>
-<span class="cv-split">
+<span class="cv-cov">
+  <span class="sr-only">Coverage</span>
   <SplitBar
     segments={[
       { count: imported, tone: "ink" },
@@ -36,4 +37,5 @@ const cells = [
       { count: placeholders, tone: "line" },
     ]}
   />
+  <span class="cv-pct">{percentDown(imported, panels)}%</span>
 </span>
