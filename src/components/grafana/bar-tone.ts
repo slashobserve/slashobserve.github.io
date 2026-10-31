@@ -1,1 +1,1 @@
-export type BarTone = "ink" | "mid" | "line"
+export type BarTone = "ink" | "mid" | "line" | "gap"

@@ -19,7 +19,9 @@ const { groups } = Astro.props
     <BarLegend
       items={[
         { label: "Imports", tone: "ink" },
-        { label: "Gap", tone: "line" },
+        { label: "No visible effect", tone: "mid" },
+        { label: "Excluded on purpose", tone: "line" },
+        { label: "Gap", tone: "gap" },
       ]}
     />
   </div>
@@ -29,9 +31,11 @@ const { groups } = Astro.props
       <span class="cv-nums">
         <span class="cv-num">Options</span>
         <span class="cv-num">Imports</span>
+        <span class="cv-num">No visible effect</span>
+        <span class="cv-num">Excluded</span>
         <span class="cv-num">Gaps</span>
       </span>
-      <span>Coverage</span>
+      <span>Handled</span>
     </div>
     {
       groups.map((group) => {
@@ -50,14 +54,14 @@ const { groups } = Astro.props
                   </span>
                 </span>
               </span>
-              <AreaCells options={group.options} converts={group.converts} gaps={group.gaps} />
+              <AreaCells counts={group} />
             </Head>
             {expandable && (
               <ul class="cv-list" role="list">
                 {group.areas.map((area) => (
                   <li class="cv-row cv-child">
                     <span class="cv-name">{area.label}</span>
-                    <AreaCells options={area.options} converts={area.converts} gaps={area.gaps} />
+                    <AreaCells counts={area} />
                   </li>
                 ))}
               </ul>

@@ -6,7 +6,17 @@ export type AreaInput = {
   gapFiles: readonly string[]
 }
 
-type Entry = { id: string; excluded: boolean }
+type Outcome = "imports" | "noEffect" | "excluded"
+
+type Entry = { id: string; outcome: Outcome }
+
+const OUTCOMES = new Map<string, Outcome>([
+  ["convert", "imports"],
+  ["convert_noted", "imports"],
+  ["cosmetic", "noEffect"],
+  ["bookkeeping", "noEffect"],
+  ["excluded", "excluded"],
+])
 
 function readEntries(area: string, catalog: any): Entry[] {
   if (!Array.isArray(catalog?.entries)) throw new Error(`${area}: catalog.json entries missing`)
@@ -14,7 +24,11 @@ function readEntries(area: string, catalog: any): Entry[] {
     if (typeof entry?.id !== "string" || entry.id === "") {
       throw new Error(`${area}: catalog.json entry ${index} has no id`)
     }
-    return { id: entry.id, excluded: entry.expect === "excluded" }
+    const outcome = entry.expect === undefined ? "imports" : OUTCOMES.get(entry.expect)
+    if (outcome === undefined) {
+      throw new Error(`${area}: catalog.json entry ${entry.id} has unknown expect ${JSON.stringify(entry.expect)}`)
+    }
+    return { id: entry.id, outcome }
   })
 }
 
@@ -36,16 +50,18 @@ export function summarizeArea(input: AreaInput): { grafana: string; summary: Cov
   const grafana = readVersion(input.area, input.catalog)
   const entries = readEntries(input.area, input.catalog)
   const gapNames = new Set(input.gapFiles)
-  const options = entries.filter((entry) => !entry.excluded)
-  const gaps = options.filter((entry) => gapNames.has(entry.id)).length
+  const gapped = entries.filter((entry) => gapNames.has(entry.id))
+  const count = (outcome: Outcome) =>
+    entries.filter((entry) => entry.outcome === outcome && !gapNames.has(entry.id)).length
   return {
     grafana,
     summary: {
       area: input.area,
-      options: options.length,
-      converts: options.length - gaps,
-      gaps,
-      excluded: entries.length - options.length,
+      options: entries.length,
+      imports: count("imports"),
+      noEffect: count("noEffect"),
+      excluded: count("excluded"),
+      gaps: gapped.length,
     },
   }
 }

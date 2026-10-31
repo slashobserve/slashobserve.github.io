@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test"
 import { coverageGroups, displayVersion, type CoverageArea, type ImportCoverage } from "./import-coverage"
 
-function area(id: string, options: number, converts: number, excluded = 0): CoverageArea {
-  return { area: id, options, converts, gaps: options - converts, excluded }
+function area(id: string, imports: number, noEffect = 0, excluded = 0, gaps = 0): CoverageArea {
+  return { area: id, options: imports + noEffect + excluded + gaps, imports, noEffect, excluded, gaps }
 }
 
 function coverage(areas: CoverageArea[], grafana = "v12.3.0"): ImportCoverage {
@@ -12,14 +12,14 @@ function coverage(areas: CoverageArea[], grafana = "v12.3.0"): ImportCoverage {
 describe("coverageGroups grouping", () => {
   const { groups } = coverageGroups(
     coverage([
-      area("variables-query", 10, 9),
-      area("transformations", 40, 30),
-      area("timeseries", 100, 60),
-      area("dashboard", 20, 20),
-      area("barchart", 50, 40),
-      area("queries-prometheus", 8, 8),
-      area("fieldconfig", 30, 12),
-      area("variables-adhoc", 5, 1),
+      area("variables-query", 9, 0, 0, 1),
+      area("transformations", 30, 0, 0, 10),
+      area("timeseries", 50, 10, 0, 40),
+      area("dashboard", 20),
+      area("barchart", 30, 5, 5, 10),
+      area("queries-prometheus", 8),
+      area("fieldconfig", 12, 0, 0, 18),
+      area("variables-adhoc", 1, 0, 0, 4),
     ]),
   )
 
@@ -40,13 +40,29 @@ describe("coverageGroups grouping", () => {
   })
 
   test("sums the counts of a group's areas", () => {
-    expect(groups[0]).toMatchObject({ options: 150, converts: 100, gaps: 50, excluded: 0 })
-    expect(groups[3]).toMatchObject({ options: 15, converts: 10, gaps: 5 })
+    expect(groups[0]).toEqual({
+      label: "Panel types",
+      areas: expect.any(Array),
+      options: 150,
+      imports: 80,
+      noEffect: 15,
+      excluded: 5,
+      gaps: 50,
+    })
+    expect(groups[3]).toMatchObject({ options: 15, imports: 10, noEffect: 0, excluded: 0, gaps: 5 })
   })
 
   test("carries each area's id and counts", () => {
     expect(groups[1].areas).toEqual([
-      { id: "fieldconfig", label: "Field config and overrides", options: 30, converts: 12, gaps: 18, excluded: 0 },
+      {
+        id: "fieldconfig",
+        label: "Field config and overrides",
+        options: 30,
+        imports: 12,
+        noEffect: 0,
+        excluded: 0,
+        gaps: 18,
+      },
     ])
   })
 })
@@ -54,18 +70,18 @@ describe("coverageGroups grouping", () => {
 describe("coverageGroups unknown areas", () => {
   test("puts an area outside the map in a trailing Other group labelled by its id", () => {
     const { groups } = coverageGroups(
-      coverage([area("zeta-panel", 4, 1), area("timeseries", 10, 5), area("alpha-panel", 6, 6)]),
+      coverage([area("zeta-panel", 1, 0, 0, 3), area("timeseries", 5, 0, 0, 5), area("alpha-panel", 6)]),
     )
     expect(groups.map((entry) => entry.label)).toEqual(["Panel types", "Other"])
     expect(groups[1].areas.map((entry) => [entry.id, entry.label])).toEqual([
       ["alpha-panel", "alpha-panel"],
       ["zeta-panel", "zeta-panel"],
     ])
-    expect(groups[1]).toMatchObject({ options: 10, converts: 7, gaps: 3 })
+    expect(groups[1]).toMatchObject({ options: 10, imports: 7, gaps: 3 })
   })
 
   test("has no Other group when every area is mapped", () => {
-    const { groups } = coverageGroups(coverage([area("timeseries", 10, 5)]))
+    const { groups } = coverageGroups(coverage([area("timeseries", 5, 0, 0, 5)]))
     expect(groups.map((entry) => entry.label)).toEqual(["Panel types"])
   })
 })
@@ -73,14 +89,14 @@ describe("coverageGroups unknown areas", () => {
 describe("coverageGroups totals", () => {
   test("sums every area, including unknown ones, and counts the areas", () => {
     const { totals } = coverageGroups(
-      coverage([area("timeseries", 100, 60, 2), area("dashboard", 20, 20, 1), area("new-area", 10, 4)]),
+      coverage([area("timeseries", 50, 10, 2, 38), area("dashboard", 20, 0, 1), area("new-area", 4, 0, 0, 6)]),
     )
-    expect(totals).toEqual({ options: 130, converts: 84, gaps: 46, excluded: 3, areas: 3 })
+    expect(totals).toEqual({ options: 131, imports: 74, noEffect: 10, excluded: 3, gaps: 44, areas: 3 })
   })
 
   test("is all zero for no areas", () => {
     const { totals, groups } = coverageGroups(coverage([]))
-    expect(totals).toEqual({ options: 0, converts: 0, gaps: 0, excluded: 0, areas: 0 })
+    expect(totals).toEqual({ options: 0, imports: 0, noEffect: 0, excluded: 0, gaps: 0, areas: 0 })
     expect(groups).toEqual([])
   })
 })

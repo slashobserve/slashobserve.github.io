@@ -16,13 +16,28 @@ function input(area: string, cat: unknown, gapFiles: string[] = []): AreaInput {
 }
 
 describe("summarizeConformance", () => {
-  test("counts options, gaps, converts and exclusions per area", () => {
+  test("counts every outcome and the gaps per area", () => {
     const result = summarizeConformance([
-      input("heatmap", catalog(["a=1", "b=2", "c=3", "d=4"], ["x=1"]), ["b=2", "d=4"]),
+      input(
+        "heatmap",
+        {
+          grafana: "v12.3.0",
+          entries: [
+            { id: "a" },
+            { id: "b", expect: "convert" },
+            { id: "c", expect: "convert_noted" },
+            { id: "d", expect: "cosmetic" },
+            { id: "e", expect: "bookkeeping" },
+            { id: "f", expect: "excluded" },
+            { id: "g", expect: "excluded" },
+          ],
+        },
+        ["b", "e", "g"],
+      ),
     ])
     expect(result).toEqual({
       grafana: "v12.3.0",
-      areas: [{ area: "heatmap", options: 4, converts: 2, gaps: 2, excluded: 1 }],
+      areas: [{ area: "heatmap", options: 7, imports: 2, noEffect: 1, excluded: 1, gaps: 3 }],
     })
   })
 
@@ -30,38 +45,43 @@ describe("summarizeConformance", () => {
     const result = summarizeConformance([
       input("gauge", catalog(["a=1", "b=2"]), ["a=1", ".gitkeep", "stale=9"]),
     ])
-    expect(result.areas[0]).toMatchObject({ options: 2, gaps: 1, converts: 1 })
+    expect(result.areas[0]).toMatchObject({ options: 2, imports: 1, gaps: 1 })
   })
 
-  test("does not count a gap file named after an excluded entry", () => {
-    const result = summarizeConformance([input("dashboard", catalog(["a=1"], ["x=1"]), ["x=1"])])
+  test("counts excluded entries as options", () => {
+    const result = summarizeConformance([input("dashboard", catalog(["a=1"], ["x=1", "y=2"]))])
     expect(result.areas[0]).toEqual({
       area: "dashboard",
-      options: 1,
-      converts: 1,
+      options: 3,
+      imports: 1,
+      noEffect: 0,
+      excluded: 2,
       gaps: 0,
-      excluded: 1,
     })
   })
 
-  test("treats cosmetic, bookkeeping and convert entries as options", () => {
-    const result = summarizeConformance([
-      input("table", {
-        grafana: "v12.3.0",
-        entries: [
-          { id: "a" },
-          { id: "b", expect: "convert" },
-          { id: "c", expect: "cosmetic" },
-          { id: "d", expect: "bookkeeping" },
-        ],
-      }),
-    ])
-    expect(result.areas[0]).toMatchObject({ options: 4, converts: 4, gaps: 0, excluded: 0 })
+  test("takes a gapped excluded entry out of excluded and into gaps", () => {
+    const result = summarizeConformance([input("dashboard", catalog(["a=1"], ["x=1"]), ["x=1"])])
+    expect(result.areas[0]).toEqual({
+      area: "dashboard",
+      options: 2,
+      imports: 1,
+      noEffect: 0,
+      excluded: 0,
+      gaps: 1,
+    })
   })
 
   test("handles an area with no entries and no gaps", () => {
     const result = summarizeConformance([input("news", { grafana: "v12.3.0", entries: [] })])
-    expect(result.areas[0]).toEqual({ area: "news", options: 0, converts: 0, gaps: 0, excluded: 0 })
+    expect(result.areas[0]).toEqual({
+      area: "news",
+      options: 0,
+      imports: 0,
+      noEffect: 0,
+      excluded: 0,
+      gaps: 0,
+    })
   })
 
   test("sorts areas by name", () => {
@@ -104,6 +124,16 @@ describe("summarizeConformance failures", () => {
       "an entry without an id",
       { grafana: "v12.3.0", entries: [{ expect: "convert" }] },
       "gauge: catalog.json entry 0 has no id",
+    ],
+    [
+      "an unknown expect value",
+      { grafana: "v12.3.0", entries: [{ id: "a=1" }, { id: "b=2", expect: "skipped" }] },
+      'gauge: catalog.json entry b=2 has unknown expect "skipped"',
+    ],
+    [
+      "an expect value named like an object property",
+      { grafana: "v12.3.0", entries: [{ id: "a=1", expect: "toString" }] },
+      'gauge: catalog.json entry a=1 has unknown expect "toString"',
     ],
   ])("rejects a catalog with %s", (_name, cat, message) => {
     expect(() => summarizeConformance([input("gauge", cat)])).toThrow(message)

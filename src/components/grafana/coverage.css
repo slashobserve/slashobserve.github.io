@@ -59,6 +59,12 @@
   background: var(--border-strong);
 }
 
+.cv-gap {
+  box-sizing: border-box;
+  background: transparent;
+  border: 1px dashed var(--border-strong);
+}
+
 .cv-bar {
   display: flex;
   gap: 2px;
@@ -80,7 +86,7 @@
 }
 
 .cv-areas {
-  --cv-cols: minmax(0, 1fr) 84px 84px 84px 208px;
+  --cv-cols: minmax(0, 1fr) 72px 72px 88px 72px 56px 196px;
 }
 
 .cv-corpus {
@@ -236,7 +242,7 @@
 
 @media (max-width: 1023px) {
   .cv-areas {
-    --cv-cols: minmax(0, 1fr) 72px 72px 72px 150px;
+    --cv-cols: minmax(0, 1fr) 60px 60px 76px 64px 48px 150px;
   }
 
   .cv-corpus {

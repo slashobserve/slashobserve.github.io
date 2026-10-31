@@ -3,9 +3,10 @@ import { join } from "node:path"
 
 export type CoverageCounts = {
   options: number
-  converts: number
-  gaps: number
+  imports: number
+  noEffect: number
   excluded: number
+  gaps: number
 }
 
 export type CoverageArea = { area: string } & CoverageCounts
@@ -100,11 +101,12 @@ function sum(areas: readonly CoverageCounts[]): CoverageCounts {
   return areas.reduce<CoverageCounts>(
     (total, area) => ({
       options: total.options + area.options,
-      converts: total.converts + area.converts,
-      gaps: total.gaps + area.gaps,
+      imports: total.imports + area.imports,
+      noEffect: total.noEffect + area.noEffect,
       excluded: total.excluded + area.excluded,
+      gaps: total.gaps + area.gaps,
     }),
-    { options: 0, converts: 0, gaps: 0, excluded: 0 },
+    { options: 0, imports: 0, noEffect: 0, excluded: 0, gaps: 0 },
   )
 }
 
@@ -113,9 +115,10 @@ function groupArea(id: string, label: string, area: CoverageArea): CoverageGroup
     id,
     label,
     options: area.options,
-    converts: area.converts,
-    gaps: area.gaps,
+    imports: area.imports,
+    noEffect: area.noEffect,
     excluded: area.excluded,
+    gaps: area.gaps,
   }
 }
 

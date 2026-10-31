@@ -1,17 +1,18 @@
 ---
+import type { CoverageCounts } from "../../lib/import-coverage"
 import { formatCount, percentDown } from "../../lib/numbers"
 import SplitBar from "./SplitBar.astro"
 
 interface Props {
-  options: number
-  converts: number
-  gaps: number
+  counts: CoverageCounts
 }
 
-const { options, converts, gaps } = Astro.props
+const { options, imports, noEffect, excluded, gaps } = Astro.props.counts
 const cells = [
   ["Options", options],
-  ["Imports", converts],
+  ["Imports", imports],
+  ["No visible effect", noEffect],
+  ["Excluded", excluded],
   ["Gaps", gaps],
 ] as const
 ---
@@ -27,12 +28,14 @@ const cells = [
   }
 </span>
 <span class="cv-cov">
-  <span class="sr-only">Coverage</span>
+  <span class="sr-only">Handled</span>
   <SplitBar
     segments={[
-      { count: converts, tone: "ink" },
-      { count: gaps, tone: "line" },
+      { count: imports, tone: "ink" },
+      { count: noEffect, tone: "mid" },
+      { count: excluded, tone: "line" },
+      { count: gaps, tone: "gap" },
     ]}
   />
-  <span class="cv-pct">{percentDown(converts, options)}%</span>
+  <span class="cv-pct">{percentDown(options - gaps, options)}%</span>
 </span>

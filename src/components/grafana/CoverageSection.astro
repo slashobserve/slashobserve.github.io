@@ -14,8 +14,7 @@ interface Props {
 
 const { coverage, rows, total } = Astro.props
 const { totals } = coverage
-const optionsLine = `${formatCount(totals.converts)} of ${formatCount(totals.options)} options across ${formatCount(totals.areas)} areas. ${formatCount(totals.gaps)} known gaps.`
-const excludedLine = `${formatCount(totals.excluded)} options for features left out on purpose are not counted.`
+const optionsLine = `${formatCount(totals.options)} options across ${formatCount(totals.areas)} areas, each with a tested outcome: ${formatCount(totals.imports)} import, ${formatCount(totals.noEffect)} have no visible effect and ${formatCount(totals.excluded)} are left out on purpose with a recorded reason. ${formatCount(totals.gaps)} known ${totals.gaps === 1 ? "gap" : "gaps"}.`
 const panelsLine =
   total === null
     ? ""
@@ -33,10 +32,9 @@ const panelsLine =
     </div>
     <div class="figures" data-reveal>
       <div class="figure">
-        <p class="figure-num">{percentDown(totals.converts, totals.options)}%</p>
-        <p class="figure-label">of Grafana options import</p>
+        <p class="figure-num">{percentDown(totals.options - totals.gaps, totals.options)}%</p>
+        <p class="figure-label">of Grafana options are handled</p>
         <p class="hint figure-sub">{optionsLine}</p>
-        {totals.excluded > 0 && <p class="hint figure-sub">{excludedLine}</p>}
       </div>
       {
         total && (
