@@ -60,7 +60,32 @@ const GROUPS: readonly { label: string; sorted: boolean; areas: readonly (readon
       ["trend", "Trend"],
       ["xychart", "XY chart"],
       ["alertlist", "Alert list"],
+      ["alertgroups", "Alert groups"],
+      ["annolist", "Annotations list"],
+      ["datagrid", "Data grid"],
+      ["debug", "Debug"],
+      ["live", "Live"],
+      ["logs-new", "Logs (new)"],
+      ["logstable", "Logs table"],
     ],
+  },
+  {
+    label: "Legacy and plugin panels",
+    sorted: true,
+    areas: [
+      ["graph", "Graph (old)"],
+      ["singlestat", "Singlestat"],
+      ["grafana-singlestat-panel", "Singlestat plugin"],
+      ["table-old", "Table (old)"],
+      ["heatmap-legacy", "Heatmap (old)"],
+      ["natel-discrete-panel", "Discrete"],
+      ["grafana-worldmap-panel", "Worldmap"],
+    ],
+  },
+  {
+    label: "Panel options",
+    sorted: false,
+    areas: [["panel", "Panel options"]],
   },
   {
     label: "Field config and overrides",
@@ -77,6 +102,7 @@ const GROUPS: readonly { label: string; sorted: boolean; areas: readonly (readon
       ["queries-expressions", "Expressions"],
       ["queries-mixed", "Mixed datasource"],
       ["queries-dashboard", "Dashboard source (another panel's results)"],
+      ["queries-unsupported", "Other datasources"],
     ],
   },
   {
@@ -94,7 +120,15 @@ const GROUPS: readonly { label: string; sorted: boolean; areas: readonly (readon
     ],
   },
   { label: "Transformations", sorted: false, areas: [["transformations", "Transformations"]] },
-  { label: "Dashboard settings", sorted: false, areas: [["dashboard", "Dashboard settings"]] },
+  {
+    label: "Dashboard settings",
+    sorted: false,
+    areas: [
+      ["dashboard", "Dashboard settings"],
+      ["row", "Rows"],
+      ["row-legacy", "Rows (old layout)"],
+    ],
+  },
 ]
 
 function sum(areas: readonly CoverageCounts[]): CoverageCounts {
