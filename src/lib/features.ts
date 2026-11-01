@@ -33,7 +33,7 @@ export const FEATURE_GROUPS: readonly { title: string; items: readonly FeatureSp
       },
       {
         title: "Variables",
-        body: "Query, custom, interval, textbox, datasource and ad hoc variables, multi-value and All.",
+        body: "Query, custom, constant, interval, textbox, datasource, ad hoc and group-by variables, multi-value and All.",
       },
     ],
   },
@@ -50,8 +50,16 @@ export const FEATURE_GROUPS: readonly { title: string; items: readonly FeatureSp
       },
       { title: "Versions with diffs", body: "Compare any two versions and restore one." },
       {
+        title: "Manage dashboards",
+        body: "Edit a dashboard's title, description and tags, duplicate it, move it to another folder or delete it.",
+      },
+      {
         title: "Panel editor",
         body: "Edit queries with a live preview against the saved series, or edit the panel as JSON.",
+      },
+      {
+        title: "Expressions",
+        body: "Math, reduce, resample and threshold steps over a panel's other queries.",
       },
     ],
   },
@@ -82,6 +90,11 @@ export const FEATURE_GROUPS: readonly { title: string; items: readonly FeatureSp
       {
         title: "Import by paste, upload, CLI or MCP",
         body: "Same queries, layout, units, thresholds, overrides and mappings.",
+        doc: "importGuide",
+      },
+      {
+        title: "Legacy and plugin panels",
+        body: "Old graph, singlestat, Angular table and heatmap panels, plus Discrete and Worldmap, import the way Grafana migrates them.",
         doc: "importGuide",
       },
       {
