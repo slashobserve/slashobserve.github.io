@@ -17,6 +17,10 @@ const { links } = Astro.props
       <span class="hint tagline">
         Dashboards from a sentence, on your own data. Open source under Apache-2.0.
       </span>
+      <span class="hint legal">
+        Grafana is a trademark of Grafana Labs. SlashObserve is not affiliated with or endorsed by
+        Grafana Labs.
+      </span>
     </div>
     <nav aria-label="Footer" class="columns">
       {
@@ -72,6 +76,11 @@ const { links } = Astro.props
 
   .tagline {
     max-width: 30ch;
+  }
+
+  .legal {
+    max-width: 36ch;
+    font-size: 12px;
   }
 
   .column .navlink {

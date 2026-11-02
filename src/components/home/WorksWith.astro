@@ -3,7 +3,6 @@ import {
   siClaude,
   siClickhouse,
   siCursor,
-  siGrafana,
   siOpenid,
   siOpentelemetry,
   siPrometheus,
@@ -13,7 +12,7 @@ const items = [
   { name: "Prometheus", icon: siPrometheus },
   { name: "ClickHouse", icon: siClickhouse },
   { name: "OpenTelemetry", icon: siOpentelemetry },
-  { name: "Grafana dashboards", icon: siGrafana },
+  { name: "Grafana dashboards", icon: null },
   { name: "Claude Code", icon: siClaude },
   { name: "Cursor", icon: siCursor },
   { name: "OIDC", icon: siOpenid },
@@ -27,9 +26,11 @@ const items = [
       {
         items.map(({ name, icon }) => (
           <li class="logo-word">
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path d={icon.path} fill="currentColor" />
-            </svg>
+            {icon && (
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d={icon.path} fill="currentColor" />
+              </svg>
+            )}
             {name}
           </li>
         ))

@@ -12,7 +12,7 @@ export const FEATURE_GROUPS: readonly { title: string; items: readonly FeatureSp
     items: [
       {
         title: "Dashboards from a sentence",
-        body: "Ask in the chat and get a live, Grafana-style dashboard.",
+        body: "Ask in the chat and get a live dashboard.",
         doc: "quickStart",
       },
       {
