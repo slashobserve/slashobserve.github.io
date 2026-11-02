@@ -47,7 +47,7 @@ describe("llmsIndex", () => {
       [
         "# SlashObserve",
         "",
-        "> Dashboards from a sentence, on your own data.",
+        "> Observability dashboards from a sentence, on your own data.",
         "",
         "Full documentation in one file: https://slashobserve.com/llms-full.txt",
         "",
@@ -70,7 +70,7 @@ describe("llmsFull", () => {
       [
         "# SlashObserve",
         "",
-        "> Dashboards from a sentence, on your own data.",
+        "> Observability dashboards from a sentence, on your own data.",
         "",
         "Index: https://slashobserve.com/llms.txt",
         "",

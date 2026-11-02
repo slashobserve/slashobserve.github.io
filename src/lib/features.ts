@@ -11,7 +11,7 @@ export const FEATURE_GROUPS: readonly { title: string; items: readonly FeatureSp
     title: "Build dashboards",
     items: [
       {
-        title: "Dashboards from a sentence",
+        title: "Observability dashboards from a sentence",
         body: "Ask in the chat and get a live dashboard.",
         doc: "quickStart",
       },
