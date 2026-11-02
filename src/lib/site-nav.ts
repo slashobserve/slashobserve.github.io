@@ -4,6 +4,8 @@ import { DOCS_HOME_PATH } from "./docs-home"
 export type NavItem = { label: string; href: string }
 
 export const GITHUB_URL = "https://github.com/slashobserve/slashobserve"
+export const CLI_INSTALL_COMMAND =
+  "curl -fsSL https://raw.githubusercontent.com/slashobserve/slashobserve/main/install.sh | sh"
 export const FEATURES_PATH = "/features/"
 export const GRAFANA_PATH = "/grafana/"
 

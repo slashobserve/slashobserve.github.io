@@ -3,6 +3,7 @@ import type { DocLinks } from "../../lib/doc-links"
 import AgentLoop from "./AgentLoop"
 import CopyCommand from "./CopyCommand.astro"
 import Stage from "./Stage.astro"
+import { CLI_INSTALL_COMMAND } from "../../lib/site-nav"
 
 interface Props {
   links: DocLinks
@@ -20,9 +21,13 @@ const { links } = Astro.props
       review.
     </p>
     <div class="commands g1-sm">
-      <CopyCommand command="git clone github.com/slashobserve/slashobserve && make demo" />
+      <CopyCommand command={CLI_INSTALL_COMMAND} />
       {links.quickStart && <a class="btn btn-primary" href={links.quickStart}>Run the demo</a>}
     </div>
+    <p class="hint cli-note">
+      Installs the <code>observe</code> CLI, which talks to a running SlashObserve server. To start
+      one, run the demo.
+    </p>
     {
       links.importGuide && (
         <a class="hint import-link" href={links.importGuide}>
@@ -77,6 +82,11 @@ const { links } = Astro.props
     width: 100%;
     max-width: 560px;
     margin-top: 10px;
+  }
+
+  .cli-note {
+    max-width: 560px;
+    margin: 0;
   }
 
   .import-link {

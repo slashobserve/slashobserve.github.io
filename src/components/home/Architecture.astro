@@ -1,15 +1,18 @@
 ---
 import Wordmark from "../site/Wordmark.astro"
+import type { DocLinks } from "../../lib/doc-links"
 import Stage from "./Stage.astro"
 
-const demoCommands = `git clone https://github.com/slashobserve/slashobserve
-cd slashobserve
-make demo`
+interface Props {
+  links: DocLinks
+}
+
+const { links } = Astro.props
 
 const deployCommand = `docker run -d --name slashobserve -p 8080:8080 \\
   --env-file slashobserve.env \\
   -v "$PWD/datasources.yaml:/etc/slashobserve/datasources.yaml:ro" \\
-  ghcr.io/slashobserve/slashobserve`
+  ghcr.io/slashobserve/slashobserve:0.1.0`
 
 const callers = [
   { name: "People", detail: "Chat, dashboards, comments" },
@@ -77,7 +80,10 @@ const parts = ["Agent", "Query proxy", "MCP", "API"]
   <div class="commands g1-sm" data-reveal>
     <div class="command">
       <span class="hint label">Try it with the demo stack</span>
-      <pre class="code">{demoCommands.split("\n").map((line) => <span class="line">{line}</span>)}</pre>
+      <p class="hint demo-note">
+        One command starts the server with Prometheus, ClickHouse and a sample shop to ask about.
+      </p>
+      {links.quickStart && <a class="demo-link" href={links.quickStart}>Run the demo →</a>}
     </div>
     <div class="command">
       <span class="hint label">Run your own deployment</span>
@@ -218,5 +224,15 @@ const parts = ["Agent", "Query proxy", "MCP", "API"]
 
   .label {
     font-weight: 500;
+  }
+
+  .demo-note {
+    max-width: 32ch;
+    margin: 0;
+  }
+
+  .demo-link {
+    font-weight: 500;
+    text-decoration: none;
   }
 </style>
