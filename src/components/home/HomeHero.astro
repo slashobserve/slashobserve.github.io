@@ -1,0 +1,53 @@
+---
+import { INSTALL_COMMAND } from "../../lib/site-facts"
+import CopyCommand from "./CopyCommand.astro"
+---
+
+<section class="wrap hero">
+  <h1 class="h1 h1-72">Observability dashboards<br />for the agentic era.</h1>
+  <p class="lead lead-20">
+    Ask for a dashboard in a sentence and get one that works, on the Prometheus, ClickHouse, Loki and Tempo you already
+    run. Every query runs before it is saved. The dashboards you built in Grafana come along.
+  </p>
+  <div class="hero-row"><CopyCommand command={INSTALL_COMMAND} /></div>
+  <p class="hint">One binary and Postgres. Your data stays in your network; the only call out is to the model you configure.</p>
+</section>
+
+<style>
+  .hero {
+    padding-top: 96px;
+    padding-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+    text-align: center;
+  }
+
+  .h1 {
+    max-width: 24ch;
+  }
+
+  .lead {
+    max-width: 62ch;
+  }
+
+  .hero-row {
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+  }
+
+  .hint {
+    margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    .hero-row {
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
+      max-width: 560px;
+    }
+  }
+</style>
