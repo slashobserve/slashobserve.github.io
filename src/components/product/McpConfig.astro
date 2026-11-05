@@ -1,0 +1,26 @@
+---
+import Window from "./Window.astro"
+
+const LINES = [
+  "{",
+  '  "mcpServers": {',
+  '    "slashobserve": {',
+  '      "url": "https://observe.example.com/mcp",',
+  '      "headers": {',
+  '        "Authorization": "Bearer $OBSERVE_TOKEN"',
+  "      }",
+  "    }",
+  "  }",
+  "}",
+]
+---
+
+<Window title="MCP" lights={false}>
+  <div class="term">{LINES.map((line) => <span class="tl">{line}</span>)}</div>
+</Window>
+
+<style>
+  .term {
+    font-size: 12px;
+  }
+</style>

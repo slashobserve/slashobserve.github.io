@@ -1,7 +1,7 @@
 ---
 import type { DocLinks } from "../../lib/doc-links"
-import { readSiteFacts, versionLine } from "../../lib/site-facts"
 import { footerColumns } from "../../lib/site-nav"
+import SiteVersion from "./SiteVersion.astro"
 import Wordmark from "./Wordmark.astro"
 
 interface Props {
@@ -9,7 +9,6 @@ interface Props {
 }
 
 const { links } = Astro.props
-const version = versionLine(readSiteFacts())
 ---
 
 <footer class="foot">
@@ -30,7 +29,7 @@ const version = versionLine(readSiteFacts())
             {column.items.map((item) => (
               <a href={item.href}>{item.label}</a>
             ))}
-            {column.title === "Project" && version && <span class="mono site-version">{version}</span>}
+            {column.title === "Project" && <SiteVersion />}
           </div>
         ))
       }
@@ -89,11 +88,6 @@ const version = versionLine(readSiteFacts())
 
   a:hover {
     color: var(--fg);
-  }
-
-  .site-version {
-    display: block;
-    padding-top: 6px;
   }
 
   @media (max-width: 900px) {

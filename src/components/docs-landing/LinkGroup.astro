@@ -1,0 +1,39 @@
+---
+import type { LandingGroup } from "../../lib/docs-landing"
+
+interface Props {
+  group: LandingGroup
+}
+
+const { group } = Astro.props
+---
+
+<nav aria-label={group.title}>
+  <span class="label">{group.title}</span>
+  {
+    group.links.map((link) => (
+      <a href={link.href} rel={link.href.startsWith("https://") ? "noopener" : undefined}>
+        {link.label}
+      </a>
+    ))
+  }
+</nav>
+
+<style>
+  .label {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  a {
+    display: block;
+    padding: 3px 0;
+    font-size: 13px;
+    color: var(--mfg);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--fg);
+  }
+</style>

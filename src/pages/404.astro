@@ -1,6 +1,6 @@
 ---
-import DocsSearch from "../components/not-found/DocsSearch.astro"
-import PageHero from "../components/site/PageHero.astro"
+import DocsSearch from "../components/site/DocsSearch.astro"
+import PageOpening from "../components/site/PageOpening.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
 import { getDocLinks } from "../lib/get-doc-links"
 
@@ -14,18 +14,18 @@ const links = await getDocLinks()
 >
   <meta slot="head" name="robots" content="noindex" />
   <div class="not-found">
-    <PageHero eyebrow="404 · no data" title="No data for this page">
+    <PageOpening title="No data for this page">
       <p class="lead">
-        The address may be old, or the page moved when the docs were reorganised. Search the docs, or
-        start from one of these.
+        The address may be old, or the page moved when the docs were reorganised. Search the docs, or start from one
+        of these.
       </p>
-      <DocsSearch />
-      <div class="actions">
+      <DocsSearch placeholder="Search docs" fromPath />
+      <div class="row actions">
         <a class="btn btn-primary" href="/">Home</a>
         {links.quickStart && <a class="btn" href={links.quickStart}>Quick start</a>}
         {links.reference && <a class="btn" href={links.reference}>Reference</a>}
       </div>
-    </PageHero>
+    </PageOpening>
   </div>
 </MarketingLayout>
 
@@ -39,7 +39,11 @@ const links = await getDocLinks()
     box-sizing: border-box;
   }
 
-  .not-found :global(.page-hero) {
+  .not-found :global(.opening) {
     width: 100%;
+  }
+
+  .actions {
+    flex-wrap: wrap;
   }
 </style>

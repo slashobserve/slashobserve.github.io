@@ -1,9 +1,11 @@
 export type SocialCard = { id: string; path: string; section: string; title: string }
 
 export const SOCIAL_CARDS: readonly SocialCard[] = [
-  { id: "home", path: "/", section: "Open source · self-hosted", title: "Ask for a dashboard. Get one that works." },
-  { id: "grafana", path: "/grafana/", section: "Coming from Grafana", title: "Keep your Grafana dashboards. Change how you build them." },
-  { id: "features", path: "/features/", section: "Features", title: "Everything you need to run dashboards with an agent." },
+  { id: "home", path: "/", section: "Open source · self-hosted", title: "Observability dashboards for the agentic era." },
+  { id: "build", path: "/build/", section: "Build", title: "Ask for a dashboard. Get one that works." },
+  { id: "grafana", path: "/grafana/", section: "Coming from Grafana", title: "Coming from Grafana? Bring everything." },
+  { id: "signals", path: "/signals/", section: "Signals", title: "Three signals, four stores, one place to look." },
+  { id: "docs", path: "/docs/", section: "Docs", title: "Start with the demo stack, then connect your own stores." },
 ]
 
 export const CARD_WIDTH = 1200

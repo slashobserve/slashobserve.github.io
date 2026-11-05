@@ -29,7 +29,7 @@ export const DOC_LINK_CANDIDATES: Record<DocLinkKey, readonly string[]> = {
   datasources: ["docs/connect/prometheus"],
 }
 
-function resolveCandidate(candidate: string, existingIds: ReadonlySet<string>): string | null {
+export function resolveCandidate(candidate: string, existingIds: ReadonlySet<string>): string | null {
   const [id, fragment] = candidate.split("#")
   if (!existingIds.has(id)) return null
   return `/${id}/${fragment ? `#${fragment}` : ""}`
