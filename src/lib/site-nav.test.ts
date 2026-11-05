@@ -5,27 +5,24 @@ import { PRODUCT_LINKS, docsHomeHref, footerColumns, getStartedHref, headerNav, 
 const withoutReference = new Set(["docs/get-started/quick-start", "docs/get-started/install"])
 const withReference = new Set([...withoutReference, "docs/reference/configuration"])
 
-const features = { label: "Features", href: "/features/" }
+const build = { label: "Build", href: "/build/" }
 const grafana = { label: "Coming from Grafana", href: "/grafana/" }
+const signals = { label: "Signals", href: "/signals/" }
+const selfHost = { label: "Self-host", href: "/docs/get-started/install/" }
 
 describe("PRODUCT_LINKS", () => {
-  test("lists Features then Coming from Grafana", () => {
-    expect(PRODUCT_LINKS).toEqual([features, grafana])
+  test("lists Build, Coming from Grafana and Signals", () => {
+    expect(PRODUCT_LINKS).toEqual([build, grafana, signals])
   })
 })
 
 describe("headerNav", () => {
-  test("lists Features, Coming from Grafana, Docs and Self-host", () => {
-    expect(headerNav(resolveDocLinks(withReference))).toEqual([
-      features,
-      grafana,
-      { label: "Docs", href: "/docs/" },
-      { label: "Self-host", href: "/docs/get-started/install/" },
-    ])
+  test("lists the product pages then Docs, without Self-host", () => {
+    expect(headerNav(resolveDocLinks(withReference))).toEqual([build, grafana, signals, { label: "Docs", href: "/docs/" }])
   })
 
-  test("keeps only Features and Coming from Grafana when no docs exist", () => {
-    expect(headerNav(resolveDocLinks(new Set()))).toEqual([features, grafana])
+  test("keeps only the product pages when no docs exist", () => {
+    expect(headerNav(resolveDocLinks(new Set()))).toEqual([build, grafana, signals])
   })
 })
 
@@ -55,9 +52,9 @@ describe("docsHomeHref", () => {
 })
 
 describe("footerColumns", () => {
-  test("lists Features, Coming from Grafana and Self-host in the Product column", () => {
+  test("lists the product pages and Self-host in the Product column", () => {
     const product = footerColumns(resolveDocLinks(withReference)).find((column) => column.title === "Product")
-    expect(product?.items).toEqual([features, grafana, { label: "Self-host", href: "/docs/get-started/install/" }])
+    expect(product?.items).toEqual([build, grafana, signals, selfHost])
   })
 
   test("omits Reference while it does not exist", () => {
@@ -73,7 +70,7 @@ describe("footerColumns", () => {
 
   test("keeps the product pages and the project column when no docs exist", () => {
     expect(footerColumns(resolveDocLinks(new Set()))).toEqual([
-      { title: "Product", items: [features, grafana] },
+      { title: "Product", items: [build, grafana, signals] },
       {
         title: "Project",
         items: [
@@ -91,8 +88,8 @@ describe("isCurrentPage", () => {
     ["/grafana/", "/grafana/", true],
     ["/docs/self-hosting/#quick-start", "/docs/self-hosting/", false],
     ["/docs/self-hosting/#quick-start", "/docs/self-hosting/#quick-start", false],
-    ["/features/", "/", false],
-    ["/features/", "/features", false],
+    ["/build/", "/", false],
+    ["/build/", "/build", false],
   ])("href %s on path %s is %p", (href, pathname, expected) => {
     expect(isCurrentPage(href, pathname)).toBe(expected)
   })

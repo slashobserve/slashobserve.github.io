@@ -3,7 +3,6 @@ import "@fontsource-variable/geist"
 import "@fontsource-variable/geist-mono"
 import "../styles/tokens.css"
 import "../styles/marketing.css"
-import Halo from "../components/site/Halo.astro"
 import SiteFooter from "../components/site/SiteFooter.astro"
 import SiteHeader from "../components/site/SiteHeader.astro"
 import ThemeScript from "../components/site/ThemeScript.astro"
@@ -13,12 +12,10 @@ import { CARD_HEIGHT, CARD_WIDTH, cardFor, cardImagePath } from "../lib/og/cards
 interface Props {
   title: string
   description: string
-  minimalHeader?: boolean
-  halo?: boolean
   canonical?: boolean
 }
 
-const { title, description, minimalHeader = false, halo = false, canonical = true } = Astro.props
+const { title, description, canonical = true } = Astro.props
 const links = await getDocLinks()
 const pageUrl = new URL(Astro.url.pathname, Astro.site)
 const card = cardFor(Astro.url.pathname)
@@ -53,13 +50,12 @@ const card = cardFor(Astro.url.pathname)
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <div class="site">
-      {halo && <Halo />}
-      <SiteHeader links={links} minimal={minimalHeader} />
+    <div class="site dots">
+      <SiteHeader links={links} />
       <main id="main">
         <slot />
       </main>
-      {!minimalHeader && <SiteFooter links={links} />}
+      <SiteFooter links={links} />
     </div>
   </body>
 </html>

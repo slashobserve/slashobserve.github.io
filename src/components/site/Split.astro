@@ -1,0 +1,25 @@
+---
+interface Props {
+  start: number
+  end: number
+  gap?: 48 | 56
+  class?: string
+}
+
+const { start, end, gap = 56, class: className } = Astro.props
+---
+
+<div
+  class:list={["split g1-sm", className]}
+  style={`grid-template-columns:minmax(0,${start}fr) minmax(0,${end}fr);gap:${gap}px`}
+>
+  <div class="split-start"><slot name="start" /></div>
+  <div class="split-end"><slot name="end" /></div>
+</div>
+
+<style>
+  .split {
+    display: grid;
+    align-items: center;
+  }
+</style>

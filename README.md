@@ -1,6 +1,6 @@
 # SlashObserve site
 
-The marketing pages and `/docs` for slashobserve.com, currently served from GitHub Pages at https://slashobserve.github.io.
+The marketing pages and `/docs` for https://slashobserve.com.
 The docs content comes from `docs/` on `main` in the core repo, https://github.com/slashobserve/slashobserve, so edit docs there, not here.
 
 ## Requirements
@@ -39,7 +39,7 @@ bun run check:links
 
 ## Layout
 
-- `src/pages/`: the home, `/grafana`, `/features` and 404 pages, the docs routes and the social cards.
+- `src/pages/`: the home, `/build`, `/grafana`, `/signals` and 404 pages, the docs routes and the social cards.
 - `src/components/`: Astro and React components, grouped by page.
 - `src/layouts/`: base, marketing and docs layouts.
 - `src/styles/`: global, marketing, docs and prose styles, with the colour tokens in `tokens.css`.

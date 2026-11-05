@@ -1,0 +1,13 @@
+---
+interface Props {
+  ruled?: boolean
+  class?: string
+  id?: string
+}
+
+const { ruled = true, class: className, id } = Astro.props
+---
+
+<section class:list={[{ ruled }]} id={id}>
+  <div class:list={["wrap section", className]}><slot /></div>
+</section>

@@ -1,0 +1,55 @@
+---
+interface Props {
+  url?: string
+  title?: string
+  lights?: boolean
+  label?: string
+  class?: string
+}
+
+const { url, title, lights = true, label, class: className } = Astro.props
+const hasBar = url !== undefined || title !== undefined || Astro.slots.has("bar-end")
+---
+
+<div class:list={["win", className]} role={label ? "group" : undefined} aria-label={label}>
+  {
+    hasBar && (
+      <div class="winbar">
+        {lights && (
+          <span class="lights" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+          </span>
+        )}
+        {url !== undefined ? (
+          <span class="url win-url">{url}</span>
+        ) : (
+          title !== undefined && <span class:list={["win-title", { centered: lights }]}>{title}</span>
+        )}
+        <slot name="bar-end" />
+      </div>
+    )
+  }
+  <slot />
+</div>
+
+<style>
+  .win-url {
+    flex: 1;
+  }
+
+  .win-title {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .win-title.centered {
+    text-align: center;
+  }
+
+  .winbar > :global(:not(.url):not(.lights):not(.win-title)) {
+    white-space: nowrap;
+    flex: none;
+  }
+</style>

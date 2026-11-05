@@ -1,0 +1,28 @@
+---
+interface Props {
+  title: string
+  size?: 60 | 56
+}
+
+const { title, size = 60 } = Astro.props
+---
+
+<section class="wrap opening" data-size={size}>
+  <h1 class:list={["h1", size === 56 ? "h1-56" : "h1-60"]}>{title}</h1>
+  <slot />
+</section>
+
+<style>
+  .opening {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 880px;
+    padding-top: 88px;
+    padding-bottom: 48px;
+  }
+
+  .opening[data-size="56"] {
+    padding-bottom: 40px;
+  }
+</style>

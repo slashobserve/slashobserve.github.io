@@ -7,3 +7,4 @@ public/schemas/
 src/generated/
 .DS_Store
 .claude/
+public/install.sh

@@ -66,12 +66,10 @@ describe("monochrome palette", () => {
     })
 
     test(`band text passes AA on the band surfaces in ${theme}`, () => {
-      for (const text of ["--ink-fg", "--ink-mfg"]) {
-        for (const surface of ["--band-bg", "--band-code"]) {
-          expect(contrastRatio(colour(text), colour(surface))).toBeGreaterThanOrEqual(4.5)
-        }
+      for (const text of ["--band-fg", "--band-mfg"]) {
+        expect(contrastRatio(colour(text), colour("--band-bg"))).toBeGreaterThanOrEqual(4.5)
       }
-      expect(contrastRatio(colour("--ink-code"), colour("--band-code"))).toBeGreaterThanOrEqual(4.5)
+      expect(contrastRatio(colour("--band-fg"), colour("--band-bg"))).toBeGreaterThanOrEqual(3)
     })
 
     test(`band stands out from the page in ${theme}`, () => {
