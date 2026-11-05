@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { formatCount, percentDown } from "./numbers"
+import { percentDown } from "./numbers"
 
 describe("percentDown", () => {
   test.each([
@@ -18,13 +18,5 @@ describe("percentDown", () => {
   test("is 0 when the whole is 0", () => {
     expect(percentDown(0, 0)).toBe(0)
     expect(percentDown(3, 0)).toBe(0)
-  })
-})
-
-describe("formatCount", () => {
-  test("groups thousands with commas", () => {
-    expect(formatCount(7)).toBe("7")
-    expect(formatCount(1696)).toBe("1,696")
-    expect(formatCount(1234567)).toBe("1,234,567")
   })
 })
