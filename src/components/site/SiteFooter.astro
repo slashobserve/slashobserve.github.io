@@ -1,5 +1,6 @@
 ---
 import type { DocLinks } from "../../lib/doc-links"
+import { readSiteFacts, versionLine } from "../../lib/site-facts"
 import { footerColumns } from "../../lib/site-nav"
 import Wordmark from "./Wordmark.astro"
 
@@ -8,30 +9,28 @@ interface Props {
 }
 
 const { links } = Astro.props
+const version = versionLine(readSiteFacts())
 ---
 
-<footer>
-  <div class="wrap grid">
+<footer class="foot">
+  <div class="wrap foot-grid">
     <div class="brand">
-      <Wordmark size={20} />
-      <span class="hint tagline">
-        Observability dashboards from a sentence, on your own data. Open source under Apache-2.0.
+      <span class="brand-mark"><Wordmark size={18} /></span>
+      <span class="tagline">Observability dashboards from a sentence, on your own data. Open source under Apache-2.0.</span>
+      <span class="legal">
+        Grafana is a trademark of Grafana Labs. SlashObserve is not affiliated with or endorsed by Grafana Labs.
       </span>
-      <span class="hint legal">
-        Grafana is a trademark of Grafana Labs. SlashObserve is not affiliated with or endorsed by
-        Grafana Labs.
-      </span>
+      <span>No analytics, no cookies.</span>
     </div>
     <nav aria-label="Footer" class="columns">
       {
         footerColumns(links).map((column) => (
-          <div class="column">
-            <span class="title">{column.title}</span>
+          <div>
+            <span class="label title">{column.title}</span>
             {column.items.map((item) => (
-              <a class="navlink" href={item.href}>
-                {item.label}
-              </a>
+              <a href={item.href}>{item.label}</a>
             ))}
+            {column.title === "Project" && version && <span class="mono site-version">{version}</span>}
           </div>
         ))
       }
@@ -40,63 +39,66 @@ const { links } = Astro.props
 </footer>
 
 <style>
-  .grid {
-    padding-top: 64px;
-    padding-bottom: 64px;
+  .foot {
+    border-top: 1px solid var(--border);
+    padding-top: 48px;
+    padding-bottom: 40px;
+    font-size: 13px;
+    color: var(--mfg);
+  }
+
+  .foot-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
-    gap: 40px;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 32px;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .brand-mark {
+    color: var(--fg);
+  }
+
+  .tagline {
+    max-width: 36ch;
+  }
+
+  .legal {
+    max-width: 40ch;
   }
 
   .columns {
     display: contents;
   }
 
-  .brand,
-  .column {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .brand {
-    gap: 10px;
-  }
-
-  .column {
-    gap: 4px;
-    font-size: 14px;
-  }
-
   .title {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--fg);
+    display: block;
     margin-bottom: 8px;
   }
 
-  .tagline {
-    max-width: 30ch;
+  a {
+    display: block;
+    padding: 3px 0;
+    color: var(--mfg);
+    text-decoration: none;
   }
 
-  .legal {
-    max-width: 36ch;
-    font-size: 12px;
+  a:hover {
+    color: var(--fg);
   }
 
-  .column .navlink {
-    padding: 4px 0;
+  .site-version {
+    display: block;
+    padding-top: 6px;
   }
 
-  @media (max-width: 860px) {
-    .grid {
+  @media (max-width: 900px) {
+    .foot-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 32px 24px;
-      padding-top: 48px;
-      padding-bottom: 48px;
-    }
-
-    .brand {
-      grid-column: 1 / -1;
     }
   }
 </style>
