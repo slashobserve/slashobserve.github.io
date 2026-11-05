@@ -1,5 +1,4 @@
 import type { DocLinks } from "./doc-links"
-import { DOCS_HOME_PATH } from "./docs-home"
 
 export type NavItem = { label: string; href: string }
 
@@ -9,6 +8,7 @@ export const CLI_INSTALL_COMMAND =
 export const BUILD_PATH = "/build/"
 export const GRAFANA_PATH = "/grafana/"
 export const SIGNALS_PATH = "/signals/"
+export const DOCS_HOME_PATH = "/docs/"
 
 export const PRODUCT_LINKS: NavItem[] = [
   { label: "Build", href: BUILD_PATH },
