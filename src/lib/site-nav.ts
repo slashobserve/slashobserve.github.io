@@ -3,8 +3,6 @@ import type { DocLinks } from "./doc-links"
 export type NavItem = { label: string; href: string }
 
 export const GITHUB_URL = "https://github.com/slashobserve/slashobserve"
-export const CLI_INSTALL_COMMAND =
-  "curl -fsSL https://raw.githubusercontent.com/slashobserve/slashobserve/main/install.sh | sh"
 export const BUILD_PATH = "/build/"
 export const GRAFANA_PATH = "/grafana/"
 export const SIGNALS_PATH = "/signals/"

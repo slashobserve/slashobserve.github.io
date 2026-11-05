@@ -18,11 +18,11 @@ Docs content is written in the core repo `slashobserve/slashobserve` under `docs
 
 ## Layout
 
-- `src/pages/`: home, /build, /grafana, /signals, 404, the /docs/ landing page (/features redirects to /build/ through `redirects` in `astro.config.ts`), `og/[card].png.ts` for marketing social cards and `og/docs/[...slug].png.ts` for one card per docs page.
-- `src/components/site/`: shared header, footer, wordmark, theme toggle, halo, page hero and closing frame.
+- `src/pages/`: home, /build, /grafana, /signals, 404, the /docs/ landing page (/features redirects to /build/ through `redirects` in `astro.config.ts`), `llms.txt`, `llms-full.txt` and `robots.txt`, `og/[card].png.ts` for marketing social cards and `og/docs/[...slug].png.ts` for one card per docs page.
+- `src/components/site/`: shared header, footer, wordmark, theme toggle, page opening, section, section head, split, band, the "Runs on" band, the surfaces section and the docs search, plus the theme script, the GitHub icon and the site version line the docs footer shares.
 - `src/components/home/`: home page sections.
-- `src/components/grafana/`: that page's sections.
-- `src/components/product/`: the drawn product screens, one component per window, named for what it shows (screenshots of the seeded demo replace them later), plus the `Window`, `Panel`, `Bars`, `Sparklines` and `SameLink` pieces.
+- `src/components/grafana/`, `src/components/signals/` and `src/components/docs-landing/`: those pages' sections.
+- `src/components/product/`: the drawn product screens, one component per window, named for what it shows (screenshots of the seeded demo replace them later), plus the `Window`, `Panel`, `Bars`, `Sparklines` and `SameLink` pieces; `BuildPlayback.astro` mounts the `BuildStage.tsx` island, styled by `build-stage.css`.
 - `src/components/docs/` and `src/components/ui/`: the docs shell, sidebar, TOC, search and pager.
 - `src/layouts/`: page layouts.
 - `src/lib/`: pure helpers.
@@ -60,7 +60,7 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 - Colours only through the tokens in `src/styles/tokens.css`, never a raw hex in a component.
 - Light and dark both work through `data-theme` on `<html>` and the `slashobserve-theme` localStorage key.
 - Primary buttons use `--primary` (black in light mode).
-- The palette is monochrome: `--brand` and `--brand-text` are ink (near black in light, near white in dark) and serve focus rings, eyebrows, icon chips and the step indicator; a unit test keeps them neutral grey and holds focus rings to 3:1 and small text to AA.
+- The palette is monochrome: `--brand` and `--brand-text` are ink (near black in light, near white in dark) and serve focus rings and the docs accents (the page eyebrow, link hovers and info callouts); a unit test keeps them neutral grey and holds focus rings to 3:1 and small text to AA.
 - The wordmark slash takes the text colour, never an accent.
 - Blue appears only as chart series colours (`--s1`) in product depictions; status colours and code highlighting keep their hues.
 - The band (`.band`) inverts the page: `--band-bg` with `--band-fg` and `--band-mfg` text and `--band-line` borders; focus rings inside it use `--band-fg`.
@@ -85,7 +85,7 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 
 ## Testing and gates
 
-- Unit tests with `bun test` for pure logic only: path mapping, link rewriting and front matter checks, docs dates, link checking, sidebar ordering and prev/next, generated reference pages, link resolution, table scroll, code figure, agent text, loop state, corpus summaries, import coverage and percentages, the site version and install command, nav, token contrast, docs landing sections and the social card registry and docs card mapping.
+- Unit tests with `bun test` for pure logic only: path mapping, link rewriting and front matter checks, docs dates, link checking, sidebar ordering and prev/next, generated reference pages, link resolution, table scroll, code figure, PromQL highlighting, inline code, disclosure, agent text, the build playback and the "Runs on" cycle, the import stats and percentages, the site version and install command, nav, theme choice, token contrast, docs landing links and the social card registry and docs card mapping.
 - No e2e or visual tests.
 - Before calling work done, run `bun run build`, `bun run check`, `bun run check:links` and `bun run test`.
 
