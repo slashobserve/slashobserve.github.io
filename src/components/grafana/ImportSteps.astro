@@ -1,81 +1,99 @@
-<section class="wrap section-y steps-section" aria-label="How import works">
-  <div class="steps" data-reveal>
-    <article>
-      <span class="hint">1. Bring the JSON</span>
-      <h2>Paste, upload, or send it from a script</h2>
-      <p>
-        The Import from Grafana button in the chat, <span class="mono">observe import</span>, or
-        the <span class="mono">import_grafana_dashboard</span> MCP tool. Classic model, external
-        share exports and API responses all work.
-      </p>
-    </article>
-    <article>
-      <span class="hint">2. Match datasources</span>
-      <h2>Your Grafana uids map to your datasources</h2>
-      <p>
-        Matches come from <span class="mono">grafanaUids</span> in the datasources file.
-        SlashObserve never guesses between two of the same type: it asks.
-      </p>
-    </article>
-    <article>
-      <span class="hint">3. Read the report</span>
-      <h2>Every query runs once, and you see the result</h2>
-      <p>
-        Panels that fail are saved as unverified, not dropped. Unsupported panels become
-        placeholders that say why.
-      </p>
-    </article>
+---
+import GrafanaSettings from "../product/GrafanaSettings.astro"
+import RepairQueue from "../product/RepairQueue.astro"
+import Section from "../site/Section.astro"
+
+const stages = ["Connect", "Import", "Repair", "Keep the links"]
+---
+
+<Section>
+  <div class="flow import-flow">
+    {
+      stages.map((stage, index) => (
+        <span class="seg">
+          <span class="stage">{stage}</span>
+          {index < stages.length - 1 && <span class="line solid" aria-hidden="true" />}
+        </span>
+      ))
+    }
   </div>
-</section>
+  <div class="cols2 steps">
+    <div class="step-copy">
+      <div>
+        <h2 class="h3">Connect</h2>
+        <p class="p">
+          Settings › Grafana takes the address and a service-account token with Viewer on the folders you want. The
+          test lists folders, counts dashboards and shows each Grafana datasource beside the SlashObserve datasource it
+          maps to.
+        </p>
+      </div>
+      <div>
+        <h2 class="h3">Import, and import again</h2>
+        <p class="p">
+          "Import all" copies every dashboard with its folder path, tags, variables and links, and runs every query. A
+          second run updates what changed in Grafana and leaves your edits alone.
+        </p>
+      </div>
+      <div>
+        <h2 class="h3">Repair</h2>
+        <p class="p">
+          A panel whose query fails or returns nothing is marked unverified, never hidden. The repair queue lists every
+          dashboard with one; "Repair with the agent" rewrites those queries against the metrics that exist and saves a
+          version you can diff.
+        </p>
+      </div>
+      <div>
+        <h2 class="h3">Keep the links</h2>
+        <p class="p">
+          Every imported dashboard keeps its Grafana uid, so <span class="mono">{"/d/<uid>/<slug>"}</span> resolves here
+          as it did there. Point the old hostname at SlashObserve and runbooks, wiki pages and alert links keep working.
+        </p>
+      </div>
+    </div>
+    <div class="step-windows">
+      <GrafanaSettings />
+      <RepairQueue />
+    </div>
+  </div>
+</Section>
 
 <style>
-  .steps-section {
-    padding-top: 0;
+  .import-flow {
+    margin-bottom: 28px;
+  }
+
+  .stage {
+    color: var(--fg);
   }
 
   .steps {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
+    align-items: start;
   }
 
-  article {
-    background: var(--surface);
-    padding: 32px;
+  .step-copy {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 28px;
   }
 
-  h2 {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    line-height: 1.25;
+  .step-copy .p {
+    margin-top: 6px;
   }
 
-  p {
-    margin: 0;
-    color: var(--mfg);
-    font-size: 14px;
+  .step-windows {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
   }
 
-  .mono {
-    font-size: 13px;
-  }
-
-  @media (max-width: 860px) {
-    .steps {
-      grid-template-columns: minmax(0, 1fr);
+  @media (max-width: 480px) {
+    .import-flow {
+      gap: 8px 16px;
     }
 
-    article {
-      padding: 24px;
+    .import-flow .line {
+      display: none;
     }
   }
 </style>

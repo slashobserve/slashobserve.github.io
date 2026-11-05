@@ -1,0 +1,7 @@
+---
+import Window from "./Window.astro"
+---
+
+<Window title="zsh">
+  <div class="term"><span class="tl"><span class="k">$</span> observe grafana connect https://grafana.internal:3000 \</span><span class="tl">{"    "}--token-from-env GRAFANA_TOKEN</span><span class="tl">Connected to grafana.internal: folders, dashboards and datasources listed</span><span class="tl"> </span><span class="tl"><span class="k">$</span> observe grafana import --all</span><span class="tl">Imported every dashboard with its folder, tags, variables and links</span><span class="tl">Unverified panels wait in the repair queue at /import/repair</span><span class="tl"> </span><span class="tl"><span class="k">$</span> observe repairs --run --all</span><span class="tl">Kubernetes / Pods{"     "}repaired, saved a new version</span><span class="tl">Node exporter full{"    "}repaired, one panel waits for nodename</span><span class="tl">Payments latency{"      "}verified</span></div>
+</Window>

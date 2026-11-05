@@ -1,0 +1,69 @@
+---
+interface Props {
+  stats: { value: string; label: string }[]
+}
+
+const { stats } = Astro.props
+---
+
+{
+  stats.length > 0 && (
+    <section class="wrap stats-wrap">
+      <div class="strip" style={`--cols:${stats.length}`}>
+        {stats.map((stat) => (
+          <div class="stat">
+            <span class="stat-value">{stat.value}</span>
+            <span class="hint">{stat.label}</span>
+          </div>
+        ))}
+      </div>
+      <p class="hint stats-note">Generated from the importer's own coverage table at each release. Never typed.</p>
+    </section>
+  )
+}
+
+<style>
+  .stats-wrap {
+    padding-bottom: 96px;
+  }
+
+  .strip {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    gap: 24px;
+    padding: 32px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat-value {
+    font-size: 40px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .stats-note {
+    margin: 12px 0 0;
+  }
+
+  @media (max-width: 900px) {
+    .stats-wrap {
+      padding-bottom: 64px;
+    }
+
+    .strip {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .strip > :last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

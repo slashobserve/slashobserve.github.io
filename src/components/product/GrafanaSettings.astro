@@ -1,0 +1,116 @@
+---
+import Window from "./Window.astro"
+
+const mappings = [
+  { from: "prometheus-main", to: "→ Prometheus (prod)" },
+  { from: "loki", to: "→ Loki (prod)" },
+  { from: "tempo", to: "→ Tempo (prod)" },
+]
+---
+
+<Window url="observe.example.com/settings/grafana">
+  <div class="settings">
+    <div class="field">
+      <span class="k">Address</span>
+      <div class="mono input">https://grafana.internal:3000</div>
+    </div>
+    <div class="field">
+      <span class="k">Token</span>
+      <div class="mono input secret">glsa_••••••••••••••••••••</div>
+    </div>
+    <div class="field field-top">
+      <span class="k">Datasources</span>
+      <div class="mappings">
+        {
+          mappings.map((mapping) => (
+            <div class="row mapping">
+              <span class="mono">{mapping.from}</span>
+              <span class="k">{mapping.to}</span>
+            </div>
+          ))
+        }
+        <div class="row mapping unmatched">
+          <span class="mono">influx-legacy</span>
+          <span class="fg-warn">no match · panels wait</span>
+        </div>
+      </div>
+    </div>
+    <div class="row status">
+      <span class="row"><span class="dot tone-ok"></span>Connected · 14 folders</span>
+      <span class="row actions">
+        <span class="btn btn-sm">Test</span>
+        <span class="btn btn-primary btn-sm">Import all</span>
+      </span>
+    </div>
+  </div>
+</Window>
+
+<style>
+  .settings {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    font-size: 13px;
+  }
+
+  .field {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+  }
+
+  .field-top {
+    align-items: start;
+  }
+
+  .input {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    background: var(--surface);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .secret {
+    color: var(--mfg);
+  }
+
+  .mappings {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .mapping {
+    justify-content: space-between;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+  }
+
+  .unmatched {
+    border: 1px dashed var(--border-strong);
+  }
+
+  .status {
+    justify-content: space-between;
+    padding-top: 6px;
+  }
+
+  .actions .btn {
+    min-height: 30px;
+    font-size: 12px;
+  }
+
+  @media (max-width: 480px) {
+    .status {
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+  }
+</style>

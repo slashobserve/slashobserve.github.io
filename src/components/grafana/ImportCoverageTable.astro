@@ -1,0 +1,126 @@
+---
+import Section from "../site/Section.astro"
+import SectionHead from "../site/SectionHead.astro"
+
+type Status = "Maps" | "Changes" | "Waits"
+
+const STATUS_TONE: Record<Status, string> = {
+  Maps: "tone-ok",
+  Changes: "tone-s4",
+  Waits: "tone-mfg",
+}
+
+type NotePart = string | { mono: string }
+
+const rows: { feature: string; status: Status; note: NotePart[] }[] = [
+  {
+    feature: "Folders, tags, dashboard links",
+    status: "Maps",
+    note: ["Folder paths are recreated. Tags and links come across unchanged."],
+  },
+  {
+    feature: "Time series, stat, gauge, bar gauge, table, text, logs, traces",
+    status: "Maps",
+    note: ["Each becomes the matching ObserveSpec panel with its units, thresholds, overrides and legend."],
+  },
+  {
+    feature: "Template variables",
+    status: "Maps",
+    note: ["Names and formats are kept, so ", { mono: "$job" }, " and ", { mono: "${job:regex}" }, " expand as before."],
+  },
+  {
+    feature: "Transforms",
+    status: "Maps",
+    note: ["Organize, merge, reduce, filter, group by, join and the rest of the table. An unsupported one leaves the panel unverified with its name."],
+  },
+  {
+    feature: "Annotations",
+    status: "Maps",
+    note: ["Prometheus, Loki and ClickHouse annotation queries become dashboard annotations; built-in ones become SlashObserve annotations."],
+  },
+  {
+    feature: "Gradients, shadows, panel backgrounds",
+    status: "Changes",
+    note: ["Drawn flat. Colour stays on data and status; the chrome is monochrome by design."],
+  },
+  {
+    feature: 'Stat colour mode "value"',
+    status: "Changes",
+    note: ["The threshold colour pairs with an icon and a word instead of colouring the digits, so warning stays readable on white."],
+  },
+  {
+    feature: "Rows and collapsed rows",
+    status: "Changes",
+    note: ["Rows become section headers; collapsed state is not kept."],
+  },
+  {
+    feature: "Alert rules, contact points, silences",
+    status: "Waits",
+    note: ["Not imported in this release. Keep Alertmanager or Grafana alerting running beside SlashObserve."],
+  },
+  {
+    feature: "Other datasources",
+    status: "Waits",
+    note: ["Their panels import unverified and wait for a datasource mapping. Nothing is lost."],
+  },
+  {
+    feature: "Plugin panels (geomap, node graph, third-party)",
+    status: "Waits",
+    note: ["Imported as a placeholder panel with the original JSON kept, so the layout survives."],
+  },
+]
+---
+
+<Section>
+  <SectionHead
+    title="What maps, what changes, what waits."
+    lead="How each Grafana feature comes across. The numbers above are generated from the importer at every release; this table describes the mapping."
+    space={32}
+  />
+  <div class="win">
+    <div class="scroll">
+      <table class="tbl coverage">
+        <thead>
+          <tr>
+            <th class="col-feature">Grafana feature</th>
+            <th class="col-status">Status</th>
+            <th>What happens on import</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            rows.map((row) => (
+              <tr>
+                <td>{row.feature}</td>
+                <td>
+                  <span class="row">
+                    <span class:list={["dot", STATUS_TONE[row.status]]} />
+                    {row.status}
+                  </span>
+                </td>
+                <td class="k">
+                  {row.note.map((part) => (typeof part === "string" ? part : <span class="mono">{part.mono}</span>))}
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</Section>
+
+<style>
+  .coverage {
+    min-width: 640px;
+    font-size: 13.5px;
+  }
+
+  .col-feature {
+    width: 26%;
+  }
+
+  .col-status {
+    width: 12%;
+  }
+</style>
