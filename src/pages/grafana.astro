@@ -1,46 +1,91 @@
 ---
-import "../components/grafana/tables.css"
-import CompatTable from "../components/grafana/CompatTable.astro"
-import CoverageSection from "../components/grafana/CoverageSection.astro"
+import ImportCoverageTable from "../components/grafana/ImportCoverageTable.astro"
+import ImportStats from "../components/grafana/ImportStats.astro"
 import ImportSteps from "../components/grafana/ImportSteps.astro"
-import SpecComparison from "../components/grafana/SpecComparison.astro"
-import TryImport from "../components/grafana/TryImport.astro"
-import PageHero from "../components/site/PageHero.astro"
+import ImportScript from "../components/product/ImportScript.astro"
+import Band from "../components/site/Band.astro"
+import PageOpening from "../components/site/PageOpening.astro"
+import Section from "../components/site/Section.astro"
+import Split from "../components/site/Split.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
 import { getDocLinks } from "../lib/get-doc-links"
-import { coverageGroups, readImportCoverage } from "../lib/import-coverage"
-import { corpusTable, readImportCorpus } from "../lib/import-corpus"
-import { dataPanelTypeCount, readSyncedSchema } from "../lib/schema-facts"
+import { cleanImportPercent, readImportCorpus } from "../lib/import-corpus"
+import { mappedPanelTypeCount, readImportCoverage } from "../lib/import-coverage"
 
 const links = await getDocLinks()
-const coverage = coverageGroups(readImportCoverage())
-const { rows, total } = corpusTable(readImportCorpus())
-const panelTypeCount = dataPanelTypeCount(readSyncedSchema())
+const mapped = mappedPanelTypeCount(readImportCoverage())
+const clean = cleanImportPercent(readImportCorpus())
+const stats = [
+  ...(mapped > 0 ? [{ value: String(mapped), label: "panel types mapped from Grafana" }] : []),
+  ...(clean !== null ? [{ value: `${clean}%`, label: "of a public dashboard corpus imports with no failing panel" }] : []),
+]
 ---
 
 <MarketingLayout
   title="Coming from Grafana | SlashObserve"
-  description="Import a Grafana dashboard and it shows the same data, layout and meaning in SlashObserve. See what imports and how the importer does on public dashboards."
+  description="Connect a Grafana with a read-only token and every dashboard comes across with its folders, variables and links. Every query runs on import and the old links keep resolving."
 >
-  <PageHero eyebrow="Coming from Grafana" title="Keep your dashboards. Change how you build them.">
+  <PageOpening title="Coming from Grafana? Bring everything.">
     <p class="lead">
-      Import a Grafana dashboard and it shows the same data, layout and meaning in SlashObserve. From
-      then on the agent can revise it, your team can review it, and every change is a version.
+      Connect a Grafana with a read-only token. Every dashboard comes across with its folder, tags, variables and links.
+      Every query runs on import, what did not translate goes to a repair queue the agent works through, and the old
+      links keep resolving. Nothing is written back.
     </p>
-    <div class="actions">
-      {
-        links.importGuide && (
+    {
+      links.importGuide && (
+        <div class="row actions">
           <a class="btn btn-primary" href={links.importGuide}>
-            Import your first dashboard
+            Read the import guide
           </a>
-        )
-      }
-      <a class="btn" href="#compat">See what imports</a>
-    </div>
-  </PageHero>
+        </div>
+      )
+    }
+  </PageOpening>
+  <ImportStats stats={stats} />
   <ImportSteps />
-  <SpecComparison />
-  <CompatTable panelTypeCount={panelTypeCount} />
-  <CoverageSection coverage={coverage} rows={rows} total={total} />
-  <TryImport />
+  <ImportCoverageTable />
+  <Section>
+    <Split start={0.8} end={1.2} gap={48}>
+      <div class="script-copy" slot="start">
+        <h2 class="h2">The same import, scripted.</h2>
+        <p class="lead lead-17">
+          Everything the Settings page does is a verb, so a migration can run from CI or a runbook and be repeated.
+        </p>
+      </div>
+      <ImportScript slot="end" />
+    </Split>
+  </Section>
+  <Band>
+    <h2 class="h2 band-title">Import your dashboards this afternoon.</h2>
+    <p class="p">
+      Point it at a Grafana you can read, or run the demo stack's own export through the importer. Nothing is written
+      back.
+    </p>
+    {
+      links.importGuide && (
+        <div class="row actions">
+          <a class="btn btn-band" href={links.importGuide}>
+            Import guide
+          </a>
+        </div>
+      )
+    }
+  </Band>
 </MarketingLayout>
+
+<style>
+  .actions {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .script-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .band-title {
+    max-width: 22ch;
+  }
+</style>
