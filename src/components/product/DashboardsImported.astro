@@ -1,0 +1,43 @@
+---
+import SameLink from "./SameLink.astro"
+import Window from "./Window.astro"
+
+const rows = [
+  { name: "Checkout service", folder: "Platform / Shop", panels: 12, version: 1, status: "verified" },
+  { name: "Kubernetes / Pods", folder: "Platform / Kubernetes", panels: 24, version: 2, status: "repaired" },
+  { name: "Node exporter full", folder: "Infra", panels: 41, version: 1, status: "repairing 2 of 5" },
+  { name: "Payments latency", folder: "Platform / Shop", panels: 9, version: 2, status: "repaired" },
+  { name: "Loki / Ingest", folder: "Observability", panels: 16, version: 1, status: "verified" },
+]
+const IN_PROGRESS = "repairing 2 of 5"
+---
+
+<Window url="observe.example.com/dashboards">
+  <div class="scroll">
+    <table class="tbl">
+      <thead>
+        <tr><th>Dashboard</th><th>Folder</th><th>Panels</th><th>Version</th><th></th></tr>
+      </thead>
+      <tbody>
+        {
+          rows.map(({ name, folder, panels, version, status }) => (
+            <tr>
+              <td>{name}</td>
+              <td class="k">{folder}</td>
+              <td>{panels}</td>
+              <td>{version}</td>
+              <td>
+                {status === IN_PROGRESS ? (
+                  <span class="chip"><span class="dot tone-s1" />{status}</span>
+                ) : (
+                  <span class="row"><span class="dot tone-ok" />{status}</span>
+                )}
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+  <SameLink />
+</Window>
