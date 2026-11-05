@@ -165,6 +165,7 @@ export default function BuildStage() {
   }, [])
 
   const lines = railLines(step)
+  const playing = phase === "playing"
 
   return (
     <div className="win stage" role="group" aria-label="A build, played back">
@@ -180,8 +181,8 @@ export default function BuildStage() {
           <button
             type="button"
             className="btn btn-primary btn-sm stage-play"
-            onClick={play}
-            disabled={phase === "playing"}
+            onClick={playing ? undefined : play}
+            aria-disabled={playing}
           >
             <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
               <path d="M8 5v14l11-7z" />

@@ -15,7 +15,7 @@
     font-size: 12px;
   }
 
-  .stage-play:disabled {
+  .stage-play[aria-disabled="true"] {
     cursor: default;
   }
 
