@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { DOC_LINK_CANDIDATES, resolveDocLinks } from "./doc-links"
+import { DOC_LINK_CANDIDATES, resolveCandidate, resolveDocLinks } from "./doc-links"
 
 const corePages = new Set([
   "docs/get-started/quick-start",
@@ -53,5 +53,17 @@ describe("resolveDocLinks", () => {
   test("no longer links into the retired single self-hosting page", () => {
     const values = Object.values(resolveDocLinks(new Set(["docs/self-hosting"])))
     expect(values.every((value) => value === null)).toBe(true)
+  })
+})
+
+describe("resolveCandidate", () => {
+  const ids = new Set(["docs/use/mcp"])
+
+  test.each([
+    ["docs/use/mcp", "/docs/use/mcp/"],
+    ["docs/use/mcp#tools", "/docs/use/mcp/#tools"],
+    ["docs/use/cli", null],
+  ])("resolves %s", (candidate, href) => {
+    expect(resolveCandidate(candidate, ids)).toBe(href)
   })
 })
