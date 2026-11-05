@@ -20,6 +20,7 @@ const { links } = Astro.props
         Grafana is a trademark of Grafana Labs. SlashObserve is not affiliated with or endorsed by Grafana Labs.
       </span>
       <span>No analytics, no cookies.</span>
+      <SiteVersion />
     </div>
     <nav aria-label="Footer" class="columns">
       {
@@ -29,7 +30,6 @@ const { links } = Astro.props
             {column.items.map((item) => (
               <a href={item.href}>{item.label}</a>
             ))}
-            {column.title === "Project" && <SiteVersion />}
           </div>
         ))
       }
@@ -93,6 +93,10 @@ const { links } = Astro.props
   @media (max-width: 900px) {
     .foot-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .brand {
+      grid-column: 1 / -1;
     }
   }
 </style>
