@@ -1,0 +1,18 @@
+---
+import ChatFollowUp from "../product/ChatFollowUp.astro"
+import CliBuild from "../product/CliBuild.astro"
+import McpBuild from "../product/McpBuild.astro"
+import Section from "./Section.astro"
+import SectionHead from "./SectionHead.astro"
+
+interface Props {
+  lead: string
+}
+
+const { lead } = Astro.props
+---
+
+<Section>
+  <SectionHead title="In the browser, the terminal, or your own agent." lead={lead} />
+  <div class="cols3"><ChatFollowUp /><CliBuild /><McpBuild /></div>
+</Section>

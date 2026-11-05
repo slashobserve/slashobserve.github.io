@@ -1,28 +1,67 @@
 ---
-import Architecture from "../components/home/Architecture.astro"
-import ClosingCta from "../components/home/ClosingCta.astro"
-import FeatureCards from "../components/home/FeatureCards.astro"
-import ForAgents from "../components/home/ForAgents.astro"
-import FourQuestions from "../components/home/FourQuestions.astro"
-import GrafanaImport from "../components/home/GrafanaImport.astro"
-import Hero from "../components/home/Hero.astro"
-import WorksWith from "../components/home/WorksWith.astro"
+import FactStrip from "../components/home/FactStrip.astro"
+import HomeHero from "../components/home/HomeHero.astro"
+import BuildPlayback from "../components/product/BuildPlayback.astro"
+import CheckoutPanels from "../components/product/CheckoutPanels.astro"
+import DashboardsImported from "../components/product/DashboardsImported.astro"
+import LogsTail from "../components/product/LogsTail.astro"
+import TraceSummary from "../components/product/TraceSummary.astro"
+import RunsOnBand from "../components/site/RunsOnBand.astro"
+import Section from "../components/site/Section.astro"
+import SectionHead from "../components/site/SectionHead.astro"
+import Split from "../components/site/Split.astro"
+import SurfacesSection from "../components/site/SurfacesSection.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
 import { getDocLinks } from "../lib/get-doc-links"
+import { GRAFANA_PATH, SIGNALS_PATH } from "../lib/site-nav"
 
 const links = await getDocLinks()
 ---
 
 <MarketingLayout
-  title="SlashObserve: ask for a dashboard, get one that works"
-  description="SlashObserve builds observability dashboards from a sentence, on the Prometheus and ClickHouse you already run. Open source and self-hosted."
+  title="SlashObserve: observability dashboards for the agentic era"
+  description="Ask for a dashboard in a sentence and get one that works, on the Prometheus, ClickHouse, Loki and Tempo you already run. Open source and self-hosted."
 >
-  <Hero links={links} />
-  <WorksWith />
-  <FourQuestions />
-  <GrafanaImport links={links} />
-  <FeatureCards />
-  <ForAgents links={links} />
-  <Architecture links={links} />
-  <ClosingCta links={links} />
+  <HomeHero />
+  <BuildPlayback space="home" />
+  <Section>
+    <Split start={0.8} end={1.2}>
+      <div slot="start" class="statement">
+        <h2 class="h2">Your Grafana dashboards come along.</h2>
+        <p class="lead lead-17">
+          Folders, variables, links and all. The ones that need a fix get one from the agent, and every old link keeps
+          resolving.
+        </p>
+        <a href={GRAFANA_PATH} class="arrow-link">Coming from Grafana →</a>
+      </div>
+      <DashboardsImported slot="end" />
+    </Split>
+  </Section>
+  <Section>
+    <SectionHead
+      title="Metrics, logs and traces, on the stores you already run."
+      lead="Prometheus, ClickHouse, Loki and Tempo. A log line opens its trace."
+    />
+    <div class="cols3"><CheckoutPanels /><LogsTail /><TraceSummary /></div>
+    <p class="more"><a href={SIGNALS_PATH} class="arrow-link">Signals →</a></p>
+  </Section>
+  <SurfacesSection lead="The web app, the observe CLI, and MCP for Claude Code or Cursor. Same tools, same checks." />
+  <FactStrip />
+  <RunsOnBand quickStart={links.quickStart} />
 </MarketingLayout>
+
+<style>
+  .statement {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .arrow-link {
+    text-decoration: none;
+  }
+
+  .more {
+    margin: 24px 0 0;
+  }
+</style>

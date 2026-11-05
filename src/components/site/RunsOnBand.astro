@@ -1,0 +1,87 @@
+---
+import Band from "./Band.astro"
+
+interface Props {
+  quickStart: string | null
+}
+
+const { quickStart } = Astro.props
+---
+
+<Band>
+  <h2 class="h2 runs-on"><span class="nowrap">Runs on <span class="sr-only">your laptop</span><span class="spin spin-b" aria-hidden="true" data-runs-on>your laptop</span></span><br />in two minutes.</h2>
+  <div class="code">git clone https://github.com/slashobserve/slashobserve &amp;&amp; cd slashobserve &amp;&amp; make demo</div>
+  <p class="p">
+    The demo ships a shop, Prometheus, ClickHouse, Loki, Tempo and three reference dashboards. Add a model key when you
+    want the agent.
+  </p>
+  {quickStart && <a class="btn btn-band" href={quickStart}>Read the quick start</a>}
+</Band>
+
+<style>
+  .spin {
+    display: inline-block;
+    border-bottom: 2px solid currentColor;
+    padding-bottom: 2px;
+  }
+
+  .spin-a {
+    animation: spin-a 0.5s ease-out;
+  }
+
+  .spin-b {
+    animation: spin-b 0.5s ease-out;
+  }
+
+  @keyframes spin-a {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes spin-b {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .spin-a,
+    .spin-b {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .runs-on {
+      font-size: 27px;
+      max-width: 100%;
+    }
+  }
+</style>
+
+<script>
+  import { CYCLE_MS, placeAt, spinClass } from "../../lib/runs-on"
+
+  const place = document.querySelector<HTMLElement>("[data-runs-on]")
+  if (place && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    let tick = 0
+    setInterval(() => {
+      if (document.hidden) return
+      tick += 1
+      place.textContent = placeAt(tick)
+      place.classList.remove("spin-a", "spin-b")
+      place.classList.add(spinClass(tick))
+    }, CYCLE_MS)
+  }
+</script>

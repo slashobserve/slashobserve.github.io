@@ -1,0 +1,56 @@
+---
+import Window from "./Window.astro"
+
+const spans = [
+  { name: "frontend", indent: 0, tone: "s1", width: 100, offset: 0 },
+  { name: "checkout", indent: 10, tone: "s3", width: 86, offset: 6 },
+  { name: "inventory", indent: 20, tone: "s4", width: 9, offset: 8 },
+  { name: "payments", indent: 20, tone: "crit", width: 66, offset: 24 },
+  { name: "gateway", indent: 30, tone: "crit", width: 64, offset: 25 },
+  { name: "render", indent: 10, tone: "s1", width: 5, offset: 93 },
+]
+---
+
+<Window url="/t/7f3a9c1e?ds=tempo">
+  <span slot="bar-end" class="fg-crit">Error</span>
+  <div class="trace-body">
+    {
+      spans.map(({ name, indent, tone, width, offset }) => (
+        <div class="span-row">
+          <span style={`padding-left:${indent}px`}>{name}</span>
+          <div class={`span-bar tone-${tone}`} style={`width:${width}%;margin-left:${offset}%`} />
+        </div>
+      ))
+    }
+    <div class="k mono trace-foot">payments · charge · 1.52 s · deadline exceeded · 504</div>
+  </div>
+</Window>
+
+<style>
+  .trace-body {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 11.5px;
+  }
+
+  .span-row {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 8px;
+    align-items: center;
+  }
+
+  .span-bar {
+    height: 10px;
+    border-radius: 2px;
+    background: var(--tone);
+  }
+
+  .trace-foot {
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+  }
+</style>

@@ -1,0 +1,47 @@
+---
+import Bars from "./Bars.astro"
+import Panel from "./Panel.astro"
+import Sparklines from "./Sparklines.astro"
+import Window from "./Window.astro"
+
+const latency = [
+  { d: "M0 56 C40 52 60 34 100 38 S160 66 200 46 S260 22 300 30", tone: "s1" },
+  { d: "M0 68 C40 66 60 58 100 60 S160 74 200 66 S260 56 300 60", tone: "s3" },
+  { d: "M0 44 C40 50 60 40 100 34 S160 28 200 40 S260 50 300 42", tone: "s2" },
+] as const
+
+const errors = [
+  { h: 20 },
+  { h: 22 },
+  { h: 18 },
+  { h: 80, tone: "crit" },
+  { h: 100, tone: "crit" },
+  { h: 60, tone: "crit" },
+  { h: 24 },
+  { h: 20 },
+] as const
+---
+
+<Window url="/d/4f1c/checkout-health">
+  <div class="checkout-body">
+    <Panel title="p95 latency by route" meta="ms">
+      <Sparklines viewBox="0 0 300 80" height="80px" series={[...latency]} />
+    </Panel>
+    <Panel title="Payment errors" meta="5m">
+      <div class="checkout-bars"><Bars height={44} gap={3} bars={[...errors]} /></div>
+    </Panel>
+  </div>
+</Window>
+
+<style>
+  .checkout-body {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .checkout-bars {
+    padding: 0 11px 10px;
+  }
+</style>

@@ -1,0 +1,22 @@
+export const PLACES = [
+  "your laptop",
+  "AWS",
+  "a Raspberry Pi",
+  "GCP",
+  "Kubernetes",
+  "Azure",
+  "Hetzner",
+  "DigitalOcean",
+  "Fly.io",
+] as const
+
+export const CYCLE_MS = 1800
+
+export function placeAt(tick: number): string {
+  const index = ((tick % PLACES.length) + PLACES.length) % PLACES.length
+  return PLACES[index]
+}
+
+export function spinClass(tick: number): "spin-a" | "spin-b" {
+  return Math.abs(tick % 2) === 1 ? "spin-a" : "spin-b"
+}

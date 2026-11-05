@@ -62,6 +62,12 @@ const { command } = Astro.props
     text-overflow: ellipsis;
   }
 
+  @media (min-width: 901px) {
+    .text {
+      max-width: 360px;
+    }
+  }
+
   .copy {
     border: 0;
     background: transparent;
