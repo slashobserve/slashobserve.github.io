@@ -1,0 +1,61 @@
+---
+import Panel from "./Panel.astro"
+import Sparklines from "./Sparklines.astro"
+import Window from "./Window.astro"
+
+const routes = [
+  { route: "/checkout", tone: "s1", d: "M0 60 C40 56 60 36 100 40 S160 70 200 50 S260 24 300 32" },
+  { route: "/cart", tone: "s3", d: "M0 74 C40 72 60 62 100 64 S160 80 200 72 S260 60 300 64" },
+  { route: "/product", tone: "s2", d: "M0 46 C40 54 60 44 100 36 S160 30 200 44 S260 54 300 46" },
+] as const
+---
+
+<Window url="observe.example.com/explore?ds=prom-prod">
+  <div class="explore">
+    <div class="mono query">{'histogram_quantile(0.95, sum by (le, route) (rate(http_request_duration_seconds_bucket{job="checkout"}[5m])))'}</div>
+    <Panel title="p95 by route" meta="last 6h">
+      <Sparklines viewBox="0 0 300 90" height="110px" series={routes.map(({ d, tone }) => ({ d, tone }))} />
+      <div class="legend">
+        {
+          routes.map(({ route, tone }) => (
+            <span class="row">
+              <span class={`dot tone-${tone}`} />
+              {route}
+            </span>
+          ))
+        }
+      </div>
+    </Panel>
+    <div class="row">
+      <span class="btn btn-sm">Add to dashboard</span>
+      <span class="btn btn-sm">Send to agent</span>
+    </div>
+  </div>
+</Window>
+
+<style>
+  .explore {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .query {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 12px;
+    background: var(--surface);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .legend {
+    padding: 0 11px 8px;
+    display: flex;
+    gap: 12px;
+    font-size: 11px;
+    flex-wrap: wrap;
+  }
+</style>

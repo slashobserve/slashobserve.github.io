@@ -1,0 +1,123 @@
+---
+import Window from "./Window.astro"
+
+interface Span {
+  name: string
+  depth: 0 | 1 | 2 | 3
+  tone: "s1" | "s2" | "s3" | "s4" | "crit"
+  width: number
+  offset: number
+  dur: string
+  selected?: boolean
+}
+
+const spans: Span[] = [
+  { name: "frontend · POST /checkout", depth: 0, tone: "s1", width: 100, offset: 0, dur: "2.31 s" },
+  { name: "checkout · place order", depth: 1, tone: "s3", width: 86, offset: 6, dur: "1.98 s" },
+  { name: "inventory · reserve", depth: 2, tone: "s4", width: 9, offset: 8, dur: "0.21 s" },
+  { name: "checkout · db insert", depth: 2, tone: "s2", width: 4, offset: 18, dur: "0.09 s" },
+  { name: "payments · charge", depth: 2, tone: "crit", width: 66, offset: 24, dur: "1.52 s", selected: true },
+  { name: "payments · gateway", depth: 3, tone: "crit", width: 64, offset: 25, dur: "1.49 s" },
+  { name: "frontend · render", depth: 1, tone: "s1", width: 5, offset: 93, dur: "0.11 s" },
+]
+
+const ticks = ["0", "0.5 s", "1.0 s", "1.5 s", "2.0 s"]
+---
+
+<Window url="observe.example.com/t/7f3a9c1e?ds=tempo-prod">
+  <span slot="bar-end" class="hide-xs">frontend · POST /checkout · 2.31 s · </span>
+  <span slot="bar-end" class="fg-crit">Error</span>
+  <div class="trace">
+    <div class="span-row head">
+      <span>service · span</span>
+      <span class="row ticks" aria-hidden="true">{ticks.map((tick) => <span>{tick}</span>)}</span>
+      <span class="dur">dur</span>
+    </div>
+    {
+      spans.map(({ name, depth, tone, width, offset, dur, selected }) => (
+        <div class:list={["span-row", { selected }]}>
+          <span class="name" style={`padding-left:${depth * 12}px`}>
+            {name}
+          </span>
+          <div class={`span-bar tone-${tone}`} style={`width:${width}%;margin-left:${offset}%`} />
+          <span class:list={["mono dur", { "fg-crit": selected }]}>{dur}</span>
+        </div>
+      ))
+    }
+    <div class="mono attrs">
+      <span class="k">span</span>
+      <span>payments · charge</span>
+      <span class="k">status</span>
+      <span class="fg-crit">Error · deadline exceeded</span>
+      <span class="k">http.status</span>
+      <span>504</span>
+      <span class="k">peer</span>
+      <span>gateway.psp.example:443</span>
+      <span class="k">logs</span>
+      <span><u>2 lines in this span</u></span>
+    </div>
+  </div>
+</Window>
+
+<style>
+  .trace {
+    --name-col: 170px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 11.5px;
+  }
+
+  .span-row {
+    display: grid;
+    grid-template-columns: var(--name-col) minmax(0, 1fr) 60px;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .head {
+    color: var(--mfg);
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ticks {
+    justify-content: space-between;
+  }
+
+  .dur {
+    text-align: right;
+  }
+
+  .selected {
+    background: var(--surface);
+    border-radius: 4px;
+  }
+
+  .span-bar {
+    height: 12px;
+    border-radius: 2px;
+    background: var(--tone);
+  }
+
+  .attrs {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 3px 10px;
+  }
+
+  @media (max-width: 480px) {
+    .trace {
+      --name-col: 118px;
+    }
+
+    .hide-xs,
+    .ticks > span:not(:first-child, :last-child) {
+      display: none;
+    }
+  }
+</style>
