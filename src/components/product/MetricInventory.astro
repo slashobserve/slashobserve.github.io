@@ -1,0 +1,22 @@
+---
+import Window from "./Window.astro"
+
+const header = "family                                   series  planned as"
+const planned = [
+  "http_requests_total                         18  Requests/s · Errors by route",
+  "http_request_duration_seconds               54  p95 latency · Latency by route",
+  "checkout_orders_total                        6  Queue depth",
+  "checkout_payment_total                       9  Payment success",
+  "inventory_reservations_total                 6  Reservations/s",
+  "db_pool_in_use                               3  DB pool in use",
+  "db_pool_max                                  3  DB pool in use",
+  "kube_pod_status_ready                        3  Pods ready",
+  "go_gc_pause_seconds                          3  GC pause p99",
+]
+const skipped = { family: "process_resident_memory_bytes                3  ", reason: "skipped: runtime, see summary" }
+const summary = "12 families · 12 planned · 0 uncovered"
+---
+
+<Window url={'list_metrics scope={job="checkout"}'}>
+  <div class="term"><span class="tl k">{header}</span>{planned.map((line) => <span class="tl">{line}</span>)}<span class="tl">{skipped.family}<span class="fg-warn">{skipped.reason}</span></span><span class="tl">…</span><span class="tl fg-ok">{summary}</span></div>
+</Window>

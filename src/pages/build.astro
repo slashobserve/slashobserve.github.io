@@ -1,6 +1,16 @@
 ---
+import BuildPlayback from "../components/product/BuildPlayback.astro"
+import MetricInventory from "../components/product/MetricInventory.astro"
+import VersionHistory from "../components/product/VersionHistory.astro"
 import PageOpening from "../components/site/PageOpening.astro"
+import RunsOnBand from "../components/site/RunsOnBand.astro"
+import Section from "../components/site/Section.astro"
+import Split from "../components/site/Split.astro"
+import SurfacesSection from "../components/site/SurfacesSection.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
+import { getDocLinks } from "../lib/get-doc-links"
+
+const links = await getDocLinks()
 ---
 
 <MarketingLayout
@@ -13,4 +23,56 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
       its query, and ends with a version and a link. Nothing in your data is left off, and nothing unverified is saved.
     </p>
   </PageOpening>
+  <BuildPlayback space="page" />
+  <Section>
+    <Split start={0.85} end={1.15}>
+      <div slot="start" class="statement inventory-statement">
+        <h2 class="h2">Nothing in your data is left off.</h2>
+        <p class="lead lead-17">
+          Before it plans, the agent takes an inventory of every metric family in scope: a job, a service, a namespace,
+          or a table. Each family ends in a panel or in a named skip with a reason. The save result lists what is still
+          uncovered, so a dashboard is complete or says why not.
+        </p>
+        <div class="row inventory-chips">
+          <span class="chip">12 families</span>
+          <span class="chip">12 panels</span>
+          <span class="chip"><span class="dot tone-ok"></span>0 uncovered</span>
+        </div>
+      </div>
+      <MetricInventory slot="end" />
+    </Split>
+  </Section>
+  <Section>
+    <Split start={1.15} end={0.85}>
+      <VersionHistory slot="start" />
+      <div slot="end" class="statement">
+        <h2 class="h2">Every change is a version.</h2>
+        <p class="lead lead-17">
+          A build becomes one version. A follow-up in the chat, an edit in the panel editor, an agent repair, each is
+          another, with a diff and a restore. Comments on a panel go to the agent, and its reply is a version too.
+        </p>
+      </div>
+    </Split>
+  </Section>
+  <SurfacesSection
+    lead="The tools behind the built-in agent are the tools served over MCP. Claude Code or Cursor builds, reads and repairs dashboards with the same metric inventory and the same checks before a save."
+  />
+  <RunsOnBand quickStart={links.quickStart} />
 </MarketingLayout>
+
+<style>
+  .statement {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .inventory-statement {
+    gap: 18px;
+  }
+
+  .inventory-chips {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+</style>
