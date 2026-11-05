@@ -2,11 +2,13 @@ import { existsSync } from "node:fs"
 import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises"
 import path from "node:path"
 import type { CorpusEntry } from "../src/lib/import-corpus"
+import { SITE_FACTS_PATH } from "../src/lib/site-facts"
 import { assertSiteSafe } from "./reference/markdown"
 import { apiPages } from "./reference/openapi"
 import { observespecPages, type Example } from "./reference/observespec"
 import { summarizeConformance, type AreaInput } from "./sync/conformance"
 import { summarizeGolden } from "./sync/corpus"
+import { INSTALL_SCRIPT_URL, isInstallScript } from "./sync/install-script"
 import { transformPage } from "./sync/markdown"
 import {
   API_DIR,
@@ -16,6 +18,8 @@ import {
   CORPUS_OUT,
   COVERAGE_OUT,
   DOCS_OUT,
+  INSTALL_SCRIPT_OUT,
+  INSTALL_SCRIPT_SOURCE,
   OBSERVESPEC_DIR,
   SCHEMA_OUT,
   SCHEMA_SOURCE,
@@ -23,6 +27,7 @@ import {
   invalidDocPath,
   outputPathFor,
 } from "./sync/paths"
+import { siteVersion, type SiteVersion } from "./sync/site-version"
 import { docDates } from "./sync/updated"
 
 const SCHEMA_ID = "https://slashobserve.com/schemas/observespec.v0.json"
@@ -145,6 +150,42 @@ function coreCommit(core: string): string {
   return result.exitCode === 0 ? result.stdout.toString().trim() : "unknown"
 }
 
+function gitOutput(args: string[]): string | null {
+  const result = Bun.spawnSync(["git", ...args])
+  return result.exitCode === 0 ? result.stdout.toString() : null
+}
+
+function readSiteVersion(): SiteVersion | null {
+  return siteVersion({
+    count: gitOutput(["rev-list", "--count", "HEAD"]),
+    sha: gitOutput(["rev-parse", "--short", "HEAD"]),
+    shallow: gitOutput(["rev-parse", "--is-shallow-repository"]),
+    githubSha: process.env.GITHUB_SHA,
+  })
+}
+
+async function fetchText(url: string): Promise<string | null> {
+  try {
+    const response = await fetch(url)
+    return response.ok ? await response.text() : null
+  } catch {
+    return null
+  }
+}
+
+async function readInstallScript(core: string): Promise<{ text: string; source: "core" | "main" }> {
+  const local = path.join(core, INSTALL_SCRIPT_SOURCE)
+  const found = existsSync(local)
+    ? { text: await readFile(local, "utf8"), source: "core" as const }
+    : { text: await fetchText(INSTALL_SCRIPT_URL), source: "main" as const }
+  if (!isInstallScript(found.text)) {
+    throw new Error(
+      `install.sh: neither ${local} nor ${INSTALL_SCRIPT_URL} gave a script starting with #!/bin/sh`,
+    )
+  }
+  return { text: found.text, source: found.source }
+}
+
 function plural(count: number, noun: string): string {
   return `${count} ${noun}${count === 1 ? "" : "s"}`
 }
@@ -204,6 +245,8 @@ async function prebuild(): Promise<string> {
   reference.forEach(assertSiteSafe)
   const api = apiPages(await readApiFiles(path.join(core, API_SOURCE)), commit)
   api.forEach(assertSiteSafe)
+  const installScript = await readInstallScript(core)
+  const version = readSiteVersion()
 
   await rm(DOCS_OUT, { recursive: true, force: true })
   await rm(path.dirname(SCHEMA_OUT), { recursive: true, force: true })
@@ -230,7 +273,13 @@ async function prebuild(): Promise<string> {
 
   await writeFile(COVERAGE_OUT, JSON.stringify({ core: commit, ...conformance }, null, 2) + "\n")
 
-  return `Prebuild: ${plural(pages.length, "page")} (${plural(dated, "dated page")}), ${plural(assets.length, "asset")}, ${plural(reference.length, "ObserveSpec reference page")}, ${plural(api.length, "HTTP API reference page")}, the ObserveSpec schema, ${plural(corpus.length, "corpus file")} and ${plural(conformance.areas.length, "conformance area")} from ${core} (${commit})`
+  await mkdir(path.dirname(SITE_FACTS_PATH), { recursive: true })
+  await writeFile(SITE_FACTS_PATH, JSON.stringify({ version }, null, 2) + "\n")
+
+  await mkdir(path.dirname(INSTALL_SCRIPT_OUT), { recursive: true })
+  await writeFile(INSTALL_SCRIPT_OUT, installScript.text)
+
+  return `Prebuild: ${plural(pages.length, "page")} (${plural(dated, "dated page")}), ${plural(assets.length, "asset")}, ${plural(reference.length, "ObserveSpec reference page")}, ${plural(api.length, "HTTP API reference page")}, the ObserveSpec schema, ${plural(corpus.length, "corpus file")} and ${plural(conformance.areas.length, "conformance area")} from ${core} (${commit}), install.sh from ${installScript.source}, site version ${version ? `${version.count} · ${version.sha}` : "unknown"}`
 }
 
 try {
