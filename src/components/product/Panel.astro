@@ -1,0 +1,14 @@
+---
+interface Props {
+  title: string
+  meta?: string
+  class?: string
+}
+
+const { title, meta, class: className } = Astro.props
+---
+
+<div class:list={["panel", className]}>
+  <div class="pt"><span>{title}</span>{meta && <span class="k">{meta}</span>}</div>
+  <slot />
+</div>

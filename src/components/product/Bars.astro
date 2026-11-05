@@ -1,0 +1,29 @@
+---
+type Tone = "s1" | "warn" | "crit"
+
+interface Props {
+  bars: { h: number; tone?: Tone }[]
+  height?: number
+  gap?: number
+  class?: string
+}
+
+const { bars, height, gap = 3, class: className } = Astro.props
+const size = height === undefined ? "flex:1" : `height:${height}px`
+---
+
+<div class:list={["bars", className]} aria-hidden="true" style={`gap:${gap}px;${size}`}>
+  {bars.map(({ h, tone }) => <i class={`tone-${tone ?? "s1"}`} style={`height:${h}%`} />)}
+</div>
+
+<style>
+  .bars {
+    display: flex;
+    align-items: flex-end;
+  }
+
+  i {
+    flex: 1;
+    background: var(--tone);
+  }
+</style>
