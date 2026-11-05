@@ -1,0 +1,100 @@
+---
+import Section from "../site/Section.astro"
+
+type Language = string | null
+
+interface Store {
+  store: string
+  metrics: Language
+  logs: Language
+  traces: Language
+  discovery: string
+}
+
+const stores: Store[] = [
+  {
+    store: "Prometheus",
+    metrics: "PromQL",
+    logs: null,
+    traces: null,
+    discovery: "metric inventory by family, labels, label values, series per family",
+  },
+  {
+    store: "ClickHouse",
+    metrics: "SQL",
+    logs: "SQL",
+    traces: "SQL",
+    discovery: "databases, tables, columns and types, sample rows, the OpenTelemetry log and trace tables",
+  },
+  {
+    store: "Loki",
+    metrics: null,
+    logs: "LogQL",
+    traces: null,
+    discovery: "stream labels and values, detected fields, line samples",
+  },
+  {
+    store: "Tempo",
+    metrics: null,
+    logs: null,
+    traces: "TraceQL",
+    discovery: "service names, span names, attribute keys, a sample trace per service",
+  },
+]
+---
+
+<Section>
+  <h2 class="h2 stores-title">What each store gives the agent.</h2>
+  <div class="win">
+    <div class="scroll">
+      <table class="tbl stores">
+        <thead>
+          <tr><th>Store</th><th>Metrics</th><th>Logs</th><th>Traces</th><th>Discovery</th></tr>
+        </thead>
+        <tbody>
+          {
+            stores.map(({ store, metrics, logs, traces, discovery }) => (
+              <tr>
+                <td>{store}</td>
+                {[metrics, logs, traces].map((language) =>
+                  language === null ? (
+                    <td class="k">
+                      <span aria-hidden="true">-</span>
+                      <span class="sr-only">none</span>
+                    </td>
+                  ) : (
+                    <td>
+                      <span class="row">
+                        <span class="dot tone-ok" />
+                        {language}
+                      </span>
+                    </td>
+                  ),
+                )}
+                <td class="k">{discovery}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p class="hint stores-note">
+    Every query is time-bounded and limited on the server, whatever the prompt says. Credentials never reach the browser.
+  </p>
+</Section>
+
+<style>
+  .stores-title {
+    margin-bottom: 28px;
+  }
+
+  .stores {
+    font-size: 13.5px;
+    min-width: 680px;
+  }
+
+  .stores-note {
+    margin: 14px 0 0;
+  }
+</style>

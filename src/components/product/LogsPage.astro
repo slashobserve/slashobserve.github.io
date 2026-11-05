@@ -1,0 +1,210 @@
+---
+import Bars from "./Bars.astro"
+import Window from "./Window.astro"
+
+type Level = "error" | "warn" | "info"
+
+interface LogLine {
+  time: string
+  level: Level
+  text: string
+  trace?: string
+  selected?: boolean
+}
+
+const levelClass: Record<Level, string> = { error: "fg-crit", warn: "fg-warn", info: "k" }
+
+const volume = [
+  { h: 20 },
+  { h: 30 },
+  { h: 25 },
+  { h: 35 },
+  { h: 30 },
+  { h: 85, tone: "crit" as const },
+  { h: 95, tone: "crit" as const },
+  { h: 60, tone: "crit" as const },
+  { h: 30 },
+  { h: 28 },
+  { h: 24 },
+  { h: 30 },
+]
+
+const lines: LogLine[] = [
+  {
+    time: "14:02:11.204",
+    level: "error",
+    text: "checkout-0 payment declined order=8812 reason=card_declined",
+    trace: "7f3a9c1e",
+  },
+  { time: "14:02:11.198", level: "info", text: "frontend-1 GET /cart 200 12ms" },
+  { time: "14:02:10.911", level: "warn", text: "checkout-0 db pool near max in_use=19 max=20" },
+  { time: "14:02:10.877", level: "info", text: "payments-0 charge ok amount=4900", trace: "2b11e0aa" },
+  {
+    time: "14:02:09.540",
+    level: "error",
+    text: "checkout-0 upstream timeout upstream=payments after=2.0s",
+    trace: "7f3a9c1e",
+    selected: true,
+  },
+  { time: "14:02:09.102", level: "info", text: "frontend-0 GET /product/41 200 8ms" },
+  { time: "14:02:08.990", level: "info", text: "inventory-0 reserve ok sku=41 qty=1" },
+  { time: "14:02:08.421", level: "error", text: "checkout-0 payment declined order=8809 reason=timeout", trace: "91c0d7f2" },
+]
+
+const fields = [
+  ["level", "error"],
+  ["app", "checkout"],
+  ["pod", "checkout-0"],
+  ["upstream", "payments"],
+  ["after", "2.0s"],
+]
+---
+
+<Window url={'observe.example.com/logs?ds=loki-prod&q={app="checkout"} |= "error"'} label="The logs page">
+  <span slot="bar-end" class="row live"><span class="dot tone-ok"></span>live tail</span>
+  <span slot="bar-end" class="hide-xs">last 15 min</span>
+  <div class="logs g1-sm">
+    <div>
+      <div class="query">
+        <div class="mono query-text">{'{app="checkout"} |= "error" | json | line_format "{{.msg}}"'}</div>
+        <span class="btn btn-sm">Run</span>
+      </div>
+      <div class="volume">
+        <Bars bars={volume} gap={2} />
+      </div>
+      <div class="lines">
+        {
+          lines.map(({ time, level, text, trace, selected }) => (
+            <div class:list={["logline", { selected }]}>
+              <span class="k">{time}</span>
+              <span class={levelClass[level]}>{level}</span>
+              <span>
+                {text}
+                {trace && (
+                  <>
+                    {" trace="}
+                    <u>{trace}</u>
+                  </>
+                )}
+              </span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+    <div class="detail">
+      <span class="label">Selected line</span>
+      <div class="mono fields">
+        {
+          fields.map(([key, value]) => (
+            <>
+              <span class="k">{key}</span>
+              <span>{value}</span>
+            </>
+          ))
+        }
+        <span class="k">trace</span>
+        <span><u>7f3a9c1e</u></span>
+      </div>
+      <span class="btn btn-sm open-trace">Open trace 7f3a9c1e</span>
+      <span class="hint">
+        Opens <span class="mono">/t/7f3a9c1e?ds=tempo-prod</span>. A trace id is detected in any field or in the line.
+      </span>
+      <span class="hint actions">Add as a logs panel · Ask the agent about this error</span>
+    </div>
+  </div>
+</Window>
+
+<style>
+  .live {
+    gap: 6px;
+  }
+
+  .logs {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+
+  .query {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .query-text {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background: var(--surface);
+  }
+
+  .query .btn,
+  .open-trace {
+    min-height: 32px;
+  }
+
+  .volume {
+    padding: 10px 12px 4px;
+    height: 56px;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .lines {
+    padding: 8px 0;
+  }
+
+  .logs .logline {
+    grid-template-columns: 90px 44px minmax(0, 1fr);
+  }
+
+  .logline.selected {
+    background: var(--surface);
+  }
+
+  .detail {
+    border-left: 1px solid var(--border);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 12px;
+  }
+
+  .fields {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 3px 10px;
+    font-size: 11.5px;
+  }
+
+  .open-trace {
+    margin-top: 4px;
+  }
+
+  .actions {
+    margin-top: auto;
+  }
+
+  @media (max-width: 900px) {
+    .detail {
+      border-left: 0;
+      border-top: 1px solid var(--border);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hide-xs {
+      display: none;
+    }
+  }
+</style>

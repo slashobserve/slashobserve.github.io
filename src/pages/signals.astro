@@ -1,5 +1,11 @@
 ---
+import ExploreQuery from "../components/product/ExploreQuery.astro"
+import LogsPage from "../components/product/LogsPage.astro"
+import TraceView from "../components/product/TraceView.astro"
+import StoresTable from "../components/signals/StoresTable.astro"
 import PageOpening from "../components/site/PageOpening.astro"
+import Section from "../components/site/Section.astro"
+import Split from "../components/site/Split.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
 ---
 
@@ -19,11 +25,53 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
       <span class="chip">Tempo</span>
     </div>
   </PageOpening>
+  <section class="wrap logs-wrap"><LogsPage /></section>
+  <Section>
+    <Split start={1.25} end={0.75} gap={48}>
+      <TraceView slot="start" />
+      <div slot="end" class="copy">
+        <h2 class="h2">The trace view.</h2>
+        <p class="lead lead-17">
+          A waterfall per trace, the slow span selected, its attributes and its log lines beside it. Tempo or the
+          OpenTelemetry tables in ClickHouse, with TraceQL or SQL behind it.
+        </p>
+      </div>
+    </Split>
+  </Section>
+  <Section>
+    <Split start={0.75} end={1.25} gap={48}>
+      <div slot="start" class="copy">
+        <h2 class="h2">Explore, before the dashboard.</h2>
+        <p class="lead lead-17">
+          Pick a datasource, write PromQL, LogQL, TraceQL or SQL, see the result. Add it to a dashboard, or send it to
+          the agent.
+        </p>
+      </div>
+      <ExploreQuery slot="end" />
+    </Split>
+  </Section>
+  <StoresTable />
 </MarketingLayout>
 
 <style>
   .chips {
     gap: 8px;
     flex-wrap: wrap;
+  }
+
+  .logs-wrap {
+    padding-bottom: 96px;
+  }
+
+  .copy {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  @media (max-width: 900px) {
+    .logs-wrap {
+      padding-bottom: 64px;
+    }
   }
 </style>
