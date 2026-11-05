@@ -7,111 +7,85 @@ import Wordmark from "./Wordmark.astro"
 
 interface Props {
   links: DocLinks
-  minimal?: boolean
 }
 
-const { links, minimal = false } = Astro.props
+const { links } = Astro.props
 const getStarted = getStartedHref(links)
 const navItems = headerNav(links)
 const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? "page" : undefined)
 ---
 
-{
-  minimal ? (
-    <header class="wrap minimal">
-      <a class="home" href="/" aria-label="SlashObserve home">
-        <Wordmark size={21} />
+<div class="header-bar" data-site-bar>
+  <header class="wrap" data-site-header>
+    <a class="home" href="/" aria-label="SlashObserve home">
+      <Wordmark size={21} />
+    </a>
+    <nav aria-label="Main" class="nav main-nav hide-sm">
+      {navItems.map((item) => (
+        <a href={item.href} aria-current={currentFor(item.href)}>
+          {item.label}
+        </a>
+      ))}
+    </nav>
+    <div class="actions">
+      <a class="github hide-sm" href={GITHUB_URL}>
+        <GitHubIcon size={15} />GitHub
       </a>
-      <span class="push">
-        <ThemeToggle bordered />
-      </span>
-    </header>
-  ) : (
-    <div class="header-bar" data-site-bar>
-      <header class="wrap full" data-site-header>
-        <div class="brand-row">
-          <a class="home" href="/" aria-label="SlashObserve home">
-            <Wordmark size={21} />
-          </a>
-          <nav aria-label="Main" class="main-nav hide-sm">
-            {navItems.map((item) => (
-              <a class="navlink" href={item.href} aria-current={currentFor(item.href)}>
-                {item.label}
-              </a>
-            ))}
-          </nav>
-        </div>
-        <div class="actions">
-          <a class="navlink github hide-sm" href={GITHUB_URL}>
-            <GitHubIcon />GitHub
-          </a>
-          <ThemeToggle />
-          {getStarted && (
-            <a class="btn btn-primary get-started hide-sm" href={getStarted}>
-              Get started
-            </a>
-          )}
-          <button
-            type="button"
-            class="icon-btn menu-toggle"
-            aria-label="Open menu"
-            aria-expanded="false"
-            aria-controls="site-menu"
-          >
-            <svg
-              class="icon-open"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-            >
-              <path d="M4 7h16M4 12h16M4 17h16"></path>
-            </svg>
-            <svg
-              class="icon-close"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-            >
-              <path d="M6 6l12 12M18 6 6 18"></path>
-            </svg>
-          </button>
-        </div>
-        <nav id="site-menu" class="menu-panel" aria-label="Mobile" hidden>
-          {navItems.map((item) => (
-            <a class="menu-link" href={item.href} aria-current={currentFor(item.href)}>
-              {item.label}
-            </a>
-          ))}
-          <a class="menu-link" href={GITHUB_URL}>
-            <GitHubIcon />GitHub
-          </a>
-          {getStarted && (
-            <a class="btn btn-primary menu-cta" href={getStarted}>
-              Get started
-            </a>
-          )}
-        </nav>
-      </header>
+      <ThemeToggle />
+      {getStarted && (
+        <a class="btn btn-primary btn-sm get-started" href={getStarted}>
+          Get started
+        </a>
+      )}
+      <button
+        type="button"
+        class="icon-btn menu-toggle"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="site-menu"
+      >
+        <svg
+          class="icon-open"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <path d="M4 7h16M4 12h16M4 17h16"></path>
+        </svg>
+        <svg
+          class="icon-close"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <path d="M6 6l12 12M18 6 6 18"></path>
+        </svg>
+      </button>
     </div>
-  )
-}
+    <nav id="site-menu" class="menu-panel" aria-label="Mobile" hidden>
+      {navItems.map((item) => (
+        <a class="menu-link" href={item.href} aria-current={currentFor(item.href)}>
+          {item.label}
+        </a>
+      ))}
+      <a class="menu-link" href={GITHUB_URL} aria-current={currentFor(GITHUB_URL)}>
+        <GitHubIcon size={15} />GitHub
+      </a>
+    </nav>
+  </header>
+</div>
 
 <style>
-  header {
-    display: flex;
-    align-items: center;
-  }
-
   .header-bar {
     position: sticky;
     top: 0;
@@ -123,20 +97,12 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
     background: var(--bg);
   }
 
-  .full {
+  header {
     position: relative;
-    gap: 20px;
-    min-height: 64px;
-  }
-
-  .minimal {
-    min-height: 64px;
-    gap: 12px;
-  }
-
-  .brand-row {
     display: flex;
-    align-items: baseline;
+    align-items: center;
+    gap: 18px;
+    min-height: 64px;
   }
 
   .home {
@@ -148,15 +114,11 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
     display: flex;
     gap: 2px;
     align-items: center;
-    margin-left: 20px;
+    margin-left: 8px;
   }
 
-  .main-nav .navlink {
+  .main-nav a {
     white-space: nowrap;
-  }
-
-  .main-nav .navlink[aria-current="page"] {
-    color: var(--fg);
   }
 
   .actions {
@@ -166,30 +128,29 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
     align-items: center;
   }
 
-  .push {
-    margin-left: auto;
-    display: inline-flex;
-  }
-
   .github {
     display: inline-flex;
     gap: 6px;
     align-items: center;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: var(--mfg);
+    text-decoration: none;
+  }
+
+  .github:hover {
+    color: var(--fg);
   }
 
   .get-started {
-    box-sizing: border-box;
     min-height: 36px;
-    padding: 0 14px;
   }
 
   .menu-toggle {
     display: none;
     flex: none;
-    width: 44px;
-    height: 44px;
     padding: 0;
-    cursor: pointer;
   }
 
   .menu-toggle:hover {
@@ -242,13 +203,7 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
     color: var(--fg);
   }
 
-  .menu-cta {
-    margin-top: 8px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  @media (max-width: 860px) {
+  @media (max-width: 900px) {
     .menu-toggle {
       display: inline-flex;
     }
@@ -268,7 +223,7 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
 </style>
 
 <script>
-  const MOBILE_QUERY = "(max-width: 860px)"
+  const MOBILE_QUERY = "(max-width: 900px)"
   const toggle = document.querySelector<HTMLButtonElement>(".menu-toggle")
   const panel = document.getElementById("site-menu")
   const bar = document.querySelector<HTMLElement>("[data-site-bar]")
