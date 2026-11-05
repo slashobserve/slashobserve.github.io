@@ -1,0 +1,40 @@
+---
+import Window from "./Window.astro"
+
+const CURRENT = 7
+const versions = [
+  { version: 7, change: "Add errors by route; pin p95 on top", by: "Priya · agent" },
+  { version: 6, change: "Threshold on DB pool at 18", by: "Priya" },
+  { version: 5, change: "Repair: container_cpu metric renamed", by: "agent" },
+  { version: 4, change: "Add Loki panel: payment errors", by: "Tom · agent" },
+  { version: 1, change: 'Built from "checkout health by pod, last 6h"', by: "Priya · agent" },
+]
+---
+
+<Window url="/d/4f1c/checkout-health · history">
+  <div class="scroll">
+    <table class="tbl history">
+      <thead>
+        <tr><th>Version</th><th>Change</th><th>By</th><th><span class="sr-only">Actions</span></th></tr>
+      </thead>
+      <tbody>
+        {
+          versions.map(({ version, change, by }) => (
+            <tr>
+              <td>{version}</td>
+              <td class="change">{change}</td>
+              <td class="k">{by}</td>
+              <td class="hint">{version === CURRENT ? "current" : "diff · restore"}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</Window>
+
+<style>
+  .history td:not(.change) {
+    white-space: nowrap;
+  }
+</style>
