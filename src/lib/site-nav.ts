@@ -6,12 +6,14 @@ export type NavItem = { label: string; href: string }
 export const GITHUB_URL = "https://github.com/slashobserve/slashobserve"
 export const CLI_INSTALL_COMMAND =
   "curl -fsSL https://raw.githubusercontent.com/slashobserve/slashobserve/main/install.sh | sh"
-export const FEATURES_PATH = "/features/"
+export const BUILD_PATH = "/build/"
 export const GRAFANA_PATH = "/grafana/"
+export const SIGNALS_PATH = "/signals/"
 
 export const PRODUCT_LINKS: NavItem[] = [
-  { label: "Features", href: FEATURES_PATH },
+  { label: "Build", href: BUILD_PATH },
   { label: "Coming from Grafana", href: GRAFANA_PATH },
+  { label: "Signals", href: SIGNALS_PATH },
 ]
 
 export function getStartedHref(links: DocLinks): string | null {
@@ -31,13 +33,7 @@ export function isCurrentPage(href: string, pathname: string): boolean {
 }
 
 export function headerNav(links: DocLinks): NavItem[] {
-  return [
-    ...PRODUCT_LINKS,
-    ...navItems([
-      ["Docs", docsHomeHref(links)],
-      ["Self-host", links.selfHost],
-    ]),
-  ]
+  return [...PRODUCT_LINKS, ...navItems([["Docs", docsHomeHref(links)]])]
 }
 
 export function footerColumns(links: DocLinks): { title: string; items: NavItem[] }[] {
