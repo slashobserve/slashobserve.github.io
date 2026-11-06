@@ -17,20 +17,6 @@ import CopyCommand from "./CopyCommand.astro"
 </section>
 
 <style>
-  .hero {
-    padding-top: 96px;
-    padding-bottom: 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 26px;
-    text-align: center;
-  }
-
-  .h1 {
-    max-width: 24ch;
-  }
-
   .h1-top {
     display: block;
     font-weight: 700;
@@ -45,10 +31,6 @@ import CopyCommand from "./CopyCommand.astro"
     color: var(--mfg);
   }
 
-  .lead {
-    max-width: 62ch;
-  }
-
   .hero-row {
     display: flex;
     justify-content: center;
@@ -60,17 +42,10 @@ import CopyCommand from "./CopyCommand.astro"
   }
 
   @media (max-width: 900px) {
-    .hero {
-      padding-top: 56px;
-      align-items: flex-start;
-      text-align: left;
-    }
-
     .hero-row {
       flex-direction: column;
       align-items: stretch;
       width: 100%;
-      max-width: none;
     }
   }
 </style>
