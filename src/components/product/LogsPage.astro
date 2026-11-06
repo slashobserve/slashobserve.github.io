@@ -1,174 +1,256 @@
 ---
 import Window from "./Window.astro"
+import { HOST, TRACE_ID } from "./screen-ids"
 
-type Level = "error" | "warn" | "info"
+type Level = "Error" | "Warning" | "Info"
 
 interface LogLine {
   time: string
+  pod: string
   level: Level
   text: string
-  trace?: string
   selected?: boolean
 }
 
-const levelClass: Record<Level, string> = { error: "fg-crit", warn: "fg-warn", info: "k" }
+const levelTone: Record<Level, string> = { Error: "tone-crit", Warning: "tone-warn", Info: "tone-mfg" }
+
+const appOf = (pod: string) => pod.slice(0, pod.lastIndexOf("-"))
+
+const QUERY = '{namespace="shop"} | json'
 
 const lines: LogLine[] = [
-  {
-    time: "14:02:11.204",
-    level: "error",
-    text: "checkout-0 payment declined order=8812 reason=card_declined",
-    trace: "7f3a9c1e",
-  },
-  { time: "14:02:11.198", level: "info", text: "frontend-1 GET /cart 200 12ms" },
-  { time: "14:02:10.911", level: "warn", text: "checkout-0 db pool near max in_use=19 max=20" },
-  { time: "14:02:10.877", level: "info", text: "payments-0 charge ok amount=4900", trace: "2b11e0aa" },
+  { time: "14:02:11.204", pod: "checkout-0", level: "Error", text: "payment declined order=8812 reason=card_declined" },
+  { time: "14:02:11.198", pod: "frontend-1", level: "Info", text: "GET /cart 200 12ms" },
+  { time: "14:02:10.911", pod: "checkout-0", level: "Warning", text: "db pool near max in_use=19 max=20" },
+  { time: "14:02:10.877", pod: "payments-0", level: "Info", text: "charge ok amount=4900" },
   {
     time: "14:02:09.540",
-    level: "error",
-    text: "checkout-0 upstream timeout upstream=payments after=2.0s",
-    trace: "7f3a9c1e",
+    pod: "checkout-0",
+    level: "Error",
+    text: "upstream timeout upstream=payments after=2.0s",
     selected: true,
   },
-  { time: "14:02:09.102", level: "info", text: "frontend-0 GET /product/41 200 8ms" },
-  { time: "14:02:08.990", level: "info", text: "inventory-0 reserve ok sku=41 qty=1" },
-  { time: "14:02:08.421", level: "error", text: "checkout-0 payment declined order=8809 reason=timeout", trace: "91c0d7f2" },
+  { time: "14:02:09.102", pod: "frontend-0", level: "Info", text: "GET /product/41 200 8ms" },
+  { time: "14:02:08.990", pod: "inventory-0", level: "Info", text: "reserve ok sku=41 qty=1" },
+  { time: "14:02:08.421", pod: "checkout-0", level: "Error", text: "payment declined order=8809 reason=timeout" },
 ]
 
-const fields = [
-  ["level", "error"],
+const details = [
+  ["Time", "2026-11-06 14:02:09"],
+  ["Body", "upstream timeout upstream=payments after=2.0s"],
   ["app", "checkout"],
+  ["detected_level", "error"],
+  ["namespace", "shop"],
   ["pod", "checkout-0"],
-  ["upstream", "payments"],
-  ["after", "2.0s"],
+  ["trace_id", TRACE_ID],
 ]
 ---
 
-<Window url={'observe.example.com/logs?ds=loki-prod&q={app="checkout"} |= "error"'} label="The logs page">
-  <span slot="bar-end" class="row live"><span class="dot tone-ok"></span>live tail</span>
-  <span slot="bar-end" class="hide-xs">last 15 min</span>
-  <div class="logs g1-sm">
-    <div>
-      <div class="query">
-        <div class="mono query-text">{'{app="checkout"} |= "error" | json | line_format "{{.msg}}"'}</div>
-        <span class="btn btn-sm">Run</span>
-      </div>
+<Window url={`${HOST}/logs?ds=loki&q=${QUERY}`} label="The logs page">
+  <div class="logs">
+    <div class="row head">
+      <span class="title">Logs</span>
+      <span class="row head-actions">
+        <span class="btn btn-sm">Last 15 minutes</span>
+        <span class="btn btn-sm">Live tail</span>
+        <span class="btn btn-sm hide-xs">Add to dashboard</span>
+      </span>
+    </div>
+    <div class="row source">
+      <span class="label">Datasource</span>
+      <span class="select">Loki (Loki)<span class="k" aria-hidden="true">▾</span></span>
+      <span class="btn btn-sm">Label browser</span>
+    </div>
+    <div class="mono code"><span class="k">1</span><span>{QUERY}</span></div>
+    <span class="btn btn-primary btn-sm run">Run query</span>
+    <div class="row options">
+      <span class="row">Order <span class="select">Newest first<span class="k" aria-hidden="true">▾</span></span></span>
+      <span class="row"><span class="box" aria-hidden="true"></span>Wrap lines</span>
+      <span class="row"><span class="box on" aria-hidden="true">✓</span>Show time</span>
+      <span class="row hide-sm">Deduplication <span class="select">No deduplication<span class="k" aria-hidden="true">▾</span></span></span>
+    </div>
+    <div class="results g1-sm">
       <div class="lines">
         {
-          lines.map(({ time, level, text, trace, selected }) => (
-            <div class:list={["logline", { selected }]}>
-              <span class="k">{time}</span>
-              <span class={levelClass[level]}>{level}</span>
-              <span>
-                {text}
-                {trace && (
-                  <>
-                    {" trace="}
-                    <u>{trace}</u>
-                  </>
-                )}
+          lines.map(({ time, pod, level, text, selected }) => (
+            <div class:list={["line", { selected }]}>
+              <span class="k">2026-11-06 {time}</span>
+              <span class="mono k labels">app={appOf(pod)} pod={pod}</span>
+              <span class="row level">
+                <span class:list={["dot", levelTone[level]]} />
+                {level}
               </span>
+              <span class="mono message">{text}</span>
             </div>
           ))
         }
       </div>
-    </div>
-    <div class="detail">
-      <span class="label">Selected line</span>
-      <div class="mono fields">
-        {
-          fields.map(([key, value]) => (
-            <>
-              <span class="k">{key}</span>
-              <span>{value}</span>
-            </>
-          ))
-        }
-        <span class="k">trace</span>
-        <span><u>7f3a9c1e</u></span>
+      <div class="detail">
+        <span class="row detail-actions">
+          <span class="btn btn-sm">Show context</span>
+          <span class="btn btn-sm">Open trace</span>
+        </span>
+        <div class="fields">
+          {
+            details.map(([key, value]) => (
+              <>
+                <span class="k">{key}</span>
+                <span class="mono">{value}</span>
+              </>
+            ))
+          }
+        </div>
       </div>
-      <span class="btn btn-sm open-trace">Open trace</span>
-      <span class="hint">
-        Opens <span class="mono">/t/7f3a9c1e?ds=tempo-prod</span>. A trace id is detected in any field or in the line.
-      </span>
-      <span class="hint actions">Show context · Add to dashboard</span>
     </div>
   </div>
 </Window>
 
 <style>
-  .live {
+  .logs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    font-size: 12px;
+  }
+
+  .head {
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .title {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .head-actions {
     gap: 6px;
   }
 
-  .logs {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 300px;
+  .btn {
+    min-height: 28px;
+    font-size: 12px;
   }
 
-  .query {
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    gap: 8px;
-    align-items: center;
+  .source {
+    flex-wrap: wrap;
   }
 
-  .query-text {
-    flex: 1;
-    min-width: 0;
+  .select {
+    display: inline-flex;
+    gap: 14px;
     border: 1px solid var(--border);
     border-radius: 6px;
-    padding: 7px 10px;
-    font-size: 12px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    padding: 4px 9px;
     background: var(--surface);
+    white-space: nowrap;
   }
 
-  .query .btn,
-  .open-trace {
-    min-height: 32px;
+  .code {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 10px;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 7px 10px 18px;
+    font-size: 11.5px;
+    background: var(--surface);
+    overflow-wrap: anywhere;
+  }
+
+  .run {
+    align-self: flex-start;
+  }
+
+  .options {
+    flex-wrap: wrap;
+    gap: 8px 16px;
+  }
+
+  .box {
+    display: inline-grid;
+    place-items: center;
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    font-size: 9px;
+  }
+
+  .box.on {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--pfg);
+  }
+
+  .results {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 290px;
+    border-top: 1px solid var(--border);
   }
 
   .lines {
-    padding: 8px 0;
+    min-width: 0;
   }
 
-  .logs .logline {
-    grid-template-columns: 90px 44px minmax(0, 1fr);
+  .line {
+    display: grid;
+    grid-template-columns: 156px minmax(0, 0.7fr) 64px minmax(0, 1fr);
+    gap: 8px;
+    padding: 4px 6px;
+    border-bottom: 1px solid var(--border);
+    font-size: 11.5px;
+    white-space: nowrap;
   }
 
-  .logline.selected {
-    background: var(--surface);
+  .line > span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .line.selected {
+    background: var(--sel);
+  }
+
+  .level {
+    gap: 5px;
   }
 
   .detail {
     border-left: 1px solid var(--border);
-    padding: 14px;
+    padding: 8px 10px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    font-size: 12px;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .detail-actions {
+    gap: 6px;
   }
 
   .fields {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
-    gap: 3px 10px;
+    gap: 3px 12px;
     font-size: 11.5px;
   }
 
-  .open-trace {
-    margin-top: 4px;
-  }
-
-  .actions {
-    margin-top: auto;
+  .fields .mono {
+    overflow-wrap: anywhere;
   }
 
   @media (max-width: 900px) {
+    .line {
+      grid-template-columns: 150px 64px minmax(0, 1fr);
+    }
+
+    .labels {
+      display: none;
+    }
+
     .detail {
       border-left: 0;
       border-top: 1px solid var(--border);
