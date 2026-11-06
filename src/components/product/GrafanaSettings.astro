@@ -3,8 +3,7 @@ import Window from "./Window.astro"
 
 const mappings = [
   { from: "prometheus-main", to: "→ Prometheus (prod)" },
-  { from: "loki", to: "→ Loki (prod)" },
-  { from: "tempo", to: "→ Tempo (prod)" },
+  { from: "clickhouse-events", to: "→ ClickHouse (prod)" },
 ]
 ---
 
@@ -30,8 +29,8 @@ const mappings = [
           ))
         }
         <div class="row mapping unmatched">
-          <span class="mono">influx-legacy</span>
-          <span class="fg-warn">no match · panels wait</span>
+          <span class="mono">loki, tempo, influx</span>
+          <span class="k">panels import as placeholders</span>
         </div>
       </div>
     </div>
@@ -39,7 +38,7 @@ const mappings = [
       <span class="row"><span class="dot tone-ok"></span>Connected · 14 folders</span>
       <span class="row actions">
         <span class="btn btn-sm">Test</span>
-        <span class="btn btn-primary btn-sm">Import all</span>
+        <span class="btn btn-primary btn-sm">Import</span>
       </span>
     </div>
   </div>

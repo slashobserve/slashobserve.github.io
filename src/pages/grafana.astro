@@ -16,8 +16,8 @@ const links = await getDocLinks()
 const mapped = mappedPanelTypeCount(readImportCoverage())
 const clean = cleanImportPercent(readImportCorpus())
 const stats = [
-  ...(mapped > 0 ? [{ value: String(mapped), label: "panel types mapped from Grafana" }] : []),
-  ...(clean !== null ? [{ value: `${clean}%`, label: "of a public dashboard corpus imports with no failing panel" }] : []),
+  ...(mapped > 0 ? [{ value: String(mapped), label: "Grafana panel types with importable options, legacy ones included" }] : []),
+  ...(clean !== null ? [{ value: `${clean}%`, label: "of the public test corpus converts with no placeholder and nothing left behind" }] : []),
 ]
 ---
 
@@ -25,11 +25,12 @@ const stats = [
   title="Coming from Grafana | SlashObserve"
   description="Connect a Grafana with a read-only token and every dashboard comes across with its folders, variables and links. Every query runs on import and the old links keep resolving."
 >
-  <PageOpening title="Coming from Grafana? Bring everything.">
+  <PageOpening title="Coming from Grafana? Bring your dashboards.">
     <p class="lead">
-      Connect a Grafana with a read-only token. Every dashboard comes across with its folder, tags, variables and links.
-      Every query runs on import, what did not translate goes to a repair queue the agent works through, and the old
-      links keep resolving. Nothing is written back.
+      Connect a Grafana with a read-only token. Every dashboard comes across with its folder, tags, variables and links,
+      and unmatched panels are listed, not hidden. Every query runs on import. Panels whose queries fail or return
+      nothing go to a repair queue the agent works through; placeholders are listed for you to redo by hand. The old
+      links keep resolving, and nothing is written back.
     </p>
     {
       links.importGuide && (

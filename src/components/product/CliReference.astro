@@ -3,12 +3,23 @@ import Window from "./Window.astro"
 
 const LINES = [
   'observe "..."        build',
-  "observe dashboards   list, get, delete",
-  "observe logs         tail, search",
-  "observe traces       get, search",
+  "observe dashboards   list, show, versions, delete, export, apply",
+  "observe logs         <query> --datasource, --tail",
+  "observe traces       <trace id> --datasource",
   "observe grafana      connect, import",
-  "observe repairs      list, run",
+  "observe import       <file>",
+  "observe annotate     <text>",
+  "observe comments     list, reply, resolve",
+  "observe run          [name...]",
+  "observe status       <request id>",
+  "observe cancel       <request id>",
+  "observe continue     <request id>",
+  "observe open         [dashboard id or Grafana uid]",
   "observe doctor",
+  "observe login",
+  "observe logout",
+  "observe version",
+  "observe completion   bash, zsh, fish",
 ]
 ---
 

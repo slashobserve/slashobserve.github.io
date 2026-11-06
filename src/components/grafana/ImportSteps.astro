@@ -23,23 +23,25 @@ const stages = ["Connect", "Import", "Repair", "Keep the links"]
         <h2 class="h3">Connect</h2>
         <p class="p">
           Settings › Grafana takes the address and a service-account token with Viewer on the folders you want. The
-          test lists folders, counts dashboards and shows each Grafana datasource beside the SlashObserve datasource it
-          maps to.
+          test counts top-level folders and dashboards; the import dialog shows each Grafana datasource beside its
+          match.
         </p>
       </div>
       <div>
         <h2 class="h3">Import, and import again</h2>
         <p class="p">
-          "Import all" copies every dashboard with its folder path, tags, variables and links, and runs every query. A
-          second run updates what changed in Grafana and leaves your edits alone.
+          Choose "Import", then "All folders" and "Start import". Every dashboard comes across with its tags, variables
+          and links, and every query runs. A nested folder path is kept as one folder titled Parent / Child. A second
+          run skips dashboards unchanged in Grafana and saves a new version of those that changed; your edits stay in
+          the version history.
         </p>
       </div>
       <div>
         <h2 class="h3">Repair</h2>
         <p class="p">
-          A panel whose query fails or returns nothing is marked unverified, never hidden. The repair queue lists every
-          dashboard with one; "Repair with the agent" rewrites those queries against the metrics that exist and saves a
-          version you can diff.
+          Panels whose queries fail or return nothing go to a repair queue the agent works through; placeholders are
+          listed for you to redo by hand. Those panels are marked unverified, never hidden, and "Repair with the agent"
+          rewrites their queries against the metrics that exist and saves a version you can diff.
         </p>
       </div>
       <div>

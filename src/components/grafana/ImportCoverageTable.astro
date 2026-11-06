@@ -14,14 +14,11 @@ type NotePart = string | { mono: string }
 
 const rows: { feature: string; status: Status; note: NotePart[] }[] = [
   {
-    feature: "Folders, tags, dashboard links",
-    status: "Maps",
-    note: ["Folder paths are recreated. Tags and links come across unchanged."],
-  },
-  {
     feature: "Time series, stat, gauge, bar gauge, table, text, logs, traces",
     status: "Maps",
-    note: ["Each becomes the matching ObserveSpec panel with its units, thresholds, overrides and legend."],
+    note: [
+      "Each becomes the matching ObserveSpec panel with its units, thresholds, overrides and legend, when its datasource is Prometheus or ClickHouse.",
+    ],
   },
   {
     feature: "Template variables",
@@ -31,12 +28,21 @@ const rows: { feature: string; status: Status; note: NotePart[] }[] = [
   {
     feature: "Transforms",
     status: "Maps",
-    note: ["Organize, merge, reduce, filter, group by, join and the rest of the table. An unsupported one leaves the panel unverified with its name."],
+    note: [
+      "Organize, merge, reduce, filter, group by, join and the rest of the table. An unsupported transformation is dropped and reported at its path; the panel imports as partial.",
+    ],
   },
   {
-    feature: "Annotations",
+    feature: "Rows and collapsed rows",
     status: "Maps",
-    note: ["Prometheus, Loki and ClickHouse annotation queries become dashboard annotations; built-in ones become SlashObserve annotations."],
+    note: ["Rows become row panels; collapsed state and repeat are kept."],
+  },
+  {
+    feature: "Folders, tags, dashboard links",
+    status: "Changes",
+    note: [
+      "A nested folder becomes one folder titled Parent / Child. Tags are lowercased and capped at 20. Links to an address and links by tag are kept.",
+    ],
   },
   {
     feature: "Gradients, shadows, panel backgrounds",
@@ -49,9 +55,21 @@ const rows: { feature: string; status: Status; note: NotePart[] }[] = [
     note: ["The threshold colour pairs with an icon and a word instead of colouring the digits, so warning stays readable on white."],
   },
   {
-    feature: "Rows and collapsed rows",
+    feature: "Third-party plugin panels",
     status: "Changes",
-    note: ["Rows become section headers; collapsed state is not kept."],
+    note: [
+      "Worldmap, singlestat, the pie chart plugin and the discrete panel become native geomap, stat or gauge, pie chart and state timeline panels.",
+      " Any other plugin imports as a placeholder that keeps its title and layout; the original dashboard JSON stays with the import record.",
+    ],
+  },
+  {
+    feature: "Annotations",
+    status: "Waits",
+    note: [
+      "Annotation queries are reported and not imported; built-in annotations are skipped. Add markers with ",
+      { mono: "observe annotate" },
+      " or the API.",
+    ],
   },
   {
     feature: "Alert rules, contact points, silences",
@@ -61,14 +79,8 @@ const rows: { feature: string; status: Status; note: NotePart[] }[] = [
   {
     feature: "Other datasources",
     status: "Waits",
-    note: ["Their panels import unverified and wait for a datasource mapping. Nothing is lost."],
-  },
-  {
-    feature: "Third-party plugin panels",
-    status: "Changes",
     note: [
-      "Worldmap, singlestat, the pie chart plugin and the discrete panel become native geomap, stat or gauge, pie chart and state timeline panels.",
-      "Any other plugin imports as a placeholder with its JSON kept, so the layout survives.",
+      "Panels on a datasource type SlashObserve does not query yet (Loki, Tempo, Elasticsearch and others) import as placeholders that keep the title, layout and reason. The original dashboard JSON stays with the import record.",
     ],
   },
 ]

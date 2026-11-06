@@ -13,15 +13,15 @@ export const TOPIC_GROUPS: readonly GroupSpec[] = [
       { label: "How the agent scopes metrics", candidates: ["docs/concepts/agent"] },
       { label: "Builds, versions and rollback", candidates: ["docs/concepts/versions"] },
       { label: "Panel types", candidates: ["docs/reference/observespec"] },
-      { label: "Variables and time", candidates: ["docs/concepts/datasources-and-variables"] },
+      { label: "Datasources and variables", candidates: ["docs/concepts/datasources-and-variables"] },
       { label: "Comments and review", candidates: ["docs/use/review"] },
     ],
   },
   {
     title: "Coming from Grafana",
     links: [
-      { label: "Connect a Grafana", candidates: ["docs/use/switch-from-grafana", "docs/use/import-grafana"] },
-      { label: "Import and re-import", candidates: ["docs/use/import-grafana"] },
+      { label: "Connect a Grafana", candidates: ["docs/use/switch-from-grafana"] },
+      { label: "Import and re-import", candidates: ["docs/use/switch-from-grafana#import"] },
       { label: "Provisioning from files", candidates: ["docs/operate/provisioning"] },
     ],
   },
@@ -38,7 +38,7 @@ export const TOPIC_GROUPS: readonly GroupSpec[] = [
   {
     title: "Operate",
     links: [
-      { label: "Install and upgrade", candidates: ["docs/get-started/install"] },
+      { label: "Install", candidates: ["docs/get-started/install"] },
       { label: "Configuration reference", candidates: ["docs/reference/configuration"] },
       { label: "Authentication and roles", candidates: ["docs/teams/roles", "docs/connect/oidc"] },
       { label: "Metrics at /metrics", candidates: ["docs/operate/metrics"] },

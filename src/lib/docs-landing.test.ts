@@ -90,11 +90,8 @@ describe("the landing groups at the pinned docs", () => {
   const topics = resolveGroups(TOPIC_GROUPS, pinnedDocs)
   const linksOf = (title: string) => topics.find((found) => found.title === title)?.links
 
-  test("Coming from Grafana links both entries to the import guide", () => {
-    expect(linksOf("Coming from Grafana")).toEqual([
-      { label: "Connect a Grafana", href: "/docs/use/import-grafana/" },
-      { label: "Import and re-import", href: "/docs/use/import-grafana/" },
-    ])
+  test("Coming from Grafana is left out until its pages exist", () => {
+    expect(linksOf("Coming from Grafana")).toBeUndefined()
   })
 
   test("Signals holds only the stores that have a page", () => {
@@ -104,8 +101,8 @@ describe("the landing groups at the pinned docs", () => {
     ])
   })
 
-  test("keeps the four topic groups in canvas order", () => {
-    expect(topics.map((found) => found.title)).toEqual(["Build", "Coming from Grafana", "Signals", "Operate"])
+  test("keeps the topic groups that resolve in canvas order", () => {
+    expect(topics.map((found) => found.title)).toEqual(["Build", "Signals", "Operate"])
   })
 
   test("the reference group keeps every link the pinned docs have", () => {
@@ -119,5 +116,22 @@ describe("the landing groups at the pinned docs", () => {
       "https://github.com/slashobserve/slashobserve/blob/main/CONTRIBUTING.md",
       "/docs/get-started/known-limitations/",
     ])
+  })
+})
+
+describe("the landing groups once the switch guide exists", () => {
+  const docs = new Set([...pinnedDocs, "docs/use/switch-from-grafana", "docs/operate/provisioning"])
+  const topics = resolveGroups(TOPIC_GROUPS, docs)
+
+  test("Coming from Grafana links the switch guide and its import section, never the file import guide", () => {
+    expect(topics.find((found) => found.title === "Coming from Grafana")?.links).toEqual([
+      { label: "Connect a Grafana", href: "/docs/use/switch-from-grafana/" },
+      { label: "Import and re-import", href: "/docs/use/switch-from-grafana/#import" },
+      { label: "Provisioning from files", href: "/docs/operate/provisioning/" },
+    ])
+  })
+
+  test("keeps all four topic groups in canvas order", () => {
+    expect(topics.map((found) => found.title)).toEqual(["Build", "Coming from Grafana", "Signals", "Operate"])
   })
 })
