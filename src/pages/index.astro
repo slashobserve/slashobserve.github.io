@@ -29,8 +29,8 @@ const links = await getDocLinks()
       <div slot="start" class="statement">
         <h2 class="h2">Your Grafana dashboards come along.</h2>
         <p class="lead lead-17">
-          Folders, variables, links and all. The ones that need a fix get one from the agent, and every old link keeps
-          resolving.
+          Their folders, variables and links come too. Panels the importer cannot match go to the repair queue, a
+          failing query can get a fix from the agent, and every old link keeps resolving.
         </p>
         <a href={GRAFANA_PATH} class="arrow-link">Coming from Grafana →</a>
       </div>
@@ -45,7 +45,7 @@ const links = await getDocLinks()
     <div class="cols3"><CheckoutPanels /><LogsTail /><TraceSummary /></div>
     <p class="more"><a href={SIGNALS_PATH} class="arrow-link">Signals →</a></p>
   </Section>
-  <SurfacesSection lead="The web app, the observe CLI, and MCP for Claude Code or Cursor. Same tools, same checks." />
+  <SurfacesSection lead="The web app, the observe CLI, and MCP for Claude Code and other MCP clients. Same save checks everywhere." />
   <FactStrip />
   <RunsOnBand quickStart={links.quickStart} />
 </MarketingLayout>

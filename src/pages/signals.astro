@@ -1,6 +1,6 @@
 ---
-import ExploreQuery from "../components/product/ExploreQuery.astro"
 import LogsPage from "../components/product/LogsPage.astro"
+import PanelEditorPreview from "../components/product/PanelEditorPreview.astro"
 import TraceView from "../components/product/TraceView.astro"
 import StoresTable from "../components/signals/StoresTable.astro"
 import PageOpening from "../components/site/PageOpening.astro"
@@ -32,8 +32,8 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
       <div slot="end" class="copy">
         <h2 class="h2">The trace view.</h2>
         <p class="lead lead-17">
-          A waterfall per trace, the slow span selected, its attributes and its log lines beside it. Tempo or the
-          OpenTelemetry tables in ClickHouse, with TraceQL or SQL behind it.
+          A waterfall per trace, the slow span selected, its attributes beside it. Tempo or the OpenTelemetry tables
+          in ClickHouse, with TraceQL or SQL behind it.
         </p>
       </div>
     </Split>
@@ -41,13 +41,15 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
   <Section>
     <Split start={0.75} end={1.25} gap={48}>
       <div slot="start" class="copy">
-        <h2 class="h2">Explore, before the dashboard.</h2>
+        <h2 class="h2">Try a query before you save it.</h2>
         <p class="lead lead-17">
-          Pick a datasource, write PromQL, LogQL, TraceQL or SQL, see the result. Add it to a dashboard, or send it to
-          the agent.
+          The logs page takes LogQL on Loki or SQL on ClickHouse. "Show context" brings up the lines around a line, a
+          line with a trace id opens its trace, and "Add to dashboard" saves the query as a logs panel. Trace search
+          finds traces by service, span, duration or TraceQL. In the panel editor, the preview runs PromQL or SQL on
+          the real datasource before you save.
         </p>
       </div>
-      <ExploreQuery slot="end" />
+      <PanelEditorPreview slot="end" />
     </Split>
   </Section>
   <StoresTable />

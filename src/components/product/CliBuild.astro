@@ -3,7 +3,7 @@ import Window from "./Window.astro"
 ---
 
 <Window title="zsh">
-  <div class="term cli-term"><span class="tl"><span class="k">$</span> observe "queue health, last 6h"</span><span class="tl">Scoped job="orders" · 7 families</span><span class="tl">Saved panel 1 of 7: Queue depth</span><span class="tl">Saved panel 2 of 7: Oldest order age</span><span class="tl">Saved panel 3 of 7: Workers busy</span><span class="tl k">…</span><span class="tl"><span class="fg-ok">Saved version 1</span>{"  "}/d/9b2e/queue-health</span><span class="tl"> </span><span class="tl"><span class="k">$</span> observe logs tail {`'{app="orders"} |= "retry"'`}</span></div>
+  <div class="term cli-term"><span class="tl"><span class="k">$</span> observe "queue health, last 6h"</span><span class="tl"><span class="k">Panel 1 of 7:</span> Queue depth (timeseries)</span><span class="tl"><span class="k">Panel 2 of 7:</span> Oldest order age (stat)</span><span class="tl"><span class="k">Panel 3 of 7:</span> Workers busy (timeseries)</span><span class="tl k">…</span><span class="tl"><span class="fg-ok">Saved version 1</span>{"  "}https://observe.example.com/d/9b2e/queue-health</span><span class="tl"> </span><span class="tl"><span class="k">$</span> observe logs {`'{app="orders"} |= "retry"'`} --datasource loki --tail</span></div>
 </Window>
 
 <style>

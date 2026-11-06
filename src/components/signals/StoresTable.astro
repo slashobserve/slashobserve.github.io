@@ -24,21 +24,21 @@ const stores: Store[] = [
     metrics: "SQL",
     logs: "SQL",
     traces: "SQL",
-    discovery: "databases, tables, columns and types, sample rows, the OpenTelemetry log and trace tables",
+    discovery: "tables in the configured database, columns and types, sample rows",
   },
   {
     store: "Loki",
     metrics: null,
     logs: "LogQL",
     traces: null,
-    discovery: "stream labels and values, detected fields, line samples",
+    discovery: "stream labels and values, line samples",
   },
   {
     store: "Tempo",
     metrics: null,
     logs: null,
     traces: "TraceQL",
-    discovery: "service names, span names, attribute keys, a sample trace per service",
+    discovery: "service names, span names, attribute keys and values",
   },
 ]
 ---

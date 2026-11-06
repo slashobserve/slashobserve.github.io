@@ -9,11 +9,11 @@ const { quickStart } = Astro.props
 ---
 
 <Band>
-  <h2 class="h2 runs-on"><span class="nowrap">Runs on <span class="sr-only">AWS</span><span class="spin spin-b" aria-hidden="true" data-runs-on>AWS</span></span><br />in two minutes.</h2>
+  <h2 class="h2 runs-on"><span class="nowrap">Runs on <span class="sr-only">AWS</span><span class="spin spin-b" aria-hidden="true" data-runs-on>AWS</span></span><br />with Docker and Postgres.</h2>
   <div class="code">git clone https://github.com/slashobserve/slashobserve &amp;&amp; cd slashobserve &amp;&amp; make demo</div>
   <p class="p">
-    The demo ships a shop, Prometheus, ClickHouse, Loki, Tempo and three reference dashboards. Add a model key when you
-    want the agent.
+    Try it on a laptop first: <span class="mono">make demo</span> brings up a shop, Prometheus, ClickHouse, Loki, Tempo
+    and three reference dashboards in about two minutes. Add a model key when you want the agent.
   </p>
   {quickStart && <a class="btn btn-band" href={quickStart}>Read the quick start</a>}
 </Band>

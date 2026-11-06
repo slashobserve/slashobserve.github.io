@@ -195,9 +195,7 @@ export default function BuildStage() {
         <div className="stage-rail">
           <div className="stage-you">
             <span className="hint">You</span>
-            <div className="mono stage-prompt">
-              <span className="k">/observe</span> checkout health by pod, last 6h
-            </div>
+            <div className="mono stage-prompt">checkout health by pod, last 6h</div>
           </div>
           <div className="stage-agent">
             <span className="hint">Agent</span>

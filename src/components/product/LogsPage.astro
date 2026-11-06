@@ -1,5 +1,4 @@
 ---
-import Bars from "./Bars.astro"
 import Window from "./Window.astro"
 
 type Level = "error" | "warn" | "info"
@@ -13,21 +12,6 @@ interface LogLine {
 }
 
 const levelClass: Record<Level, string> = { error: "fg-crit", warn: "fg-warn", info: "k" }
-
-const volume = [
-  { h: 20 },
-  { h: 30 },
-  { h: 25 },
-  { h: 35 },
-  { h: 30 },
-  { h: 85, tone: "crit" as const },
-  { h: 95, tone: "crit" as const },
-  { h: 60, tone: "crit" as const },
-  { h: 30 },
-  { h: 28 },
-  { h: 24 },
-  { h: 30 },
-]
 
 const lines: LogLine[] = [
   {
@@ -69,9 +53,6 @@ const fields = [
         <div class="mono query-text">{'{app="checkout"} |= "error" | json | line_format "{{.msg}}"'}</div>
         <span class="btn btn-sm">Run</span>
       </div>
-      <div class="volume">
-        <Bars bars={volume} gap={2} />
-      </div>
       <div class="lines">
         {
           lines.map(({ time, level, text, trace, selected }) => (
@@ -106,11 +87,11 @@ const fields = [
         <span class="k">trace</span>
         <span><u>7f3a9c1e</u></span>
       </div>
-      <span class="btn btn-sm open-trace">Open trace 7f3a9c1e</span>
+      <span class="btn btn-sm open-trace">Open trace</span>
       <span class="hint">
         Opens <span class="mono">/t/7f3a9c1e?ds=tempo-prod</span>. A trace id is detected in any field or in the line.
       </span>
-      <span class="hint actions">Add as a logs panel · Ask the agent about this error</span>
+      <span class="hint actions">Show context · Add to dashboard</span>
     </div>
   </div>
 </Window>
@@ -149,14 +130,6 @@ const fields = [
   .query .btn,
   .open-trace {
     min-height: 32px;
-  }
-
-  .volume {
-    padding: 10px 12px 4px;
-    height: 56px;
-    display: flex;
-    flex-direction: column;
-    border-bottom: 1px solid var(--border);
   }
 
   .lines {

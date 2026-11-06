@@ -10,7 +10,10 @@ import CopyCommand from "./CopyCommand.astro"
     run. Every query runs before it is saved. The dashboards you built in Grafana come along.
   </p>
   <div class="hero-row"><CopyCommand command={INSTALL_COMMAND} /></div>
-  <p class="hint">One binary and Postgres. Your data stays in your network; the only call out is to the model you configure.</p>
+  <p class="hint">
+    Installs the observe CLI on macOS and Linux. The server is one binary beside Postgres; it runs in your network and
+    sends only the agent's tool results to the model you configure.
+  </p>
 </section>
 
 <style>

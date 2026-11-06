@@ -11,12 +11,11 @@ const planned = [
   "db_pool_in_use                               3  DB pool in use",
   "db_pool_max                                  3  DB pool in use",
   "kube_pod_status_ready                        3  Pods ready",
-  "go_gc_pause_seconds                          3  GC pause p99",
 ]
-const skipped = { family: "process_resident_memory_bytes                3  ", reason: "skipped: runtime, see summary" }
+const runtime = "2 runtime families counted"
 const summary = "12 families · 12 planned · 0 uncovered"
 ---
 
 <Window url={'list_metrics scope={job="checkout"}'}>
-  <div class="term"><span class="tl k">{header}</span>{planned.map((line) => <span class="tl">{line}</span>)}<span class="tl">{skipped.family}<span class="fg-warn">{skipped.reason}</span></span><span class="tl">…</span><span class="tl fg-ok">{summary}</span></div>
+  <div class="term"><span class="tl k">{header}</span>{planned.map((line) => <span class="tl">{line}</span>)}<span class="tl">…</span><span class="tl k">{runtime}</span><span class="tl fg-ok">{summary}</span></div>
 </Window>

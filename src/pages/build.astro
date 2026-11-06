@@ -15,23 +15,24 @@ const links = await getDocLinks()
 
 <MarketingLayout
   title="Build | SlashObserve"
-  description="Ask for a dashboard in a sentence: the agent inventories every metric in scope, saves one verified panel at a time, and ends with a version and a link."
+  description="Ask for a dashboard in a sentence: the agent inventories the metric families in scope, runs every panel it adds before the save, and ends with a version and a link."
 >
   <PageOpening title="Ask for a dashboard. Get one that works.">
     <p class="lead">
-      The agent takes an inventory of every metric in scope before it plans, saves one panel at a time after running
-      its query, and ends with a version and a link. Nothing in your data is left off, and nothing unverified is saved.
+      The agent takes an inventory of the metric families in scope before it plans, saves one panel at a time, and ends
+      with a version and a link. Every family in scope, apart from runtime metrics, ends in a panel or a stated reason,
+      and every panel the agent adds or changes is run before the save.
     </p>
   </PageOpening>
   <BuildPlayback space="page" />
   <Section>
     <Split start={0.85} end={1.15}>
       <div slot="start" class="statement inventory-statement">
-        <h2 class="h2">Nothing in your data is left off.</h2>
+        <h2 class="h2">Every family in scope is accounted for.</h2>
         <p class="lead lead-17">
           Before it plans, the agent takes an inventory of every metric family in scope: a job, a service, a namespace,
-          or a table. Each family ends in a panel or in a named skip with a reason. The save result lists what is still
-          uncovered, so a dashboard is complete or says why not.
+          or a table. Every family in scope, apart from runtime metrics, ends in a panel or a stated reason, and the
+          save result lists anything uncovered. Runtime metrics are counted, not listed.
         </p>
         <div class="row inventory-chips">
           <span class="chip">12 families</span>
@@ -49,13 +50,13 @@ const links = await getDocLinks()
         <h2 class="h2">Every change is a version.</h2>
         <p class="lead lead-17">
           A build becomes one version. A follow-up in the chat, an edit in the panel editor, an agent repair, each is
-          another, with a diff and a restore. Comments on a panel go to the agent, and its reply is a version too.
+          another, with a diff and a restore. A comment can be sent to the agent, and its change is a version too.
         </p>
       </div>
     </Split>
   </Section>
   <SurfacesSection
-    lead="The tools behind the built-in agent are the tools served over MCP. Claude Code or Cursor builds, reads and repairs dashboards with the same metric inventory and the same checks before a save."
+    lead="The tools behind the built-in agent are served over MCP too. Claude Code and other MCP clients build, read and repair dashboards with the same metric inventory. Same save checks everywhere."
   />
   <RunsOnBand quickStart={links.quickStart} />
 </MarketingLayout>

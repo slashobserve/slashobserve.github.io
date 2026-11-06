@@ -10,35 +10,93 @@ const routes = [
 ] as const
 ---
 
-<Window url="observe.example.com/explore?ds=prom-prod">
-  <div class="explore">
-    <div class="mono query">{'histogram_quantile(0.95, sum by (le, route) (rate(http_request_duration_seconds_bucket{job="checkout"}[5m])))'}</div>
-    <Panel title="p95 by route" meta="last 6h">
-      <Sparklines viewBox="0 0 300 90" height="110px" series={routes.map(({ d, tone }) => ({ d, tone }))} />
-      <div class="legend">
-        {
-          routes.map(({ route, tone }) => (
-            <span class="row">
-              <span class={`dot tone-${tone}`} />
-              {route}
-            </span>
-          ))
-        }
+<Window url="observe.example.com/d/4f1c/checkout-health?panel=latency-route&edit=query" label="The panel editor">
+  <div class="editor">
+    <div class="head">
+      <span class="label">Edit p95 by route</span>
+      <span class="hint">A draft. Nothing changes until you save.</span>
+    </div>
+    <div class="preview">
+      <div class="row preview-head">
+        <span class="row status"><span class="dot tone-ok"></span>Draft ran just now, 3 series</span>
+        <span>last 6h</span>
       </div>
-    </Panel>
-    <div class="row">
-      <span class="btn btn-sm">Add to dashboard</span>
-      <span class="btn btn-sm">Send to agent</span>
+      <Panel title="p95 by route" meta="Time series">
+        <Sparklines viewBox="0 0 300 90" height="96px" series={routes.map(({ d, tone }) => ({ d, tone }))} />
+        <div class="legend">
+          {
+            routes.map(({ route, tone }) => (
+              <span class="row">
+                <span class={`dot tone-${tone}`} />
+                {route}
+              </span>
+            ))
+          }
+        </div>
+      </Panel>
+    </div>
+    <div class="field">
+      <span class="hint">Datasource</span>
+      <span class="select mono">prom-prod<span class="k" aria-hidden="true">▾</span></span>
+    </div>
+    <div class="field">
+      <span class="hint">Query A</span>
+      <div class="mono query">{'histogram_quantile(0.95, sum by (le, route) (rate(http_request_duration_seconds_bucket{job="checkout"}[5m])))'}</div>
+      <span class="hint fg-ok">Query is valid.</span>
+    </div>
+    <div class="row actions">
+      <span class="btn btn-sm">Discard</span>
+      <span class="btn btn-primary btn-sm">Save as version 8</span>
     </div>
   </div>
 </Window>
 
 <style>
-  .explore {
+  .editor {
     padding: 12px;
     display: flex;
     flex-direction: column;
     gap: 10px;
+  }
+
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .preview {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .preview-head {
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--mfg);
+  }
+
+  .status {
+    gap: 6px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .select {
+    align-self: flex-start;
+    display: inline-flex;
+    gap: 16px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 12px;
+    background: var(--surface);
   }
 
   .query {
@@ -57,5 +115,10 @@ const routes = [
     gap: 12px;
     font-size: 11px;
     flex-wrap: wrap;
+  }
+
+  .actions {
+    justify-content: flex-end;
+    gap: 8px;
   }
 </style>

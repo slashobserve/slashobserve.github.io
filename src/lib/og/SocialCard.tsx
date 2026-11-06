@@ -83,7 +83,7 @@ export function SocialCardImage({ section, title, colors }: Props) {
             padding: "14px 20px",
           }}
         >
-          /observe checkout health by pod, last 6h
+          checkout health by pod, last 6h
         </div>
       </div>
       <div style={{ display: "flex", fontSize: 22, color: colors.mfg }}>slashobserve.com</div>

@@ -1,7 +1,7 @@
 ---
 import Window from "./Window.astro"
 
-const CURRENT = 7
+const LATEST = 7
 const versions = [
   { version: 7, change: "Add errors by route; pin p95 on top", by: "Priya · agent" },
   { version: 6, change: "Threshold on DB pool at 18", by: "Priya" },
@@ -24,7 +24,7 @@ const versions = [
               <td>{version}</td>
               <td class="change">{change}</td>
               <td class="k">{by}</td>
-              <td class="hint">{version === CURRENT ? "current" : "diff · restore"}</td>
+              <td class="hint">{version === LATEST ? "latest" : "compare · restore"}</td>
             </tr>
           ))
         }

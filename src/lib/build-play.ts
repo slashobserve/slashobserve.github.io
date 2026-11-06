@@ -1,4 +1,21 @@
-export const PANEL_COUNT = 12
+const BUILT_PANELS = [
+  { title: "Requests/s", row: "Overview" },
+  { title: "Error ratio", row: "Overview" },
+  { title: "p95 latency", row: "Overview" },
+  { title: "Pods ready", row: "Overview" },
+  { title: "Requests by pod", row: "Traffic" },
+  { title: "Latency by route", row: "Traffic" },
+  { title: "Errors by route", row: "Traffic" },
+  { title: "DB pool in use", row: "Internals" },
+  { title: "Queue depth", row: "Internals" },
+  { title: "Payment success", row: "Internals" },
+  { title: "Reservations/s", row: "Internals" },
+  { title: "GC pause p99", row: "Internals" },
+] as const
+
+const BUILT_ROWS = new Set(BUILT_PANELS.map(({ row }) => row)).size
+
+export const PANEL_COUNT: number = BUILT_PANELS.length
 export const SAVE_MS = 420
 export const RAIL_ROWS = 6
 
@@ -6,11 +23,11 @@ export type PlayPhase = "ready" | "playing" | "done"
 export type RailLine = { text: string; tone: "active" | "done" }
 
 const SCRIPT: readonly string[] = [
-  'Scoped job="checkout" · 12 metric families',
-  `Planned ${PANEL_COUNT} panels in 3 rows`,
-  "Running queries, one panel per save",
-  ...Array.from({ length: PANEL_COUNT }, (_, i) => `Saved panel ${i + 1} of ${PANEL_COUNT}`),
-  "Saved version 1 · /d/4f1c/checkout-health · 0 uncovered",
+  'Listed 12 metric families in {job="checkout"} on prom-prod',
+  "Listed 3 label values on prom-prod",
+  "Ran a query on prom-prod: 3 series",
+  ...BUILT_PANELS.map(({ title, row }, i) => `Saved panel ${i + 1} of ${PANEL_COUNT}: ${title} (row ${row})`),
+  `Saved version 1 (${BUILT_ROWS} rows, ${PANEL_COUNT} panels)`,
 ]
 
 const LINES_BEFORE_SAVES = 3
