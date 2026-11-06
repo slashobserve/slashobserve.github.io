@@ -1,8 +1,7 @@
 ---
+import LevelIcon, { type Level } from "./LevelIcon.astro"
 import Window from "./Window.astro"
 import { HOST, TRACE_ID } from "./screen-ids"
-
-type Level = "Error" | "Warning" | "Info"
 
 interface LogLine {
   time: string
@@ -11,8 +10,6 @@ interface LogLine {
   text: string
   selected?: boolean
 }
-
-const levelTone: Record<Level, string> = { Error: "tone-crit", Warning: "tone-warn", Info: "tone-mfg" }
 
 const appOf = (pod: string) => pod.slice(0, pod.lastIndexOf("-"))
 
@@ -77,7 +74,7 @@ const details = [
               <span class="k">2026-11-06 {time}</span>
               <span class="mono k labels">app={appOf(pod)} pod={pod}</span>
               <span class="row level">
-                <span class:list={["dot", levelTone[level]]} />
+                <LevelIcon level={level} />
                 {level}
               </span>
               <span class="mono message">{text}</span>

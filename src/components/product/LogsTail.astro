@@ -1,9 +1,6 @@
 ---
+import LevelIcon, { type Level } from "./LevelIcon.astro"
 import Window from "./Window.astro"
-
-type Level = "Error" | "Info" | "Warning"
-
-const LEVEL_TONE: Record<Level, string> = { Error: "tone-crit", Info: "tone-mfg", Warning: "tone-warn" }
 
 const lines: { time: string; level: Level; message: string; picked?: boolean }[] = [
   { time: "14:02:11.204", level: "Error", message: "payment declined order=8812" },
@@ -29,7 +26,7 @@ const lines: { time: string; level: Level; message: string; picked?: boolean }[]
         <div class:list={["line", { picked }]}>
           <span class="k">2026-11-06 {time}</span>
           <span class="row level">
-            <span class:list={["dot", LEVEL_TONE[level]]} />
+            <LevelIcon level={level} />
             {level}
           </span>
           <span class="mono">{message}</span>
