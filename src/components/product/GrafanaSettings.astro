@@ -1,45 +1,92 @@
 ---
 import Window from "./Window.astro"
+import { HOST } from "./screen-ids"
 
-const mappings = [
-  { from: "prometheus-main", to: "→ Prometheus (prod)" },
-  { from: "clickhouse-events", to: "→ ClickHouse (prod)" },
+const CONNECTION = "prod"
+
+const datasources = [
+  { name: "Prometheus main", type: "prometheus", match: "prom (Prometheus)" },
+  { name: "ClickHouse events", type: "grafana-clickhouse-datasource", match: "ch (ClickHouse)" },
 ]
 ---
 
-<Window url="observe.example.com/settings/grafana">
+<Window url={`${HOST}/settings/grafana`} label="Grafana settings with a connection and the import form">
   <div class="settings">
-    <div class="field">
-      <span class="k">Address</span>
-      <div class="mono input">https://grafana.internal:3000</div>
+    <div class="page-head">
+      <span class="title">Grafana</span>
+      <span class="k">Connect a Grafana server and import its dashboards with their folders.</span>
     </div>
-    <div class="field">
-      <span class="k">Token</span>
-      <div class="mono input secret">glsa_••••••••••••••••••••</div>
+    <div class="row tabs"><span>General</span><span class="on">Grafana</span></div>
+    <div class="card scroll">
+      <table class="tbl connections">
+        <thead>
+          <tr><th>Name</th><th>URL</th><th>Last test</th><th>Last import</th><th><span class="sr-only">Actions</span></th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label">{CONNECTION}</td>
+            <td class="mono url-cell">https://grafana.internal</td>
+            <td>
+              <span class="row status"><span class="dot tone-ok"></span>Connected: 14 top-level folders, 212 dashboards.</span>
+              <span class="k small">2 minutes ago</span>
+            </td>
+            <td class="k">Never</td>
+            <td>
+              <span class="actions">
+                <span class="btn btn-sm">Test</span>
+                <span class="btn btn-sm">Import</span>
+                <span class="btn btn-sm">Delete</span>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="field field-top">
-      <span class="k">Datasources</span>
-      <div class="mappings">
-        {
-          mappings.map((mapping) => (
-            <div class="row mapping">
-              <span class="mono">{mapping.from}</span>
-              <span class="k">{mapping.to}</span>
-            </div>
-          ))
-        }
-        <div class="row mapping unmatched">
-          <span class="mono">loki, tempo, influx</span>
-          <span class="k">panels import as placeholders</span>
+    <div class="card">
+      <div class="card-head">
+        <span class="label">Import from {CONNECTION}</span>
+        <span class="k small">Choose what to bring over and check the datasource matches.</span>
+      </div>
+      <div class="block">
+        <span class="label">Folders</span>
+        <span class="row choice"><span class="radio on" aria-hidden="true"></span>All folders (212 dashboards)</span>
+        <span class="row choice"><span class="radio" aria-hidden="true"></span>Choose folders</span>
+      </div>
+      <div class="block">
+        <span class="label">Datasources</span>
+        <div class="scroll">
+          <table class="tbl sources">
+            <thead>
+              <tr><th>In Grafana</th><th>Type</th><th>Use in SlashObserve</th></tr>
+            </thead>
+            <tbody>
+              {
+                datasources.map(({ name, type, match }) => (
+                  <tr>
+                    <td>{name}</td>
+                    <td class="mono type">{type}</td>
+                    <td>
+                      <span class="select">
+                        {match}
+                        <span class="k" aria-hidden="true">▾</span>
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
         </div>
+        <span class="k small">3 datasources have types SlashObserve does not query; their panels import as placeholders.</span>
+      </div>
+      <div class="row foot">
+        <span class="btn btn-primary btn-sm">Start import</span>
+        <span class="btn btn-sm">Cancel</span>
       </div>
     </div>
-    <div class="row status">
-      <span class="row"><span class="dot tone-ok"></span>Connected · 14 folders</span>
-      <span class="row actions">
-        <span class="btn btn-sm">Test</span>
-        <span class="btn btn-primary btn-sm">Import</span>
-      </span>
+    <div class="card card-head">
+      <span class="label">Add a connection</span>
+      <span class="k small">A Grafana URL and a service account token with the Viewer role on the folders to import.</span>
     </div>
   </div>
 </Window>
@@ -49,67 +96,162 @@ const mappings = [
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 16px;
-    font-size: 13px;
+    padding: 14px;
+    font-size: 12px;
+    line-height: 1.4;
   }
 
-  .field {
-    display: grid;
-    grid-template-columns: 96px minmax(0, 1fr);
-    gap: 10px;
-    align-items: center;
+  .page-head {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
   }
 
-  .field-top {
-    align-items: start;
+  .title {
+    font-size: 16px;
+    font-weight: 600;
   }
 
-  .input {
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 7px 10px;
-    background: var(--surface);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  .tabs {
+    gap: 4px;
+    border-bottom: 1px solid var(--border);
   }
 
-  .secret {
+  .tabs span {
+    padding: 4px 8px 5px;
     color: var(--mfg);
   }
 
-  .mappings {
+  .tabs .on {
+    color: var(--fg);
+    box-shadow: inset 0 -2px 0 var(--fg);
+  }
+
+  .card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .card-head {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    min-width: 0;
+    gap: 2px;
+    padding: 9px 11px;
   }
 
-  .mapping {
-    justify-content: space-between;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 6px 10px;
+  .card > .card-head {
+    border-bottom: 1px solid var(--border);
   }
 
-  .unmatched {
-    border: 1px dashed var(--border-strong);
+  .small {
+    font-size: 11px;
+  }
+
+  .tbl th,
+  .tbl td {
+    padding: 6px 8px;
+    font-size: 11.5px;
+    vertical-align: top;
+  }
+
+  .connections th,
+  .connections td {
+    padding: 6px;
+  }
+
+  .connections th:first-child,
+  .connections td:first-child {
+    padding-left: 10px;
+  }
+
+  .connections th:last-child,
+  .connections td:last-child {
+    padding-right: 10px;
+  }
+
+  .sources {
+    min-width: 470px;
+  }
+
+  .url-cell,
+  .type {
+    font-size: 10.5px;
+    white-space: nowrap;
   }
 
   .status {
-    justify-content: space-between;
-    padding-top: 6px;
+    min-width: 128px;
   }
 
-  .actions .btn {
-    min-height: 30px;
-    font-size: 12px;
+  .status {
+    gap: 5px;
+    align-items: baseline;
+  }
+
+  .status .dot {
+    flex: none;
+    transform: translateY(-1px);
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .btn {
+    min-height: 26px;
+    padding: 0 9px;
+    font-size: 11.5px;
+  }
+
+  .block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 9px 11px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .choice {
+    gap: 7px;
+  }
+
+  .radio {
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+  }
+
+  .radio.on {
+    border-color: var(--primary);
+    background: radial-gradient(circle, var(--primary) 0 3px, transparent 3.5px);
+  }
+
+  .sources {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+
+  .select {
+    display: inline-flex;
+    gap: 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 8px;
+    background: var(--surface);
+    white-space: nowrap;
+  }
+
+  .foot {
+    gap: 8px;
+    padding: 9px 11px;
   }
 
   @media (max-width: 480px) {
-    .status {
-      flex-wrap: wrap;
-      gap: 10px;
+    .connections {
+      min-width: 500px;
     }
   }
 </style>
