@@ -1,7 +1,7 @@
 ---
 import Window from "./Window.astro"
 import { HOST, TRACE_ID } from "./screen-ids"
-import { ROOT, SELECTED_SPAN, SPANS, TICKS, TRACE_START } from "./trace"
+import { LOG_LINK_RANGE, ROOT, SELECTED_SPAN, SPANS, TICKS, TRACE_START, hasChildren } from "./trace"
 
 const selected = SPANS.find((span) => span.selected) ?? ROOT
 ---
@@ -14,7 +14,7 @@ const selected = SPANS.find((span) => span.selected) ?? ROOT
         <span class="mono k trace-id">{TRACE_ID}</span>
       </div>
       <span class="row head-actions">
-        <span class="btn btn-sm hide-xs">Last 1 hour</span>
+        <span class="btn btn-sm hide-xs">{LOG_LINK_RANGE}</span>
         <span class="btn btn-sm">Copy link</span>
         <span class="btn btn-sm hide-xs">Search traces</span>
       </span>
@@ -35,9 +35,10 @@ const selected = SPANS.find((span) => span.selected) ?? ROOT
             <span class="ticks" aria-hidden="true">{TICKS.map((tick) => <span>{tick}</span>)}</span>
           </div>
           {
-            SPANS.map(({ service, operation, depth, tone, width, offset, duration, error, selected }) => (
+            SPANS.map(({ service, operation, depth, tone, width, offset, duration, error, selected }, index) => (
               <div class:list={["span-row", { selected }]}>
                 <span class="name" style={`padding-left:${depth * 10}px`}>
+                  <span class="k chevron" aria-hidden="true">{hasChildren(index) ? "⌄" : ""}</span>
                   <span class="op">
                     <span class="k">{service}</span> {operation}
                   </span>
@@ -96,9 +97,10 @@ const selected = SPANS.find((span) => span.selected) ?? ROOT
 
   .head {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 12px;
+    gap: 8px 12px;
   }
 
   .head-text {
@@ -192,6 +194,12 @@ const selected = SPANS.find((span) => span.selected) ?? ROOT
     margin-left: 8px;
     min-width: 0;
     white-space: nowrap;
+  }
+
+  .chevron {
+    flex: none;
+    width: 9px;
+    margin-top: -4px;
   }
 
   .op {
