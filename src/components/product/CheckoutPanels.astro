@@ -1,13 +1,14 @@
 ---
 import Bars from "./Bars.astro"
 import Panel from "./Panel.astro"
-import Sparklines from "./Sparklines.astro"
+import TimeSeries from "./TimeSeries.astro"
 import Window from "./Window.astro"
+import { DASHBOARD_PATH, DASHBOARD_TITLE } from "./screen-ids"
 
 const latency = [
-  { d: "M0 56 C40 52 60 34 100 38 S160 66 200 46 S260 22 300 30", tone: "s1" },
-  { d: "M0 68 C40 66 60 58 100 60 S160 74 200 66 S260 56 300 60", tone: "s3" },
-  { d: "M0 44 C40 50 60 40 100 34 S160 28 200 40 S260 50 300 42", tone: "s2" },
+  { name: "/checkout", tone: "s1", d: "M0 56 C40 52 60 34 100 38 S160 66 200 46 S260 22 300 30" },
+  { name: "/cart", tone: "s3", d: "M0 68 C40 66 60 58 100 60 S160 74 200 66 S260 56 300 60" },
+  { name: "/product/{id}", tone: "s2", d: "M0 44 C40 50 60 40 100 34 S160 28 200 40 S260 50 300 42" },
 ] as const
 
 const errors = [
@@ -22,18 +23,78 @@ const errors = [
 ] as const
 ---
 
-<Window url="/d/4f1c/checkout-health">
+<Window url={DASHBOARD_PATH} label="A dashboard">
+  <div class="top">
+    <span class="row crumbs">
+      <span class="mark" aria-hidden="true">/</span>
+      <span class="k">Dashboards</span>
+      <span class="k">/</span>
+      <span class="k">Shop</span>
+      <span class="k">/</span>
+      <span class="label">{DASHBOARD_TITLE}</span>
+      <span class="row k version"><span class="dot tone-ok"></span>Live · v7 ▾</span>
+    </span>
+    <span class="btn btn-sm controls">Controls</span>
+  </div>
   <div class="checkout-body">
-    <Panel title="p95 latency by route" meta="ms">
-      <Sparklines viewBox="0 0 300 80" height="80px" series={[...latency]} />
+    <Panel title="p95 latency by route" datasource="prom">
+      <TimeSeries
+        viewBox="0 0 300 80"
+        height="72px"
+        yTicks={["300 ms", "150 ms", "0 s"]}
+        xTicks={["09:00", "11:00", "13:00"]}
+        series={[...latency]}
+      />
     </Panel>
-    <Panel title="Payment errors" meta="5m">
+    <Panel title="Payment errors" datasource="loki">
       <div class="checkout-bars"><Bars height={44} gap={3} bars={[...errors]} /></div>
     </Panel>
   </div>
 </Window>
 
 <style>
+  .top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 10px 0;
+    font-size: 12px;
+  }
+
+  .crumbs {
+    gap: 6px;
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+
+  .crumbs .label {
+    font-size: 12px;
+  }
+
+  .mark {
+    display: inline-grid;
+    place-items: center;
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    background: var(--fg);
+    color: var(--bg);
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  .version {
+    gap: 5px;
+    font-size: 11.5px;
+  }
+
+  .controls {
+    min-height: 28px;
+    font-size: 12px;
+  }
+
   .checkout-body {
     padding: 10px;
     display: flex;

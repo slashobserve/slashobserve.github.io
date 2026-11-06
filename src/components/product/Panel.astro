@@ -1,14 +1,41 @@
 ---
 interface Props {
   title: string
-  meta?: string
+  datasource?: string
   class?: string
 }
 
-const { title, meta, class: className } = Astro.props
+const { title, datasource, class: className } = Astro.props
 ---
 
 <div class:list={["panel", className]}>
-  <div class="pt"><span>{title}</span>{meta && <span class="k">{meta}</span>}</div>
+  <div class="pt panel-head">
+    <span class="panel-title">{title}</span>
+    {datasource && <span class="k panel-ds">{datasource}</span>}
+    <span class="k panel-menu" aria-hidden="true">⋯</span>
+  </div>
   <slot />
 </div>
+
+<style>
+  .panel-head {
+    justify-content: flex-start;
+  }
+
+  .panel-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+
+  .panel-ds {
+    font-weight: 400;
+  }
+
+  .panel-menu {
+    margin-left: auto;
+    letter-spacing: 0.05em;
+  }
+</style>

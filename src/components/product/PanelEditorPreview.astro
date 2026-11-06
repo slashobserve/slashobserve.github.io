@@ -21,7 +21,7 @@ const routes = [
         <span class="row status"><span class="dot tone-ok"></span>Draft ran just now, 3 series</span>
         <span>last 6h</span>
       </div>
-      <Panel title="p95 by route" meta="Time series">
+      <Panel title="p95 by route">
         <Sparklines viewBox="0 0 300 90" height="96px" series={routes.map(({ d, tone }) => ({ d, tone }))} />
         <div class="legend">
           {
