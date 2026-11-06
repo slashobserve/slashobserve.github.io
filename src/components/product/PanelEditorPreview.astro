@@ -1,50 +1,100 @@
 ---
-import Panel from "./Panel.astro"
-import Sparklines from "./Sparklines.astro"
+import TimeSeries from "./TimeSeries.astro"
 import Window from "./Window.astro"
+import { DASHBOARD_PATH, HOST } from "./screen-ids"
+
+const TITLE = "p95 latency by route"
 
 const routes = [
-  { route: "/checkout", tone: "s1", d: "M0 60 C40 56 60 36 100 40 S160 70 200 50 S260 24 300 32" },
-  { route: "/cart", tone: "s3", d: "M0 74 C40 72 60 62 100 64 S160 80 200 72 S260 60 300 64" },
-  { route: "/product", tone: "s2", d: "M0 46 C40 54 60 44 100 36 S160 30 200 44 S260 54 300 46" },
+  { name: "/checkout", tone: "s1", d: "M0 60 C40 56 60 36 100 40 S160 70 200 50 S260 24 300 32" },
+  { name: "/cart", tone: "s3", d: "M0 74 C40 72 60 62 100 64 S160 80 200 72 S260 60 300 64" },
+  { name: "/product/{id}", tone: "s2", d: "M0 46 C40 54 60 44 100 36 S160 30 200 44 S260 54 300 46" },
 ] as const
+
+const settings = [
+  { label: "Panel type", value: "Time series" },
+  { label: "Unit", value: "seconds (s)" },
+]
 ---
 
-<Window url="observe.example.com/d/4f1c/checkout-health?panel=latency-route&edit=query" label="The panel editor">
+<Window url={`${HOST}${DASHBOARD_PATH}?panel=latency_by_route&edit=query`} label="The panel editor">
   <div class="editor">
     <div class="head">
-      <span class="label">Edit p95 by route</span>
-      <span class="hint">A draft. Nothing changes until you save.</span>
+      <div class="head-text">
+        <span class="label">Edit {TITLE}</span>
+        <span class="hint">A draft. Nothing changes until you save.</span>
+      </div>
+      <span class="row head-actions">
+        <span class="k hide-xs">Back to activity</span>
+        <span class="seg"><span class="on">Editor</span><span>JSON</span></span>
+        <span class="k" aria-hidden="true">×</span>
+      </span>
     </div>
     <div class="preview">
       <div class="row preview-head">
-        <span class="row status"><span class="dot tone-ok"></span>Draft ran just now, 3 series</span>
-        <span>last 6h</span>
+        <span class="row status"><span class="fg-ok" aria-hidden="true">✓</span>Draft ran just now, 3 series</span>
+        <span>Last 6 hours</span>
       </div>
-      <Panel title="p95 by route" meta="Time series">
-        <Sparklines viewBox="0 0 300 90" height="96px" series={routes.map(({ d, tone }) => ({ d, tone }))} />
-        <div class="legend">
-          {
-            routes.map(({ route, tone }) => (
-              <span class="row">
-                <span class={`dot tone-${tone}`} />
-                {route}
-              </span>
-            ))
-          }
+      <TimeSeries
+        viewBox="0 0 300 90"
+        height="88px"
+        yTicks={["300 ms", "150 ms", "0 s"]}
+        xTicks={["09:00", "11:00", "13:00"]}
+        series={[...routes]}
+      />
+    </div>
+    <div class="row ask">
+      <span class="k ask-text">Ask the agent to change this query, like: only 5xx, by route</span>
+      <span class="btn btn-sm">Suggest</span>
+    </div>
+    <div class="cols g1-sm">
+      <div class="queries">
+        <div class="row line">
+          <span class="label">Datasource</span>
+          <span class="select">prom (Prometheus)<span class="k" aria-hidden="true">▾</span></span>
+          <span class="btn btn-sm browse hide-xs">Metrics and labels</span>
         </div>
-      </Panel>
+        <div class="row line">
+          <span class="label">Query A</span>
+          <span class="select">Panel datasource (prom)<span class="k" aria-hidden="true">▾</span></span>
+        </div>
+        <div class="mono code">
+          <span class="k gutter">1</span>
+          <span>{'histogram_quantile(0.95, sum by (le, route) (rate(http_request_duration_seconds_bucket{job="checkout"}[$__rate_interval])))'}</span>
+        </div>
+        <span class="row hint valid"><span class="fg-ok" aria-hidden="true">✓</span>Query is valid. Errors show under the line that has them.</span>
+        <span class="row check"><span class="box" aria-hidden="true"></span>Exemplars</span>
+        <span class="label">Legend</span>
+        <span class="mono input">{"{{route}}"}</span>
+        <span class="k add">+ Add query</span>
+      </div>
+      <div class="settings">
+        {
+          settings.map(({ label, value }) => (
+            <div class="field">
+              <span class="label">{label}</span>
+              <span class="select">
+                {value}
+                <span class="k" aria-hidden="true">
+                  ▾
+                </span>
+              </span>
+            </div>
+          ))
+        }
+        <div class="field">
+          <span class="label">Thresholds</span>
+          <span class="k link">Add threshold</span>
+        </div>
+        <div class="field">
+          <span class="label">Title</span>
+          <span class="input">{TITLE}</span>
+        </div>
+      </div>
     </div>
-    <div class="field">
-      <span class="hint">Datasource</span>
-      <span class="select mono">prom-prod<span class="k" aria-hidden="true">▾</span></span>
-    </div>
-    <div class="field">
-      <span class="hint">Query A</span>
-      <div class="mono query">{'histogram_quantile(0.95, sum by (le, route) (rate(http_request_duration_seconds_bucket{job="checkout"}[5m])))'}</div>
-      <span class="hint fg-ok">Query is valid.</span>
-    </div>
-    <div class="row actions">
+    <div class="row foot">
+      <span class="k summary">1 change: query</span>
+      <span class="k hide-xs">Add a note</span>
       <span class="btn btn-sm">Discard</span>
       <span class="btn btn-primary btn-sm">Save as version 8</span>
     </div>
@@ -53,27 +103,58 @@ const routes = [
 
 <style>
   .editor {
-    padding: 12px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    font-size: 12px;
   }
 
   .head {
     display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .head-text {
+    display: flex;
     flex-direction: column;
     gap: 2px;
+    min-width: 0;
+  }
+
+  .head-actions {
+    flex: none;
+    gap: 10px;
+  }
+
+  .seg {
+    display: inline-flex;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .seg span {
+    padding: 3px 8px;
+  }
+
+  .seg .on {
+    background: var(--muted-bg);
   }
 
   .preview {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+    margin: 12px 14px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
   }
 
   .preview-head {
     justify-content: space-between;
     gap: 12px;
+    padding: 8px 11px 6px;
     font-size: 11px;
     color: var(--mfg);
   }
@@ -82,43 +163,112 @@ const routes = [
     gap: 6px;
   }
 
+  .ask {
+    justify-content: space-between;
+    margin: 10px 14px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 5px 5px 5px 10px;
+  }
+
+  .ask-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ask .btn,
+  .browse,
+  .foot .btn {
+    min-height: 28px;
+    font-size: 12px;
+  }
+
+  .cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 190px;
+    gap: 16px;
+    padding: 12px 14px;
+  }
+
+  .queries,
+  .settings {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .line {
+    flex-wrap: wrap;
+  }
+
+  .browse {
+    margin-left: auto;
+  }
+
   .field {
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
 
-  .select {
-    align-self: flex-start;
+  .select,
+  .input {
     display: inline-flex;
-    gap: 16px;
+    justify-content: space-between;
+    gap: 14px;
     border: 1px solid var(--border);
     border-radius: 6px;
-    padding: 5px 10px;
-    font-size: 12px;
+    padding: 4px 9px;
     background: var(--surface);
+    white-space: nowrap;
   }
 
-  .query {
-    border: 1px solid var(--border);
+  .code {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 10px;
+    border: 1px solid var(--border-strong);
     border-radius: 6px;
-    padding: 8px 10px;
-    font-size: 12px;
+    padding: 7px 10px;
+    font-size: 11.5px;
     background: var(--surface);
     white-space: pre-wrap;
     overflow-wrap: anywhere;
   }
 
-  .legend {
-    padding: 0 11px 8px;
-    display: flex;
-    gap: 12px;
-    font-size: 11px;
-    flex-wrap: wrap;
+  .valid,
+  .check {
+    gap: 6px;
   }
 
-  .actions {
+  .box {
+    width: 11px;
+    height: 11px;
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+  }
+
+  .link {
+    text-decoration: underline;
+  }
+
+  .foot {
     justify-content: flex-end;
     gap: 8px;
+    padding: 10px 14px 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  .summary {
+    margin-right: auto;
+  }
+
+  @media (max-width: 480px) {
+    .hide-xs {
+      display: none;
+    }
   }
 </style>

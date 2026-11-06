@@ -1,56 +1,116 @@
 ---
 import Window from "./Window.astro"
+import { TRACE_ID } from "./screen-ids"
+import { ROOT, SELECTED_SPAN, SPANS, TRACE_START } from "./trace"
 
-const spans = [
-  { name: "frontend", indent: 0, tone: "s1", width: 100, offset: 0 },
-  { name: "checkout", indent: 10, tone: "s3", width: 86, offset: 6 },
-  { name: "inventory", indent: 20, tone: "s4", width: 9, offset: 8 },
-  { name: "payments", indent: 20, tone: "crit", width: 66, offset: 24 },
-  { name: "gateway", indent: 30, tone: "crit", width: 64, offset: 25 },
-  { name: "render", indent: 10, tone: "s1", width: 5, offset: 93 },
-]
+const ATTRIBUTES_SHOWN = 3
 ---
 
-<Window url="/t/7f3a9c1e?ds=tempo">
-  <span slot="bar-end" class="fg-crit">Error</span>
+<Window url={`/t/${TRACE_ID}?ds=tempo`} label="A trace">
+  <div class="card-head">
+    <span class="label">{ROOT.service} {ROOT.operation}</span>
+    <span class="row k meta"><span>{TRACE_START}</span><span>{ROOT.duration}</span></span>
+  </div>
   <div class="trace-body">
     {
-      spans.map(({ name, indent, tone, width, offset }) => (
-        <div class="span-row">
-          <span style={`padding-left:${indent}px`}>{name}</span>
-          <div class={`span-bar tone-${tone}`} style={`width:${width}%;margin-left:${offset}%`} />
-        </div>
+      SPANS.map(({ service, operation, depth, tone, width, offset, error, selected }) => (
+        <>
+          <div class:list={["span-row", { selected }]}>
+            <span class="name" style={`padding-left:${depth * 8}px`}>
+              <span class="op">
+                <span class="k">{service}</span> {operation}
+              </span>
+              {error && <span class="dot tone-crit" />}
+            </span>
+            <span class="track">
+              <span class={`span-bar tone-${tone}`} style={`width:${width}%;margin-left:${offset}%`} />
+            </span>
+          </div>
+          {selected && (
+            <div class="attrs">
+              {SELECTED_SPAN.attributes.slice(0, ATTRIBUTES_SHOWN).map(([key, value]) => (
+                <>
+                  <span class="k">{key}</span>
+                  <span class="mono">{value}</span>
+                </>
+              ))}
+            </div>
+          )}
+        </>
       ))
     }
-    <div class="k mono trace-foot">payments · charge · 1.52 s · deadline exceeded · 504</div>
   </div>
 </Window>
 
 <style>
-  .trace-body {
-    padding: 12px;
+  .card-head {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 2px;
+    padding: 10px 12px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .meta {
+    gap: 10px;
+    font-size: 11px;
+  }
+
+  .trace-body {
     font-size: 11.5px;
   }
 
   .span-row {
     display: grid;
-    grid-template-columns: 92px minmax(0, 1fr);
-    gap: 8px;
+    grid-template-columns: 150px minmax(0, 1fr);
     align-items: center;
+    min-height: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .selected {
+    background: var(--sel);
+  }
+
+  .name {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 10px;
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  .op {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .track {
+    padding: 0 10px;
+    min-width: 0;
   }
 
   .span-bar {
-    height: 10px;
-    border-radius: 2px;
+    display: block;
+    height: 9px;
+    border-radius: 5px;
     background: var(--tone);
   }
 
-  .trace-foot {
-    padding-top: 6px;
-    border-top: 1px solid var(--border);
-    margin-top: 4px;
+  .attrs {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 2px 10px;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+  }
+
+  .attrs .mono {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 </style>

@@ -1,40 +1,190 @@
 ---
 import Window from "./Window.astro"
+import { DASHBOARD_ID, DASHBOARD_TITLE, HOST } from "./screen-ids"
 
 const LATEST = 7
+
 const versions = [
-  { version: 7, change: "Add errors by route; pin p95 on top", by: "Priya · agent" },
-  { version: 6, change: "Threshold on DB pool at 18", by: "Priya" },
-  { version: 5, change: "Repair: container_cpu metric renamed", by: "agent" },
-  { version: 4, change: "Add Loki panel: payment errors", by: "Tom · agent" },
-  { version: 1, change: 'Built from "checkout health by pod, last 6h"', by: "Priya · agent" },
+  { version: 7, summary: "Add errors by route to the Traffic row and move p95 latency to the top.", author: "Priya", saved: "2 hours ago" },
+  { version: 6, summary: "Set a threshold of 18 on DB pool in use.", author: "Priya", saved: "yesterday" },
+  { version: 5, summary: "Repair the CPU by pod query after container_cpu was renamed.", author: "Tom", saved: "2 days ago" },
+  { version: 4, summary: "Add payment errors from Loki to the Overview row.", author: "Tom", saved: "3 days ago" },
+  { version: 3, summary: "Show request rate per route instead of per pod.", author: "Priya", saved: "last week" },
 ]
 ---
 
-<Window url="/d/4f1c/checkout-health · history">
-  <div class="scroll">
-    <table class="tbl history">
-      <thead>
-        <tr><th>Version</th><th>Change</th><th>By</th><th><span class="sr-only">Actions</span></th></tr>
-      </thead>
-      <tbody>
-        {
-          versions.map(({ version, change, by }) => (
-            <tr>
-              <td>{version}</td>
-              <td class="change">{change}</td>
-              <td class="k">{by}</td>
-              <td class="hint">{version === LATEST ? "latest" : "compare · restore"}</td>
-            </tr>
-          ))
-        }
-      </tbody>
-    </table>
+<Window url={`${HOST}/d/${DASHBOARD_ID}/versions`} label="The version history">
+  <div class="history-page">
+    <div class="row crumbs">
+      <span class="k">← Back to dashboard</span>
+      <span class="k" aria-hidden="true">/</span>
+      <span class="title">{DASHBOARD_TITLE}: history</span>
+    </div>
+    <div class="scroll">
+      <table class="tbl history">
+        <thead>
+          <tr><th>Version</th><th>Summary</th><th>Author</th><th>Saved</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          {
+            versions.map(({ version, summary, author, saved }) => (
+              <tr>
+                <td class="version">
+                  <span class="label">v{version}</span>
+                  {version === LATEST && <span class="badge">Latest</span>}
+                </td>
+                <td class="summary">{summary}</td>
+                <td>{author}</td>
+                <td class="k nowrap">{saved}</td>
+                <td>
+                  <span class="row actions">
+                    <span class="view">View</span>
+                    <span class="btn btn-sm">Compare</span>
+                    {version !== LATEST && <span class="btn btn-sm">Restore</span>}
+                  </span>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <div class="diff">
+      <span class="label diff-title">Changes from v6 to v7</span>
+      <span class="row pickers">
+        <span class="row"><span class="k">From</span><span class="select">v6<span class="k" aria-hidden="true">▾</span></span></span>
+        <span class="row"><span class="k">To</span><span class="select">v7<span class="k" aria-hidden="true">▾</span></span></span>
+      </span>
+      <div class="change">
+        <span class="label">Panel "Errors by route"</span>
+        <span class="row op"><span aria-hidden="true">+</span>Added</span>
+      </div>
+      <div class="change">
+        <span class="label">Panel "p95 latency by route"</span>
+        <span class="row op"><span aria-hidden="true">↕</span>Reordered</span>
+      </div>
+    </div>
   </div>
 </Window>
 
 <style>
-  .history td:not(.change) {
+  .history-page {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+  }
+
+  .crumbs {
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .title {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .history th,
+  .history td {
+    padding: 7px 6px;
+    font-size: 11.5px;
+    line-height: 1.35;
+    vertical-align: middle;
+  }
+
+  .history th:first-child,
+  .history td:first-child {
+    padding-left: 14px;
+  }
+
+  .history th:last-child,
+  .history td:last-child {
+    padding-right: 14px;
+  }
+
+  .version {
     white-space: nowrap;
+  }
+
+  .version .label {
+    display: block;
+  }
+
+  .badge {
+    display: inline-block;
+    margin-top: 3px;
+    padding: 1px 6px;
+    border-radius: 5px;
+    background: var(--muted-bg);
+    font-size: 10.5px;
+  }
+
+  .summary {
+    min-width: 150px;
+  }
+
+  .nowrap {
+    white-space: nowrap;
+  }
+
+  .actions {
+    gap: 6px;
+    flex-wrap: nowrap;
+  }
+
+  .actions .btn {
+    min-height: 24px;
+    padding: 0 7px;
+    font-size: 11px;
+  }
+
+  .view {
+    padding-right: 2px;
+  }
+
+  .diff {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 14px 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .diff-title {
+    font-size: 13px;
+  }
+
+  .pickers {
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .pickers > .row {
+    gap: 6px;
+  }
+
+  .select {
+    display: inline-flex;
+    gap: 24px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 9px;
+    background: var(--surface);
+  }
+
+  .change {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 10px;
+  }
+
+  .op {
+    gap: 5px;
+    color: var(--mfg);
+    flex: none;
   }
 </style>

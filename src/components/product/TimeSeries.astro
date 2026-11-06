@@ -1,0 +1,77 @@
+---
+import Sparklines from "./Sparklines.astro"
+
+type Tone = "s1" | "s2" | "s3" | "s4"
+
+interface Props {
+  viewBox: string
+  height: string
+  yTicks: string[]
+  xTicks: string[]
+  series: { d: string; tone: Tone; name: string }[]
+}
+
+const { viewBox, height, yTicks, xTicks, series } = Astro.props
+---
+
+<div class="ts" aria-hidden="true">
+  <div class="ts-y">{yTicks.map((tick) => <span>{tick}</span>)}</div>
+  <Sparklines viewBox={viewBox} height={height} series={series.map(({ d, tone }) => ({ d, tone }))} />
+  <span></span>
+  <div class="ts-x">{xTicks.map((tick) => <span>{tick}</span>)}</div>
+  <div class="ts-legend">
+    {
+      series.map(({ name, tone }) => (
+        <span class="row">
+          <i class={`tone-${tone}`} />
+          {name}
+        </span>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .ts {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 6px;
+    padding: 0 11px 9px;
+    font-size: 10.5px;
+    color: var(--mfg);
+  }
+
+  .ts-y {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .ts-x {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 2px;
+  }
+
+  .ts-legend {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 12px;
+    padding-top: 6px;
+    color: var(--fg);
+  }
+
+  .ts-legend .row {
+    gap: 5px;
+  }
+
+  .ts-legend i {
+    width: 12px;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--tone);
+  }
+</style>

@@ -1,51 +1,95 @@
 import { describe, expect, test } from "bun:test"
-import { nextStep, panelShown, playLabel, railLines, windowStatus } from "./build-play"
+import {
+  buildStatus,
+  composerText,
+  nextStep,
+  panelShown,
+  playLabel,
+  runningFor,
+  stepSummary,
+  timeline,
+  topRowTitle,
+} from "./build-play"
 
-describe("railLines", () => {
-  test("step 0 shows the inventory line alone, active", () => {
-    expect(railLines(0)).toEqual([
-      { text: 'Listed 12 metric families in {job="checkout"} on prom-prod', tone: "active" },
+describe("timeline", () => {
+  test("step 0 groups discovery and the first query into phases", () => {
+    expect(timeline(0)).toEqual([
+      {
+        label: "Discovering",
+        tools: "list_metrics, list_label_values",
+        messages: ['Listed 12 metric families in {job="checkout"} on prom', "Listed 3 label values on prom"],
+      },
+      { label: "Running queries", tools: "query_range", messages: ["Ran a query on prom: 3 series"] },
     ])
   })
 
-  test("step 1 shows four lines ending on the first save, active", () => {
-    const lines = railLines(1)
-    expect(lines.map((line) => line.text)).toEqual([
-      'Listed 12 metric families in {job="checkout"} on prom-prod',
-      "Listed 3 label values on prom-prod",
-      "Ran a query on prom-prod: 3 series",
-      "Saved panel 1 of 12: Requests/s (row Overview)",
-    ])
-    expect(lines.map((line) => line.tone)).toEqual(["done", "done", "done", "active"])
+  test("saves join one Saving phase that counts repeated tools", () => {
+    const saving = timeline(3).at(-1)
+    expect(saving).toEqual({
+      label: "Saving",
+      tools: "create_dashboard, update_panels 2",
+      messages: [
+        "Saved panel 1 of 12: Requests/s (row Overview)",
+        "Saved panel 2 of 12: Error ratio (row Overview)",
+        "Saved panel 3 of 12: p95 latency (row Overview)",
+      ],
+    })
   })
 
-  test("step 5 keeps the last six lines", () => {
-    expect(railLines(5).map((line) => line.text)).toEqual([
-      "Ran a query on prom-prod: 3 series",
-      "Saved panel 1 of 12: Requests/s (row Overview)",
-      "Saved panel 2 of 12: Error ratio (row Overview)",
-      "Saved panel 3 of 12: p95 latency (row Overview)",
-      "Saved panel 4 of 12: Pods ready (row Overview)",
-      "Saved panel 5 of 12: Requests by pod (row Traffic)",
-    ])
+  test("the last save also saves version 1", () => {
+    const saving = timeline(12).at(-1)
+    expect(saving?.tools).toBe("create_dashboard, update_panels 11")
+    expect(saving?.messages).toHaveLength(12)
+    expect(saving?.messages.at(-1)).toBe(
+      "Saved panel 12 of 12: Cache hit ratio (row Internals), then saved version 1 (3 rows, 12 panels)",
+    )
   })
 
-  test("step 12 ends on the saved version with every line done", () => {
-    const lines = railLines(12)
-    expect(lines.map((line) => line.text)).toEqual([
-      "Saved panel 8 of 12: DB pool in use (row Internals)",
-      "Saved panel 9 of 12: Queue depth (row Internals)",
-      "Saved panel 10 of 12: Payment success (row Internals)",
-      "Saved panel 11 of 12: Reservations/s (row Internals)",
-      "Saved panel 12 of 12: Cache hit ratio (row Internals)",
-      "Saved version 1 (3 rows, 12 panels)",
-    ])
-    expect(lines.every((line) => line.tone === "done")).toBe(true)
+  test("steps outside the build clamp to its ends", () => {
+    expect(timeline(-3)).toEqual(timeline(0))
+    expect(timeline(40)).toEqual(timeline(12))
   })
+})
 
-  test("steps outside the script clamp to its ends", () => {
-    expect(railLines(-3)).toEqual(railLines(0))
-    expect(railLines(40)).toEqual(railLines(12))
+describe("buildStatus", () => {
+  test("reads as the agent working until a panel is saved, then counts panels", () => {
+    expect(buildStatus(0)).toBe("Building the dashboard")
+    expect(buildStatus(4)).toBe("Building, 4 of 12 panels")
+    expect(buildStatus(12)).toBe("Building, 12 of 12 panels")
+  })
+})
+
+describe("stepSummary", () => {
+  test("counts every discovery, query and save step and the time the last save took", () => {
+    expect(stepSummary()).toBe("Ran 15 steps in 38s")
+  })
+})
+
+describe("runningFor", () => {
+  test("grows with each save and ends where the summary does", () => {
+    expect(runningFor(0)).toBe("Running for 2s")
+    expect(runningFor(5)).toBe("Running for 17s")
+    expect(runningFor(12)).toBe("Running for 38s")
+  })
+})
+
+describe("topRowTitle", () => {
+  test("names the dashboard once the first panel is saved", () => {
+    expect(topRowTitle(0)).toBe("New dashboard")
+    expect(topRowTitle(1)).toBe("Checkout health")
+  })
+})
+
+describe("composerText", () => {
+  test("asks for a dashboard while building and for a change once done", () => {
+    expect(composerText(false)).toEqual({
+      placeholder: "Describe a dashboard, like: checkout health by pod, last 6h",
+      note: "Wait for the dashboard, then ask for changes.",
+    })
+    expect(composerText(true)).toEqual({
+      placeholder: "Ask for another change to Checkout health",
+      note: "Each change is saved as a new version of the dashboard.",
+    })
   })
 })
 
@@ -53,13 +97,6 @@ describe("panelShown", () => {
   test("a panel shows once its save has happened", () => {
     expect(panelShown(3, 3)).toBe(true)
     expect(panelShown(3, 4)).toBe(false)
-  })
-})
-
-describe("windowStatus", () => {
-  test("counts saves until the build finishes", () => {
-    expect(windowStatus(4)).toBe("saved 4 of 12")
-    expect(windowStatus(12)).toBe("version 1 · 12 panels")
   })
 })
 

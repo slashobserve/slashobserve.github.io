@@ -1,11 +1,12 @@
 ---
 import SameLink from "./SameLink.astro"
 import Window from "./Window.astro"
+import { HOST } from "./screen-ids"
 
 type Tone = "running" | "ok" | "critical"
 
 const TONE_CLASS: Record<Tone, string> = {
-  running: "tone-running",
+  running: "tone-mfg",
   ok: "tone-ok",
   critical: "tone-crit",
 }
@@ -14,7 +15,9 @@ interface QueuedDashboard {
   name: string
   folder: string
   unverified: string
-  repair: { label: string; tone: Tone } | null
+  placeholders: number
+  repair: { label: string; tone: Tone; finished?: string } | null
+  canRepair: boolean
 }
 
 const rows: QueuedDashboard[] = [
@@ -22,68 +25,181 @@ const rows: QueuedDashboard[] = [
     name: "Kubernetes / Pods",
     folder: "Platform / Kubernetes",
     unverified: "3 panels",
+    placeholders: 0,
     repair: { label: "Repairing", tone: "running" },
+    canRepair: false,
   },
   {
     name: "Node exporter full",
     folder: "Infra",
     unverified: "5 panels, 1 variable",
+    placeholders: 0,
     repair: { label: "Repair queued", tone: "running" },
+    canRepair: false,
   },
   {
     name: "Payments latency",
     folder: "Platform / Shop",
     unverified: "1 panel",
-    repair: { label: "Repaired, still failing", tone: "ok" },
+    placeholders: 0,
+    repair: { label: "Repaired, still failing", tone: "ok", finished: "12 minutes ago" },
+    canRepair: true,
   },
-  { name: "Loki / Ingest", folder: "Observability", unverified: "2 panels", repair: { label: "Repair failed", tone: "critical" } },
-  { name: "Checkout service", folder: "Platform / Shop", unverified: "1 panel", repair: null },
+  {
+    name: "Ingest pipeline",
+    folder: "Observability",
+    unverified: "2 panels",
+    placeholders: 3,
+    repair: { label: "Repair failed", tone: "critical", finished: "1 hour ago" },
+    canRepair: true,
+  },
+  { name: "Checkout service", folder: "Platform / Shop", unverified: "1 panel", placeholders: 0, repair: null, canRepair: true },
+  { name: "Graphite legacy", folder: "Infra", unverified: "None", placeholders: 4, repair: null, canRepair: false },
 ]
 ---
 
-<Window url="observe.example.com/import/repair">
-  <span slot="bar-end" class="hint queue-title">Repair queue</span>
-  <div class="scroll">
-    <table class="tbl">
-      <thead>
-        <tr><th>Dashboard</th><th>Folder</th><th>Unverified</th><th>Repair</th></tr>
-      </thead>
-      <tbody>
-        {
-          rows.map(({ name, folder, unverified, repair }) => (
-            <tr>
-              <td>{name}</td>
-              <td class="k">{folder}</td>
-              <td>{unverified}</td>
-              <td class="state">
-                {repair ? (
-                  <span class="row">
-                    <span class:list={["dot", TONE_CLASS[repair.tone]]} />
-                    {repair.label}
-                  </span>
-                ) : (
-                  <span class="k">Not requested</span>
-                )}
-              </td>
-            </tr>
-          ))
-        }
-      </tbody>
-    </table>
-  </div>
+<div class="repair-stack">
+  <Window url={`${HOST}/import/repair`} label="The repair queue">
+    <div class="row head">
+      <span class="title">Repair queue</span>
+      <span class="row head-actions">
+        <span class="select">All folders<span class="k" aria-hidden="true">▾</span></span>
+        <span class="btn btn-primary btn-sm">Repair all</span>
+      </span>
+    </div>
+    <div class="scroll">
+      <table class="tbl queue">
+        <thead>
+          <tr>
+            <th>Dashboard</th><th>Folder</th><th>Unverified</th><th>Placeholders</th><th>Imported</th><th>Repair</th><th
+              ><span class="sr-only">Actions</span></th
+            >
+          </tr>
+        </thead>
+        <tbody>
+          {
+            rows.map(({ name, folder, unverified, placeholders, repair, canRepair }) => (
+              <tr>
+                <td class="name">{name}</td>
+                <td>{folder}</td>
+                <td>{unverified}</td>
+                <td>{placeholders}</td>
+                <td class="k nowrap">2 hours ago</td>
+                <td class="state">
+                  {repair ? (
+                    <span class="status">
+                      <span class="row">
+                        <span class:list={["dot", TONE_CLASS[repair.tone]]} />
+                        {repair.label}
+                      </span>
+                      {repair.finished && <span class="k when">{repair.finished}</span>}
+                    </span>
+                  ) : (
+                    <span class="k nowrap">Not requested</span>
+                  )}
+                </td>
+                <td>
+                  <span class:list={["btn btn-sm repair", { off: !canRepair }]}>Repair with the agent</span>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </Window>
   <SameLink />
-</Window>
+</div>
 
 <style>
-  .queue-title {
-    font-size: 12px;
+  .repair-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
   }
 
-  .state {
+  .head {
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 12px 12px 10px;
+  }
+
+  .title {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .head-actions {
+    gap: 6px;
+  }
+
+  .select {
+    display: inline-flex;
+    gap: 24px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 9px;
+    font-size: 12px;
+    background: var(--surface);
+  }
+
+  .head .btn {
+    min-height: 26px;
+    padding: 0 9px;
+    font-size: 11.5px;
+  }
+
+  .repair {
+    min-height: 0;
+    padding: 4px 8px;
+    font-size: 11px;
+    line-height: 1.25;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .queue {
+    position: relative;
+    font-size: 11.5px;
+    border-top: 1px solid var(--border);
+  }
+
+  .queue th,
+  .queue td {
+    padding: 7px 6px;
+    line-height: 1.35;
+  }
+
+  .queue th:first-child,
+  .queue td:first-child {
+    padding-left: 12px;
+  }
+
+  .queue th:last-child,
+  .queue td:last-child {
+    padding-right: 12px;
+  }
+
+  .nowrap {
     white-space: nowrap;
   }
 
-  .tone-running {
-    --tone: var(--fg);
+  .name {
+    font-weight: 500;
+  }
+
+  .status {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .when {
+    font-size: 11px;
+  }
+
+  .off {
+    opacity: 0.5;
   }
 </style>

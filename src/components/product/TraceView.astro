@@ -1,121 +1,266 @@
 ---
 import Window from "./Window.astro"
+import { HOST, TRACE_ID } from "./screen-ids"
+import { ROOT, SELECTED_SPAN, SPANS, TICKS, TRACE_START } from "./trace"
 
-interface Span {
-  name: string
-  depth: 0 | 1 | 2 | 3
-  tone: "s1" | "s2" | "s3" | "s4" | "crit"
-  width: number
-  offset: number
-  dur: string
-  selected?: boolean
-}
-
-const spans: Span[] = [
-  { name: "frontend · POST /checkout", depth: 0, tone: "s1", width: 100, offset: 0, dur: "2.31 s" },
-  { name: "checkout · place order", depth: 1, tone: "s3", width: 86, offset: 6, dur: "1.98 s" },
-  { name: "inventory · reserve", depth: 2, tone: "s4", width: 9, offset: 8, dur: "0.21 s" },
-  { name: "checkout · db insert", depth: 2, tone: "s2", width: 4, offset: 18, dur: "0.09 s" },
-  { name: "payments · charge", depth: 2, tone: "crit", width: 66, offset: 24, dur: "1.52 s", selected: true },
-  { name: "payments · gateway", depth: 3, tone: "crit", width: 64, offset: 25, dur: "1.49 s" },
-  { name: "frontend · render", depth: 1, tone: "s1", width: 5, offset: 93, dur: "0.11 s" },
-]
-
-const ticks = ["0", "0.5 s", "1.0 s", "1.5 s", "2.0 s"]
+const selected = SPANS.find((span) => span.selected) ?? ROOT
 ---
 
-<Window url="observe.example.com/t/7f3a9c1e?ds=tempo-prod">
-  <span slot="bar-end" class="hide-xs">frontend · POST /checkout · 2.31 s · </span>
-  <span slot="bar-end" class="fg-crit">Error</span>
-  <div class="trace">
-    <div class="span-row head">
-      <span>service · span</span>
-      <span class="row ticks" aria-hidden="true">{ticks.map((tick) => <span>{tick}</span>)}</span>
-      <span class="dur">dur</span>
+<Window url={`${HOST}/t/${TRACE_ID}?ds=tempo`} label="The trace view">
+  <div class="page">
+    <div class="head">
+      <div class="head-text">
+        <span class="title">Trace {TRACE_ID.slice(0, 8)}</span>
+        <span class="mono k trace-id">{TRACE_ID}</span>
+      </div>
+      <span class="row head-actions">
+        <span class="btn btn-sm hide-xs">Last 1 hour</span>
+        <span class="btn btn-sm">Copy link</span>
+        <span class="btn btn-sm hide-xs">Search traces</span>
+      </span>
     </div>
-    {
-      spans.map(({ name, depth, tone, width, offset, dur, selected }) => (
-        <div class:list={["span-row", { selected }]}>
-          <span class="name" style={`padding-left:${depth * 12}px`}>
-            {name}
-          </span>
-          <div class={`span-bar tone-${tone}`} style={`width:${width}%;margin-left:${offset}%`} />
-          <span class:list={["mono dur", { "fg-crit": selected }]}>{dur}</span>
+    <div class="card">
+      <div class="card-head">
+        <span class="label">{ROOT.service} {ROOT.operation}</span>
+        <span class="row k meta">
+          <span>Trace <span class="mono">{TRACE_ID}</span></span>
+          <span>{TRACE_START}</span>
+          <span>{ROOT.duration}</span>
+        </span>
+      </div>
+      <div class="split">
+        <div class="waterfall">
+          <div class="span-row ruler">
+            <span>Service and operation</span>
+            <span class="ticks" aria-hidden="true">{TICKS.map((tick) => <span>{tick}</span>)}</span>
+          </div>
+          {
+            SPANS.map(({ service, operation, depth, tone, width, offset, duration, error, selected }) => (
+              <div class:list={["span-row", { selected }]}>
+                <span class="name" style={`padding-left:${depth * 10}px`}>
+                  <span class="op">
+                    <span class="k">{service}</span> {operation}
+                  </span>
+                  {error && (
+                    <span class="row err">
+                      <span class="dot tone-crit" />
+                      Error
+                    </span>
+                  )}
+                  <span class="k dur">{duration}</span>
+                </span>
+                <span class="track">
+                  <span class={`span-bar tone-${tone}`} style={`width:${width}%;margin-left:${offset}%`} />
+                </span>
+              </div>
+            ))
+          }
         </div>
-      ))
-    }
-    <div class="mono attrs">
-      <span class="k">span</span>
-      <span>payments · charge</span>
-      <span class="k">status</span>
-      <span class="fg-crit">Error · deadline exceeded</span>
-      <span class="k">http.status</span>
-      <span>504</span>
-      <span class="k">peer</span>
-      <span>gateway.psp.example:443</span>
+        <div class="pane">
+          <span class="label">
+            {selected.service} {selected.operation}
+          </span>
+          <span class="row k meta">
+            <span>Span <span class="mono">{SELECTED_SPAN.id}</span></span>
+            <span>{SELECTED_SPAN.start}</span>
+            <span>{selected.duration}</span>
+            <span class="row err">
+              <span class="dot tone-crit" />
+              Error
+            </span>
+          </span>
+          <div class="attrs">
+            {
+              SELECTED_SPAN.attributes.map(([key, value]) => (
+                <>
+                  <span class="k">{key}</span>
+                  <span class="mono">{value}</span>
+                </>
+              ))
+            }
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </Window>
 
 <style>
-  .trace {
-    --name-col: 170px;
-    padding: 12px 14px;
+  .page {
+    padding: 14px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 12px;
     font-size: 11.5px;
+  }
+
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .head-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .title {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .trace-id {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .head-actions {
+    gap: 6px;
+    flex: none;
+  }
+
+  .btn {
+    min-height: 28px;
+    font-size: 12px;
+  }
+
+  .card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .card-head {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 7px 9px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .meta {
+    flex-wrap: wrap;
+    gap: 0 10px;
+    font-size: 11px;
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 38%;
+  }
+
+  .waterfall {
+    min-width: 0;
   }
 
   .span-row {
     display: grid;
-    grid-template-columns: var(--name-col) minmax(0, 1fr) 60px;
-    gap: 10px;
+    grid-template-columns: minmax(150px, 46%) minmax(0, 1fr);
     align-items: center;
-  }
-
-  .head {
-    color: var(--mfg);
-    padding-bottom: 4px;
+    min-height: 26px;
     border-bottom: 1px solid var(--border);
   }
 
-  .ticks {
-    justify-content: space-between;
+  .ruler {
+    color: var(--mfg);
+    font-size: 10.5px;
   }
 
-  .dur {
-    text-align: right;
+  .ruler > span:first-child {
+    padding-left: 8px;
+  }
+
+  .ticks {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 8px;
   }
 
   .selected {
-    background: var(--surface);
-    border-radius: 4px;
+    background: var(--sel);
+  }
+
+  .name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-right: 8px;
+    margin-left: 8px;
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  .op {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .err {
+    gap: 4px;
+    flex: none;
+  }
+
+  .dur {
+    flex: none;
+  }
+
+  .track {
+    padding: 0 8px;
+    min-width: 0;
   }
 
   .span-bar {
-    height: 12px;
-    border-radius: 2px;
+    display: block;
+    height: 10px;
+    border-radius: 5px;
     background: var(--tone);
   }
 
+  .pane {
+    border-left: 1px solid var(--border);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
   .attrs {
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid var(--border);
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
-    gap: 3px 10px;
+    gap: 2px 10px;
+    margin-top: 6px;
+  }
+
+  .attrs .mono {
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 900px) {
+    .split {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .pane {
+      border-left: 0;
+      border-top: 1px solid var(--border);
+    }
   }
 
   @media (max-width: 480px) {
-    .trace {
-      --name-col: 118px;
-    }
-
     .hide-xs,
     .ticks > span:not(:first-child, :last-child) {
       display: none;
+    }
+
+    .span-row {
+      grid-template-columns: minmax(0, 62%) minmax(0, 1fr);
     }
   }
 </style>
