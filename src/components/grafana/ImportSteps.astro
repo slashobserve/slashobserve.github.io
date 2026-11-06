@@ -47,8 +47,9 @@ const stages = ["Connect", "Import", "Repair", "Keep the links"]
       <div>
         <h2 class="h3">Keep the links</h2>
         <p class="p">
-          Every imported dashboard keeps its Grafana uid, so <span class="mono">{"/d/<uid>/<slug>"}</span> resolves here
-          as it did there. Point the old hostname at SlashObserve and runbooks, wiki pages and alert links keep working.
+          Every imported dashboard keeps its Grafana uid, so <span class="mono">{"/d/<uid>/<slug>"}</span> here
+          redirects to the imported dashboard. Point the old hostname at SlashObserve and runbooks, wiki pages and alert
+          links keep working.
         </p>
       </div>
     </div>

@@ -42,7 +42,7 @@ const rows: QueuedDashboard[] = [
     folder: "Platform / Shop",
     unverified: "1 panel",
     placeholders: 0,
-    repair: { label: "Repaired, still failing", tone: "ok", finished: "12 minutes ago" },
+    repair: { label: "Repaired, still failing", tone: "ok", finished: "12 min ago" },
     canRepair: true,
   },
   {
@@ -50,7 +50,7 @@ const rows: QueuedDashboard[] = [
     folder: "Observability",
     unverified: "2 panels",
     placeholders: 3,
-    repair: { label: "Repair failed", tone: "critical", finished: "1 hour ago" },
+    repair: { label: "Repair failed", tone: "critical", finished: "1 h ago" },
     canRepair: true,
   },
   { name: "Checkout service", folder: "Platform / Shop", unverified: "1 panel", placeholders: 0, repair: null, canRepair: true },
@@ -84,7 +84,7 @@ const rows: QueuedDashboard[] = [
                 <td>{folder}</td>
                 <td>{unverified}</td>
                 <td>{placeholders}</td>
-                <td class="k nowrap">2 hours ago</td>
+                <td class="nowrap">2 h ago</td>
                 <td class="state">
                   {repair ? (
                     <span class="status">
