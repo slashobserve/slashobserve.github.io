@@ -119,7 +119,7 @@ const PANELS: { wide: boolean; body: ReactNode }[] = [
   { wide: false, body: <Stat title="Queue depth" value="18" /> },
   { wide: false, body: <Stat title="Payment success" value="99.1%" ok /> },
   { wide: false, body: <Stat title="Reservations/s" value="64" /> },
-  { wide: false, body: <Stat title="GC pause p99" value="4 ms" /> },
+  { wide: false, body: <Stat title="Cache hit ratio" value="94%" /> },
 ]
 
 export default function BuildStage() {

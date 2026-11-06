@@ -10,7 +10,7 @@ const BUILT_PANELS = [
   { title: "Queue depth", row: "Internals" },
   { title: "Payment success", row: "Internals" },
   { title: "Reservations/s", row: "Internals" },
-  { title: "GC pause p99", row: "Internals" },
+  { title: "Cache hit ratio", row: "Internals" },
 ] as const
 
 const BUILT_ROWS = new Set(BUILT_PANELS.map(({ row }) => row)).size

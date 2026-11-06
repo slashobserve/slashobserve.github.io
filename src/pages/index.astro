@@ -3,7 +3,7 @@ import FactStrip from "../components/home/FactStrip.astro"
 import HomeHero from "../components/home/HomeHero.astro"
 import BuildPlayback from "../components/product/BuildPlayback.astro"
 import CheckoutPanels from "../components/product/CheckoutPanels.astro"
-import DashboardsImported from "../components/product/DashboardsImported.astro"
+import RepairQueue from "../components/product/RepairQueue.astro"
 import LogsTail from "../components/product/LogsTail.astro"
 import TraceSummary from "../components/product/TraceSummary.astro"
 import RunsOnBand from "../components/site/RunsOnBand.astro"
@@ -34,7 +34,7 @@ const links = await getDocLinks()
         </p>
         <a href={GRAFANA_PATH} class="arrow-link">Coming from Grafana →</a>
       </div>
-      <DashboardsImported slot="end" />
+      <RepairQueue slot="end" />
     </Split>
   </Section>
   <Section>

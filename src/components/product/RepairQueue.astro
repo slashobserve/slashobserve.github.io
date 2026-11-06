@@ -1,38 +1,73 @@
 ---
 import SameLink from "./SameLink.astro"
 import Window from "./Window.astro"
+
+type Tone = "running" | "ok" | "critical"
+
+const TONE_CLASS: Record<Tone, string> = {
+  running: "tone-running",
+  ok: "tone-ok",
+  critical: "tone-crit",
+}
+
+interface QueuedDashboard {
+  name: string
+  folder: string
+  unverified: string
+  repair: { label: string; tone: Tone } | null
+}
+
+const rows: QueuedDashboard[] = [
+  {
+    name: "Kubernetes / Pods",
+    folder: "Platform / Kubernetes",
+    unverified: "3 panels",
+    repair: { label: "Repairing", tone: "running" },
+  },
+  {
+    name: "Node exporter full",
+    folder: "Infra",
+    unverified: "5 panels, 1 variable",
+    repair: { label: "Repair queued", tone: "running" },
+  },
+  {
+    name: "Payments latency",
+    folder: "Platform / Shop",
+    unverified: "1 panel",
+    repair: { label: "Repaired, still failing", tone: "ok" },
+  },
+  { name: "Loki / Ingest", folder: "Observability", unverified: "2 panels", repair: { label: "Repair failed", tone: "critical" } },
+  { name: "Checkout service", folder: "Platform / Shop", unverified: "1 panel", repair: null },
+]
 ---
 
 <Window url="observe.example.com/import/repair">
+  <span slot="bar-end" class="hint queue-title">Repair queue</span>
   <div class="scroll">
     <table class="tbl">
       <thead>
-        <tr>
-          <th>Dashboard</th>
-          <th>Unverified</th>
-          <th>Why</th>
-          <th><span class="sr-only">Status</span></th>
-        </tr>
+        <tr><th>Dashboard</th><th>Folder</th><th>Unverified</th><th>Repair</th></tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Kubernetes / Pods</td>
-          <td class="fg-warn">3 of 24</td>
-          <td class="k">metric renamed</td>
-          <td><span class="chip"><span class="dot tone-s1"></span>repairing 2 of 3</span></td>
-        </tr>
-        <tr>
-          <td>Node exporter full</td>
-          <td class="fg-warn">5 of 41</td>
-          <td class="k">label <span class="mono">nodename</span> missing</td>
-          <td><span class="btn btn-sm repair">Repair</span></td>
-        </tr>
-        <tr>
-          <td>Payments latency</td>
-          <td class="fg-ok">0 of 9</td>
-          <td class="k">repaired · version 2</td>
-          <td class="hint">view diff</td>
-        </tr>
+        {
+          rows.map(({ name, folder, unverified, repair }) => (
+            <tr>
+              <td>{name}</td>
+              <td class="k">{folder}</td>
+              <td>{unverified}</td>
+              <td class="state">
+                {repair ? (
+                  <span class="row">
+                    <span class:list={["dot", TONE_CLASS[repair.tone]]} />
+                    {repair.label}
+                  </span>
+                ) : (
+                  <span class="k">Not requested</span>
+                )}
+              </td>
+            </tr>
+          ))
+        }
       </tbody>
     </table>
   </div>
@@ -40,8 +75,15 @@ import Window from "./Window.astro"
 </Window>
 
 <style>
-  .repair {
-    min-height: 26px;
+  .queue-title {
     font-size: 12px;
+  }
+
+  .state {
+    white-space: nowrap;
+  }
+
+  .tone-running {
+    --tone: var(--fg);
   }
 </style>

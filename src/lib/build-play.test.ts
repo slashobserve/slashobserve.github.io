@@ -37,7 +37,7 @@ describe("railLines", () => {
       "Saved panel 9 of 12: Queue depth (row Internals)",
       "Saved panel 10 of 12: Payment success (row Internals)",
       "Saved panel 11 of 12: Reservations/s (row Internals)",
-      "Saved panel 12 of 12: GC pause p99 (row Internals)",
+      "Saved panel 12 of 12: Cache hit ratio (row Internals)",
       "Saved version 1 (3 rows, 12 panels)",
     ])
     expect(lines.every((line) => line.tone === "done")).toBe(true)
