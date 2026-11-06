@@ -1,13 +1,14 @@
 export const PLACES = [
-  "your laptop",
   "AWS",
-  "a Raspberry Pi",
   "GCP",
-  "Kubernetes",
   "Azure",
   "Hetzner",
   "DigitalOcean",
   "Fly.io",
+  "Linode",
+  "Vultr",
+  "OVHcloud",
+  "Scaleway",
 ] as const
 
 export const CYCLE_MS = 1800

@@ -3,14 +3,14 @@ import { placeAt, spinClass } from "./runs-on"
 
 describe("placeAt", () => {
   test("walks the places and wraps", () => {
-    expect(placeAt(0)).toBe("your laptop")
-    expect(placeAt(2)).toBe("a Raspberry Pi")
-    expect(placeAt(8)).toBe("Fly.io")
-    expect(placeAt(9)).toBe("your laptop")
+    expect(placeAt(0)).toBe("AWS")
+    expect(placeAt(5)).toBe("Fly.io")
+    expect(placeAt(9)).toBe("Scaleway")
+    expect(placeAt(10)).toBe("AWS")
   })
 
   test("never indexes below the first place", () => {
-    expect(placeAt(-1)).toBe("Fly.io")
+    expect(placeAt(-1)).toBe("Scaleway")
   })
 })
 
