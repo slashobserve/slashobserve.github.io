@@ -4,7 +4,7 @@ import CopyCommand from "./CopyCommand.astro"
 ---
 
 <section class="wrap hero">
-  <h1 class="h1 h1-72">Observability workspace<br />for humans and agents.</h1>
+  <h1 class="h1 h1-72"><span class="h1-top">Observability workspace</span><span class="h1-sub">for humans and agents.</span></h1>
   <p class="lead lead-20">
     Ask for a dashboard in a sentence and get one that works, on the Prometheus, ClickHouse, Loki and Tempo you already
     run. Every query runs before it is saved. The dashboards you built in Grafana come along.
@@ -26,6 +26,20 @@ import CopyCommand from "./CopyCommand.astro"
 
   .h1 {
     max-width: 24ch;
+  }
+
+  .h1-top {
+    display: block;
+    font-weight: 700;
+  }
+
+  .h1-sub {
+    display: block;
+    margin-top: 0.18em;
+    font-size: 0.56em;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--mfg);
   }
 
   .lead {
