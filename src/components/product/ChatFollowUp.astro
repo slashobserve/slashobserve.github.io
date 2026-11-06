@@ -1,54 +1,276 @@
 ---
+import Sparklines from "./Sparklines.astro"
 import Window from "./Window.astro"
+import { DASHBOARD_TITLE, HOST } from "./screen-ids"
 
-const steps = [
-  "Saved panel 13: Errors by route (row Traffic)",
-  "Moved 1 panel in the build (13 in all)",
-  "Saved version 7 (3 rows, 13 panels)",
+const CHAT_ID = "3b9d01c2-6a4e-4f0b-8d21-9e7c5a1f4b60"
+
+const phases = [
+  { label: "Discovering", tools: "list_metrics", messages: ["Listed 3 metrics on prom"] },
+  { label: "Checking queries", tools: "lint_query", messages: ["Checked a query on prom: 0 errors"] },
+  { label: "Running queries", tools: "query_range", messages: ["Ran a query on prom: 4 series"] },
+  {
+    label: "Saving",
+    tools: "update_panels 3",
+    messages: [
+      "Saved panel 13: Errors by route (row Traffic)",
+      "Moved 1 panel in the build (13 in all)",
+      "Saved version 7 (3 rows, 13 panels)",
+    ],
+  },
+]
+
+const STEP_COUNT = phases.reduce((total, { messages }) => total + messages.length, 0)
+
+const thumbnails = [
+  { title: "p95 latency by route", d: "M0 22 C20 20 30 12 50 14 S80 24 100 18 S130 8 150 12" },
+  { title: "Errors by route", d: "M0 26 C20 25 30 18 50 22 S80 10 100 16 S130 22 150 20" },
 ]
 ---
 
-<Window url="/d/4f1c/checkout-health">
-  <span slot="bar-end">version 7</span>
+<Window url={`${HOST}/c/${CHAT_ID}`} label="A follow-up in the chat">
   <div class="chat-body">
-    <div class="bubble ask">Add errors by route and pin the p95 panel on top.</div>
-    {
-      steps.map((step) => (
-        <div class="act">
-          <span class="dot tone-ok" />
-          {step}
+    <div class="bubble">Add errors by route and pin the p95 panel on top.</div>
+    <div class="turn">
+      <span class="tile" aria-hidden="true">/</span>
+      <div class="turn-body">
+        <span class="k summary"><span aria-hidden="true">▾</span> Ran {STEP_COUNT} steps in 14s</span>
+        <ol class="phases">
+          {
+            phases.map(({ label, tools, messages }) => (
+              <li>
+                <span class="fg-ok" aria-hidden="true">✓</span>
+                <span class="phase">
+                  <span class="phase-line">
+                    <span>{label}</span>
+                    <span class="k">{tools}</span>
+                    {messages.length === 1 && <span class="k">{messages[0]}</span>}
+                  </span>
+                  {messages.length > 1 && messages.map((message) => <span class="k">{message}</span>)}
+                </span>
+              </li>
+            ))
+          }
+        </ol>
+        <div class="result">
+          <div class="thumbs">
+            {
+              thumbnails.map(({ title, d }) => (
+                <div class="thumb">
+                  <span class="thumb-title">{title}</span>
+                  <Sparklines viewBox="0 0 150 30" height="18px" series={[{ d, tone: "s1" }]} />
+                </div>
+              ))
+            }
+          </div>
+          <div class="row result-head">
+            <span class="result-text">
+              <span class="label">{DASHBOARD_TITLE}</span>
+              <span class="k">13 panels from prom</span>
+            </span>
+            <span class="btn btn-primary btn-sm">Open dashboard</span>
+          </div>
+          <span class="row k saved"><span class="fg-ok" aria-hidden="true">✓</span>Saved as version 7, just now</span>
         </div>
-      ))
-    }
-    <div class="bubble reply">
-      Done. Errors by route reads from http_requests_total with status=~"5..", and p95 is now the first panel. Version 6
-      is one click away if you want it back.
+        <span class="k request">Request {CHAT_ID.slice(0, 8)}</span>
+      </div>
     </div>
+    <div class="composer">
+      <span class="chip context">{DASHBOARD_TITLE}</span>
+      <span class="k">Ask for another change to {DASHBOARD_TITLE}</span>
+      <span class="row composer-foot">
+        <span class="row sources">
+          {["ch", "loki", "prom", "tempo"].map((uid) => <span class="row"><span class="dot tone-ok" />{uid}</span>)}
+        </span>
+        <span class="send" aria-hidden="true">↑</span>
+      </span>
+    </div>
+    <span class="k footnote">Each change is saved as a new version of the dashboard.</span>
   </div>
 </Window>
 
 <style>
   .chat-body {
-    padding: 14px;
+    padding: 12px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    font-size: 12.5px;
-    min-height: 200px;
+    font-size: 11.5px;
+    line-height: 1.4;
   }
 
   .bubble {
+    align-self: flex-end;
     max-width: 85%;
     border: 1px solid var(--border);
     border-radius: 10px;
-    padding: 8px 10px;
+    padding: 6px 10px;
+    font-size: 12px;
   }
 
-  .ask {
-    align-self: flex-end;
+  .turn {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr);
+    gap: 8px;
   }
 
-  .reply {
-    color: var(--mfg);
+  .tile {
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    background: var(--primary);
+    color: var(--pfg);
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .turn-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .summary {
+    line-height: 20px;
+  }
+
+  .phases {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .phases li {
+    display: grid;
+    grid-template-columns: 12px minmax(0, 1fr);
+    gap: 5px;
+  }
+
+  .phase {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .phase-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 6px;
+  }
+
+  .result {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .thumbs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .thumb {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 4px 5px;
+    min-width: 0;
+  }
+
+  .thumb-title {
+    font-size: 9.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .result-head {
+    justify-content: space-between;
+    gap: 8px;
+    padding: 7px 9px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .result-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .result-head .btn {
+    min-height: 24px;
+    padding: 0 8px;
+    font-size: 11px;
+    flex: none;
+  }
+
+  .saved {
+    gap: 5px;
+    padding: 5px 9px;
+    font-size: 11px;
+  }
+
+  .request {
+    font-size: 11px;
+  }
+
+  .composer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 9px;
+  }
+
+  .context {
+    font-size: 10.5px;
+  }
+
+  .composer-foot {
+    align-self: stretch;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .sources {
+    flex-wrap: wrap;
+    gap: 3px 10px;
+    font-size: 10.5px;
+  }
+
+  .sources .row {
+    gap: 4px;
+  }
+
+  .send {
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    background: var(--primary);
+    color: var(--pfg);
+    font-size: 11px;
+  }
+
+  .footnote {
+    align-self: center;
+    font-size: 10.5px;
+    text-align: center;
   }
 </style>
