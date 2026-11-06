@@ -64,9 +64,12 @@ const rows: { feature: string; status: Status; note: NotePart[] }[] = [
     note: ["Their panels import unverified and wait for a datasource mapping. Nothing is lost."],
   },
   {
-    feature: "Plugin panels (geomap, node graph, third-party)",
-    status: "Waits",
-    note: ["Imported as a placeholder panel with the original JSON kept, so the layout survives."],
+    feature: "Third-party plugin panels",
+    status: "Changes",
+    note: [
+      "Worldmap, singlestat, the pie chart plugin and the discrete panel become native geomap, stat or gauge, pie chart and state timeline panels.",
+      "Any other plugin imports as a placeholder with its JSON kept, so the layout survives.",
+    ],
   },
 ]
 ---
