@@ -335,26 +335,6 @@ export default function BuildStage() {
         )}
       </div>
       <div className="stage-body">
-        <div className="stage-rail">
-          <div ref={conversation} className="stage-conversation">
-            <div className="stage-bubble">{PROMPT}</div>
-            <div className="stage-turn">
-              <span className="stage-tile" aria-hidden="true">
-                /
-              </span>
-              {playing ? <Running step={step} /> : <Finished />}
-            </div>
-          </div>
-          <div className="stage-composer">
-            <div className="stage-composer-box">
-              <span className="k">{composer.placeholder}</span>
-              <span className="stage-send" aria-hidden="true">
-                ↑
-              </span>
-            </div>
-            <span className="k stage-note">{composer.note}</span>
-          </div>
-        </div>
         <div className="stage-main">
           <div className="stage-top">
             <span className="stage-mark" aria-hidden="true">
@@ -390,6 +370,26 @@ export default function BuildStage() {
               </section>
             )
           })}
+        </div>
+        <div className="stage-rail">
+          <div ref={conversation} className="stage-conversation">
+            <div className="stage-bubble">{PROMPT}</div>
+            <div className="stage-turn">
+              <span className="stage-tile" aria-hidden="true">
+                /
+              </span>
+              {playing ? <Running step={step} /> : <Finished />}
+            </div>
+          </div>
+          <div className="stage-composer">
+            <div className="stage-composer-box">
+              <span className="k">{composer.placeholder}</span>
+              <span className="stage-send" aria-hidden="true">
+                ↑
+              </span>
+            </div>
+            <span className="k stage-note">{composer.note}</span>
+          </div>
         </div>
       </div>
       <p className="sr-only" aria-live="polite">
