@@ -22,7 +22,7 @@ Docs content is written in the core repo `slashobserve/slashobserve` under `docs
 - `src/components/site/`: shared header, footer, wordmark, theme toggle, page opening, section, section head, split, band, the "Runs on" band, the surfaces section and the docs search, plus the theme script, the GitHub icon and the site commit line the docs footer shares.
 - `src/components/home/`: home page sections.
 - `src/components/grafana/`, `src/components/signals/` and `src/components/docs-landing/`: those pages' sections.
-- `src/components/product/`: the drawn product screens, one component per window, named for what it shows (screenshots of the seeded demo replace them later), plus the `Window`, `Panel`, `Bars`, `Sparklines` and `SameLink` pieces; `BuildPlayback.astro` mounts the `BuildStage.tsx` island, styled by `build-stage.css`.
+- `src/components/product/`: the drawn product screens, one component per window, named for what it shows (screenshots of the seeded demo replace them later), plus the `Window`, `Panel`, `TimeSeries`, `Bars`, `Sparklines` and `SameLink` pieces, the shared `screen-ids.ts` and `trace.ts` data; `BuildPlayback.astro` mounts the `BuildStage.tsx` island, styled by `build-stage.css`.
 - `src/components/docs/` and `src/components/ui/`: the docs shell, sidebar, TOC, search and pager.
 - `src/layouts/`: page layouts.
 - `src/lib/`: pure helpers.
