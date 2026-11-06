@@ -53,7 +53,7 @@ function PanelHead({ title }: { title: string }) {
   )
 }
 
-function Stat({ title, value, unit }: { title: string; value: string; unit?: string }) {
+function Stat({ title, value, unit, ok = false }: { title: string; value: string; unit?: string; ok?: boolean }) {
   return (
     <>
       <PanelHead title={title} />
@@ -62,12 +62,14 @@ function Stat({ title, value, unit }: { title: string; value: string; unit?: str
           {value}
           {unit && <span className="stage-stat-unit">{unit}</span>}
         </span>
-        <span className="k stage-stat-ok">
-          <span className="fg-ok" aria-hidden="true">
-            ✓
-          </span>{" "}
-          OK
-        </span>
+        {ok && (
+          <span className="k stage-stat-ok">
+            <span className="fg-ok" aria-hidden="true">
+              ✓
+            </span>{" "}
+            OK
+          </span>
+        )}
       </div>
     </>
   )
@@ -113,7 +115,7 @@ const ROWS: { title: string; panels: { size: Size; body: ReactNode }[] }[] = [
     title: "Overview",
     panels: [
       { size: "quarter", body: <Stat title="Requests/s" value="1.9k" unit="req/s" /> },
-      { size: "quarter", body: <Stat title="Error ratio" value="0.4" unit="%" /> },
+      { size: "quarter", body: <Stat title="Error ratio" value="0.4" unit="%" ok /> },
       { size: "quarter", body: <Stat title="p95 latency" value="212" unit="ms" /> },
       { size: "quarter", body: <Stat title="Pods ready" value="3" /> },
     ],
@@ -168,7 +170,7 @@ const ROWS: { title: string; panels: { size: Size; body: ReactNode }[] }[] = [
         ),
       },
       { size: "third", body: <Stat title="Queue depth" value="18" /> },
-      { size: "third", body: <Stat title="Payment success" value="99.1" unit="%" /> },
+      { size: "third", body: <Stat title="Payment success" value="99.1" unit="%" ok /> },
       { size: "third", body: <Stat title="Reservations/s" value="64" unit="req/s" /> },
       { size: "third", body: <Stat title="Cache hit ratio" value="94" unit="%" /> },
     ],
