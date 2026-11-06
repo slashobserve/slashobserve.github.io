@@ -70,7 +70,7 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 - Never use gradient-filled text or buttons, backdrop blur, numbered section labels, emoji, stock illustrations or coloured left-border callouts.
 - Docs stay calm: flat background, 1px borders.
 - Tailwind utilities appear only in the docs components.
-- The Website design canvas at `../docs/site/canvas/` is the layout spec and the copy for the marketing pages and the /docs/ landing: `gen/head.html` (tokens and classes), `gen/build.py` (header, footer, page frame, the build playback), `gen/*.body.html` (pages) and the phone boards and screenshots (390px). Docs content pages keep their own design.
+- The Website design canvas at `../docs/site/canvas/` is the layout spec for the marketing pages and the /docs/ landing; the copy in this repo is the source of truth for wording, because every product claim was checked against the core code and the canvas still carries the earlier wording: `gen/head.html` (tokens and classes), `gen/build.py` (header, footer, page frame, the build playback), `gen/*.body.html` (pages) and the phone boards and screenshots (390px). Docs content pages keep their own design.
 - Shared marketing styles live in `src/styles/marketing.css` (the canvas classes, phone rules at 900px); `site/PageOpening.astro` opens a page, `site/Section.astro`, `SectionHead.astro` and `Split.astro` lay out sections, `site/Band.astro` is the inverted band, and `product/Window.astro` frames every drawn screen.
 - Phones: no horizontal page scroll at 390px; tables sit in `.scroll` wrappers; terminal and code blocks scroll inside themselves.
 - The docs follow their own design in the site's brand, not the canvas.
@@ -93,3 +93,8 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 
 - Atomic commits.
 - Messages describe the change, with no plan or milestone numbers and no co-author trailers.
+
+## Product claims
+
+- Every sentence that says what the product does cites a core file that makes it true: CLI verbs and flags from `internal/cli`, agent step strings from `internal/agent/tools`, importer rules from `pkg/grafana`, labels in drawn screens from the real web strings.
+- The site describes the next release: a claim true on the core branch but not in the pinned tag is allowed; a claim true nowhere in core is not, however the canvas words it.
