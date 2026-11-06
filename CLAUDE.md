@@ -19,7 +19,7 @@ Docs content is written in the core repo `slashobserve/slashobserve` under `docs
 ## Layout
 
 - `src/pages/`: home, /build, /grafana, /signals, 404, the /docs/ landing page (/features redirects to /build/ through `redirects` in `astro.config.ts`), `llms.txt`, `llms-full.txt` and `robots.txt`, `og/[card].png.ts` for marketing social cards and `og/docs/[...slug].png.ts` for one card per docs page.
-- `src/components/site/`: shared header, footer, wordmark, theme toggle, page opening, section, section head, split, band, the "Runs on" band, the surfaces section and the docs search, plus the theme script, the GitHub icon and the site version line the docs footer shares.
+- `src/components/site/`: shared header, footer, wordmark, theme toggle, page opening, section, section head, split, band, the "Runs on" band, the surfaces section and the docs search, plus the theme script, the GitHub icon and the site commit line the docs footer shares.
 - `src/components/home/`: home page sections.
 - `src/components/grafana/`, `src/components/signals/` and `src/components/docs-landing/`: those pages' sections.
 - `src/components/product/`: the drawn product screens, one component per window, named for what it shows (screenshots of the seeded demo replace them later), plus the `Window`, `Panel`, `Bars`, `Sparklines` and `SameLink` pieces; `BuildPlayback.astro` mounts the `BuildStage.tsx` island, styled by `build-stage.css`.
@@ -48,7 +48,7 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 - Numbers about the product come from generated data or the synced schema, never typed by hand.
 - Importer numbers on /grafana come from `src/generated/import-corpus.json`, which the prebuild builds from the core goldens in `pkg/grafana/testdata/golden`, and from `src/generated/import-coverage.json`, which it builds from the core option catalogs and gap files in `pkg/grafana/testdata/conformance`.
 - The canvas's `[N]` placeholders come from generators (`src/generated/`, the synced schema); a placeholder no generator fills is left out of the page, while numbers drawn inside a product screen are part of the drawing.
-- The footer's site version is the site repo's commit count and short SHA, read from git by the prebuild into `src/generated/site.json`; when git cannot be read the line is omitted.
+- The footer shows only the site repo's short commit SHA, unlinked and without a label, read from git by the prebuild into `src/generated/site.json`; when git cannot be read the line is omitted.
 - The prebuild writes `public/install.sh` (git-ignored) from the core checkout's `install.sh`, else from core `main` on GitHub, and fails the build when neither gives a `#!/bin/sh` script; so the install command `curl -fsSL https://slashobserve.com/install.sh | sh` always works and pages show it unconditionally.
 - The only domain is slashobserve.com; the site never names the GitHub Pages host. No live demo link anywhere; the demo is `make demo`.
 - Grafana appears only as the name of their product: no logo, no orange, not in our product name, paths or page titles beyond "Coming from Grafana"; never "replace Grafana". The footer carries the trademark line on every page, docs included.
@@ -85,7 +85,7 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 
 ## Testing and gates
 
-- Unit tests with `bun test` for pure logic only: path mapping, link rewriting and front matter checks, docs dates, link checking, sidebar ordering and prev/next, generated reference pages, link resolution, table scroll, code figure, PromQL highlighting, inline code, disclosure, agent text, the build playback and the "Runs on" cycle, the import stats and percentages, the site version and install command, nav, theme choice, token contrast, docs landing links and the social card registry and docs card mapping.
+- Unit tests with `bun test` for pure logic only: path mapping, link rewriting and front matter checks, docs dates, link checking, sidebar ordering and prev/next, generated reference pages, link resolution, table scroll, code figure, PromQL highlighting, inline code, disclosure, agent text, the build playback and the "Runs on" cycle, the import stats and percentages, the site commit and install command, nav, theme choice, token contrast, docs landing links and the social card registry and docs card mapping.
 - No e2e or visual tests.
 - Before calling work done, run `bun run build`, `bun run check`, `bun run check:links` and `bun run test`.
 

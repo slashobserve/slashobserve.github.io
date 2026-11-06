@@ -8,8 +8,8 @@ export const SITE_FACTS_PATH = "src/generated/site.json"
 
 export const INSTALL_COMMAND = "curl -fsSL https://slashobserve.com/install.sh | sh"
 
-export function versionLine(facts: SiteFacts): string | null {
-  return facts.version === null ? null : `site version ${facts.version.count} · ${facts.version.sha}`
+export function commitLine(facts: SiteFacts): string | null {
+  return facts.version === null ? null : facts.version.sha
 }
 
 export function readSiteFacts(): SiteFacts {

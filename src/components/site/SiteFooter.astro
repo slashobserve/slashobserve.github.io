@@ -1,7 +1,7 @@
 ---
 import type { DocLinks } from "../../lib/doc-links"
 import { footerColumns } from "../../lib/site-nav"
-import SiteVersion from "./SiteVersion.astro"
+import SiteCommit from "./SiteCommit.astro"
 import Wordmark from "./Wordmark.astro"
 
 interface Props {
@@ -20,7 +20,7 @@ const { links } = Astro.props
         Grafana is a trademark of Grafana Labs. SlashObserve is not affiliated with or endorsed by Grafana Labs.
       </span>
       <span>No analytics, no cookies.</span>
-      <SiteVersion />
+      <SiteCommit />
     </div>
     <nav aria-label="Footer" class="columns">
       {

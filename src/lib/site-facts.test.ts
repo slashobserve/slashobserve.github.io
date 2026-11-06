@@ -1,12 +1,12 @@
 import { describe, expect, test } from "bun:test"
-import { versionLine } from "./site-facts"
+import { commitLine } from "./site-facts"
 
-describe("versionLine", () => {
+describe("commitLine", () => {
   test("shows the commit count and short sha", () => {
-    expect(versionLine({ version: { count: 103, sha: "15064fb" } })).toBe("site version 103 · 15064fb")
+    expect(commitLine({ version: { sha: "15064fb" } })).toBe("15064fb")
   })
 
-  test("is null when the version is unknown", () => {
-    expect(versionLine({ version: null })).toBeNull()
+  test("is null when the commit is unknown", () => {
+    expect(commitLine({ version: null })).toBeNull()
   })
 })

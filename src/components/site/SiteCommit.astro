@@ -1,0 +1,15 @@
+---
+import { readSiteFacts, commitLine } from "../../lib/site-facts"
+
+const line = commitLine(readSiteFacts())
+---
+
+{line && <span class="mono site-commit">{line}</span>}
+
+<style>
+  .site-commit {
+    display: block;
+    padding-top: 6px;
+    font-family: var(--font-mono);
+  }
+</style>

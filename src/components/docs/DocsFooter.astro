@@ -1,5 +1,5 @@
 ---
-import SiteVersion from "@/components/site/SiteVersion.astro"
+import SiteCommit from "@/components/site/SiteCommit.astro"
 import Wordmark from "@/components/site/Wordmark.astro"
 import { getDocLinks } from "@/lib/get-doc-links"
 import { footerColumns } from "@/lib/site-nav"
@@ -20,7 +20,7 @@ const project = footerColumns(links).find((column) => column.title === "Project"
         {project.items.map((item) => (
           <a href={item.href}>{item.label}</a>
         ))}
-        <SiteVersion />
+        <SiteCommit />
       </nav>
     )
   }

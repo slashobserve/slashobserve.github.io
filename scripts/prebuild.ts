@@ -157,7 +157,6 @@ function gitOutput(args: string[]): string | null {
 
 function readSiteVersion(): SiteVersion | null {
   return siteVersion({
-    count: gitOutput(["rev-list", "--count", "HEAD"]),
     sha: gitOutput(["rev-parse", "--short", "HEAD"]),
     shallow: gitOutput(["rev-parse", "--is-shallow-repository"]),
     githubSha: process.env.GITHUB_SHA,
@@ -279,7 +278,7 @@ async function prebuild(): Promise<string> {
   await mkdir(path.dirname(INSTALL_SCRIPT_OUT), { recursive: true })
   await writeFile(INSTALL_SCRIPT_OUT, installScript.text)
 
-  return `Prebuild: ${plural(pages.length, "page")} (${plural(dated, "dated page")}), ${plural(assets.length, "asset")}, ${plural(reference.length, "ObserveSpec reference page")}, ${plural(api.length, "HTTP API reference page")}, the ObserveSpec schema, ${plural(corpus.length, "corpus file")} and ${plural(conformance.areas.length, "conformance area")} from ${core} (${commit}), install.sh from ${installScript.source}, site version ${version ? `${version.count} · ${version.sha}` : "unknown"}`
+  return `Prebuild: ${plural(pages.length, "page")} (${plural(dated, "dated page")}), ${plural(assets.length, "asset")}, ${plural(reference.length, "ObserveSpec reference page")}, ${plural(api.length, "HTTP API reference page")}, the ObserveSpec schema, ${plural(corpus.length, "corpus file")} and ${plural(conformance.areas.length, "conformance area")} from ${core} (${commit}), install.sh from ${installScript.source}, site commit ${version ? version.sha : "unknown"}`
 }
 
 try {
