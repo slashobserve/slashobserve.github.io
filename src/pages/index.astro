@@ -13,7 +13,7 @@ import Split from "../components/site/Split.astro"
 import SurfacesSection from "../components/site/SurfacesSection.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
 import { getDocLinks } from "../lib/get-doc-links"
-import { GRAFANA_PATH, SIGNALS_PATH } from "../lib/site-nav"
+import { MIGRATE_PATH, SIGNALS_PATH } from "../lib/site-nav"
 
 const links = await getDocLinks()
 ---
@@ -32,7 +32,7 @@ const links = await getDocLinks()
           Their folders, variables and links come too. Panels the importer cannot match go to the repair queue, a
           failing query can get a fix from the agent, and every old link keeps resolving.
         </p>
-        <a href={GRAFANA_PATH} class="arrow-link">Coming from Grafana →</a>
+        <a href={MIGRATE_PATH} class="arrow-link">Migrate →</a>
       </div>
       <RepairQueue slot="end" />
     </Split>

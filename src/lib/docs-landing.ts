@@ -18,11 +18,13 @@ export const TOPIC_GROUPS: readonly GroupSpec[] = [
     ],
   },
   {
-    title: "Coming from Grafana",
+    title: "Migrate",
     links: [
       { label: "Connect a Grafana", candidates: ["docs/use/switch-from-grafana"] },
       { label: "Import and re-import", candidates: ["docs/use/switch-from-grafana#import"] },
       { label: "Provisioning from files", candidates: ["docs/operate/provisioning"] },
+      { label: "Connect Elasticsearch", candidates: ["docs/connect/elasticsearch"] },
+      { label: "Connect OpenSearch", candidates: ["docs/connect/opensearch"] },
     ],
   },
   {
@@ -31,6 +33,10 @@ export const TOPIC_GROUPS: readonly GroupSpec[] = [
       { label: "Prometheus", candidates: ["docs/connect/prometheus"] },
       { label: "ClickHouse", candidates: ["docs/connect/clickhouse"] },
       { label: "Loki and the logs page", candidates: ["docs/connect/loki", "docs/use/logs-and-traces"] },
+      {
+        label: "Elasticsearch and OpenSearch",
+        candidates: ["docs/connect/elasticsearch", "docs/connect/opensearch", "docs/use/logs-and-traces"],
+      },
       { label: "Tempo and the trace view", candidates: ["docs/connect/tempo", "docs/use/logs-and-traces"] },
       { label: "Annotations", candidates: ["docs/use/annotations"] },
     ],

@@ -1,0 +1,97 @@
+---
+import Window from "../product/Window.astro"
+import Section from "../site/Section.astro"
+import SectionHead from "../site/SectionHead.astro"
+import type { DocLinks } from "../../lib/doc-links"
+
+interface Props {
+  links: DocLinks
+}
+
+const { links } = Astro.props
+
+const QUERY_FORMS = [
+  "service.name:checkout and log.level:error",
+  "lucene:service.name:checkout AND NOT log.level:info",
+  '{"query": {"match_phrase": {"message": "timeout"}}}',
+]
+---
+
+<Section>
+  <SectionHead
+    title="From Kibana or OpenSearch Dashboards: same clusters, same queries."
+    lead="Nothing moves. SlashObserve reads the index patterns you already have, in the language you already type."
+    space={32}
+  />
+  <div class="cols2 kibana">
+    <div class="kibana-copy">
+      <div>
+        <h3 class="h3">Connect the same clusters and indices</h3>
+        <p class="p">
+          An Elasticsearch or OpenSearch datasource is one index pattern, the data view you had in Discover: a pattern
+          such as logs-*, a data stream or an alias, with its time field. Basic auth, a bearer token or an API key.
+          Elasticsearch 8 and 9, OpenSearch 2 and 3; the health check names the flavour and version it found.
+        </p>
+      </div>
+      <div>
+        <h3 class="h3">KQL carries over</h3>
+        <p class="p">
+          Type the KQL you typed in Discover: service.name:checkout and log.level:error, a quoted phrase, a range, a
+          wildcard, or and not with parentheses. The server compiles it to Query DSL. It is a strict subset of Kibana's KQL, so a
+          query Kibana accepts may be refused: nested field queries are, with a message, and a mistake is marked at the character. Ask in
+          plain language instead and the agent drafts the KQL for you.
+        </p>
+      </div>
+      <div>
+        <h3 class="h3">Lucene and Query DSL when you want them</h3>
+        <p class="p">
+          Start a query with lucene: for Lucene syntax, or paste a {"{...}"} body for the Query DSL, aggregations included.
+          A datasource can make Lucene its default instead of KQL. Lint checks all three before anything runs.
+        </p>
+      </div>
+      <p class="hint">
+        Saved objects are not imported. Dashboards, saved searches and visualizations from Kibana or OpenSearch
+        Dashboards stay where they are; describe the dashboard you want and the agent builds it against the same index.
+      </p>
+    </div>
+    <div class="kibana-side">
+      <Window label="The three query forms on an Elasticsearch or OpenSearch datasource">
+        <div class="term">{QUERY_FORMS.map((line) => <span class="tl">{line}</span>)}</div>
+      </Window>
+      {links.elasticsearch && <a class="arrow-link" href={links.elasticsearch}>Connect Elasticsearch →</a>}
+      {links.opensearch && <a class="arrow-link" href={links.opensearch}>Connect OpenSearch →</a>}
+    </div>
+  </div>
+</Section>
+
+<style>
+  .kibana {
+    align-items: start;
+  }
+
+  .kibana-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .kibana-copy .p {
+    margin-top: 6px;
+  }
+
+  .kibana-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    min-width: 0;
+  }
+
+  .kibana-side :global(.win) {
+    align-self: stretch;
+  }
+
+  .arrow-link {
+    text-decoration: none;
+  }
+</style>

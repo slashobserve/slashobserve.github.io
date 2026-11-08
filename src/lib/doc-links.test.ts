@@ -30,7 +30,15 @@ describe("resolveDocLinks", () => {
       llm: "/docs/connect/llm-providers/",
       cli: "/docs/use/cli/",
       datasources: "/docs/connect/prometheus/",
+      elasticsearch: null,
+      opensearch: null,
     })
+  })
+
+  test("links the Elasticsearch and OpenSearch pages when core has them", () => {
+    const links = resolveDocLinks(new Set([...corePages, "docs/connect/elasticsearch", "docs/connect/opensearch"]))
+    expect(links.elasticsearch).toBe("/docs/connect/elasticsearch/")
+    expect(links.opensearch).toBe("/docs/connect/opensearch/")
   })
 
   test("returns null for a page that is not in core", () => {

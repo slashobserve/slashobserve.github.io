@@ -11,6 +11,8 @@ export type DocLinkKey =
   | "llm"
   | "cli"
   | "datasources"
+  | "elasticsearch"
+  | "opensearch"
 
 export type DocLinks = Record<DocLinkKey, string | null>
 
@@ -27,6 +29,8 @@ export const DOC_LINK_CANDIDATES: Record<DocLinkKey, readonly string[]> = {
   llm: ["docs/connect/llm-providers"],
   cli: ["docs/use/cli"],
   datasources: ["docs/connect/prometheus"],
+  elasticsearch: ["docs/connect/elasticsearch"],
+  opensearch: ["docs/connect/opensearch"],
 }
 
 export function resolveCandidate(candidate: string, existingIds: ReadonlySet<string>): string | null {

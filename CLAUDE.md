@@ -18,10 +18,10 @@ Docs content is written in the core repo `slashobserve/slashobserve` under `docs
 
 ## Layout
 
-- `src/pages/`: home, /build, /grafana, /signals, 404, the /docs/ landing page (/features redirects to /build/ through `redirects` in `astro.config.ts`), `llms.txt`, `llms-full.txt` and `robots.txt`, `og/[card].png.ts` for marketing social cards and `og/docs/[...slug].png.ts` for one card per docs page.
+- `src/pages/`: home, /build, /migrate, /signals, 404, the /docs/ landing page (/features redirects to /build/ and /grafana to /migrate/ through `redirects` in `astro.config.ts`), `llms.txt`, `llms-full.txt` and `robots.txt`, `og/[card].png.ts` for marketing social cards and `og/docs/[...slug].png.ts` for one card per docs page.
 - `src/components/site/`: shared header, footer, wordmark, theme toggle, page opening, section, section head, split, band, the "Runs on" band, the surfaces section and the docs search, plus the theme script, the GitHub icon and the site commit line the docs footer shares.
 - `src/components/home/`: home page sections.
-- `src/components/grafana/`, `src/components/signals/` and `src/components/docs-landing/`: those pages' sections.
+- `src/components/migrate/`, `src/components/signals/` and `src/components/docs-landing/`: those pages' sections.
 - `src/components/product/`: the drawn product screens, one component per window, named for what it shows (screenshots of the seeded demo replace them later), plus the `Window`, `Panel`, `TimeSeries`, `Bars`, `Sparklines` and `SameLink` pieces, the shared `screen-ids.ts` and `trace.ts` data; `BuildPlayback.astro` mounts the `BuildStage.tsx` island, styled by `build-stage.css`.
 - `src/components/docs/` and `src/components/ui/`: the docs shell, sidebar, TOC, search and pager.
 - `src/layouts/`: page layouts.
@@ -46,12 +46,12 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 
 - No milestone names anywhere on the site.
 - Numbers about the product come from generated data or the synced schema, never typed by hand.
-- Importer numbers on /grafana come from `src/generated/import-corpus.json`, which the prebuild builds from the core goldens in `pkg/grafana/testdata/golden`, and from `src/generated/import-coverage.json`, which it builds from the core option catalogs and gap files in `pkg/grafana/testdata/conformance`.
+- Importer numbers on /migrate come from `src/generated/import-corpus.json`, which the prebuild builds from the core goldens in `pkg/grafana/testdata/golden`, and from `src/generated/import-coverage.json`, which it builds from the core option catalogs and gap files in `pkg/grafana/testdata/conformance`.
 - The canvas's `[N]` placeholders come from generators (`src/generated/`, the synced schema); a placeholder no generator fills is left out of the page, while numbers drawn inside a product screen are part of the drawing.
 - The footer shows only the site repo's short commit SHA, unlinked and without a label, read from git by the prebuild into `src/generated/site.json`; when git cannot be read the line is omitted.
 - The prebuild writes `public/install.sh` (git-ignored) from the core checkout's `install.sh`, else from core `main` on GitHub, and fails the build when neither gives a `#!/bin/sh` script; so the install command `curl -fsSL https://slashobserve.com/install.sh | sh` always works and pages show it unconditionally.
 - The only domain is slashobserve.com; the site never names the GitHub Pages host. No live demo link anywhere; the demo is `make demo`.
-- Grafana appears only as the name of their product: no logo, no orange, not in our product name, paths or page titles beyond "Coming from Grafana"; never "replace Grafana". The footer carries the trademark line on every page, docs included.
+- Grafana, Kibana, Elastic, Elasticsearch, OpenSearch and OpenSearch Dashboards appear only as the names of their products: no logos, no brand colours, not in our product name or paths; the one page title that names them is /migrate's heading "Coming from Grafana, Kibana or OpenSearch Dashboards?"; never "replace Grafana", "replace Kibana" or any "replace <product>". Kibana saved objects are not imported and the site says so. The footer carries the trademark line (Grafana Labs, Elasticsearch B.V., LF Projects, LLC) on every page, docs included.
 - No analytics, cookies or third-party requests. Text uses the system SF Pro stack (SF Mono for code) with self-hosted Geist as the fallback off Apple devices; social cards render in Geist because SF Pro may not be embedded.
 - No pricing, enterprise or blog pages.
 
@@ -97,4 +97,4 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 ## Product claims
 
 - Every sentence that says what the product does cites a core file that makes it true: CLI verbs and flags from `internal/cli`, agent step strings from `internal/agent/tools`, importer rules from `pkg/grafana`, labels in drawn screens from the real web strings.
-- The site describes the next release: a claim true on the core branch but not in the pinned tag is allowed; a claim true nowhere in core is not, however the canvas words it.
+- The site describes the core release `core-ref.txt` pins: every product claim is true at that tag (read it with `git -C <core> show <ref>:<path>`); a feature that exists only on a core branch waits until the pin moves, however the canvas words it.

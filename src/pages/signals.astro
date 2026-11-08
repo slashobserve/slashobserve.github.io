@@ -11,17 +11,19 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
 
 <MarketingLayout
   title="Signals | SlashObserve"
-  description="Metrics, logs and traces from Prometheus, ClickHouse, Loki and Tempo in one place. Dashboards mix them and a log line opens its trace."
+  description="Metrics, logs and traces from Prometheus, ClickHouse, Loki, Elasticsearch, OpenSearch and Tempo in one place: PromQL, SQL, LogQL, KQL (with Lucene and the Query DSL) and TraceQL. Dashboards mix them and a log line opens its trace."
 >
-  <PageOpening title="Three signals, four stores, one place to look.">
+  <PageOpening title="Three signals, six stores, one place to look.">
     <p class="lead lead-20">
-      Prometheus or ClickHouse for metrics. Loki or ClickHouse for logs. Tempo or ClickHouse for traces. Dashboards
-      mix them, the agent queries all of them, and a log line with a trace id opens the trace.
+      Prometheus or ClickHouse for metrics. Loki, ClickHouse, Elasticsearch or OpenSearch for logs. Tempo or ClickHouse for
+      traces. Dashboards mix them, the agent queries all of them, and a log line with a trace id opens the trace.
     </p>
     <div class="row chips">
       <span class="chip">Prometheus</span>
       <span class="chip">ClickHouse</span>
       <span class="chip">Loki</span>
+      <span class="chip">Elasticsearch</span>
+      <span class="chip">OpenSearch</span>
       <span class="chip">Tempo</span>
     </div>
   </PageOpening>
@@ -43,10 +45,13 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
       <div slot="start" class="copy">
         <h2 class="h2">Try a query before you save it.</h2>
         <p class="lead lead-17">
-          The logs page takes LogQL on Loki or SQL on ClickHouse. "Show context" brings up the lines around a line, a
-          line with a trace id opens its trace, and "Add to dashboard" saves the query as a logs panel. Trace search
-          finds traces by service, span, duration or TraceQL. In the panel editor, the preview runs PromQL or SQL on
-          the real datasource before you save.
+          The logs page takes one store at a time in its own language: LogQL on Loki, SQL on ClickHouse, KQL on
+          Elasticsearch or OpenSearch, with Lucene or the Query DSL when you want them. "Show context", or "Surrounding documents" on
+          Elasticsearch and OpenSearch, brings up the lines around a line, a line with a trace id opens its trace, and "Add to dashboard" saves the query as a logs
+          panel. Trace search finds traces by service, span, duration or TraceQL. With a model on the server, both pages
+          also take a plain question: the logs page writes the query in the datasource's language, and the trace search
+          fills its fields or writes TraceQL. In the panel editor, the preview runs PromQL or SQL on the real datasource
+          before you save.
         </p>
       </div>
       <PanelEditorPreview slot="end" />

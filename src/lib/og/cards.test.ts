@@ -5,22 +5,22 @@ describe("cardFor", () => {
   test.each([
     ["/", "home"],
     ["/build/", "build"],
-    ["/grafana/", "grafana"],
-    ["/grafana", "grafana"],
+    ["/migrate/", "migrate"],
+    ["/migrate", "migrate"],
     ["/signals/", "signals"],
     ["/docs/", "docs"],
   ])("finds the card for %s", (pathname, id) => {
     expect(cardFor(pathname)?.id).toBe(id)
   })
 
-  test.each(["/features/", "/404.html", "/docs/self-hosting/", "/grafana/extra/"])("returns null for %s", (pathname) => {
+  test.each(["/features/", "/404.html", "/docs/self-hosting/", "/migrate/extra/"])("returns null for %s", (pathname) => {
     expect(cardFor(pathname)).toBeNull()
   })
 })
 
 describe("cardImagePath", () => {
   test("places the image under /og by card id", () => {
-    expect(cardImagePath({ id: "grafana", path: "/grafana/", section: "s", title: "t" })).toBe("/og/grafana.png")
+    expect(cardImagePath({ id: "migrate", path: "/migrate/", section: "s", title: "t" })).toBe("/og/migrate.png")
   })
 })
 

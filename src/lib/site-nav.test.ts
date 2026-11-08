@@ -6,23 +6,23 @@ const withoutReference = new Set(["docs/get-started/quick-start", "docs/get-star
 const withReference = new Set([...withoutReference, "docs/reference/configuration"])
 
 const build = { label: "Build", href: "/build/" }
-const grafana = { label: "Coming from Grafana", href: "/grafana/" }
+const migrate = { label: "Migrate", href: "/migrate/" }
 const signals = { label: "Signals", href: "/signals/" }
 const selfHost = { label: "Self-host", href: "/docs/get-started/install/" }
 
 describe("PRODUCT_LINKS", () => {
-  test("lists Build, Coming from Grafana and Signals", () => {
-    expect(PRODUCT_LINKS).toEqual([build, grafana, signals])
+  test("lists Build, Migrate and Signals", () => {
+    expect(PRODUCT_LINKS).toEqual([build, migrate, signals])
   })
 })
 
 describe("headerNav", () => {
   test("lists the product pages then Docs, without Self-host", () => {
-    expect(headerNav(resolveDocLinks(withReference))).toEqual([build, grafana, signals, { label: "Docs", href: "/docs/" }])
+    expect(headerNav(resolveDocLinks(withReference))).toEqual([build, migrate, signals, { label: "Docs", href: "/docs/" }])
   })
 
   test("keeps only the product pages when no docs exist", () => {
-    expect(headerNav(resolveDocLinks(new Set()))).toEqual([build, grafana, signals])
+    expect(headerNav(resolveDocLinks(new Set()))).toEqual([build, migrate, signals])
   })
 })
 
@@ -54,7 +54,7 @@ describe("docsHomeHref", () => {
 describe("footerColumns", () => {
   test("lists the product pages and Self-host in the Product column", () => {
     const product = footerColumns(resolveDocLinks(withReference)).find((column) => column.title === "Product")
-    expect(product?.items).toEqual([build, grafana, signals, selfHost])
+    expect(product?.items).toEqual([build, migrate, signals, selfHost])
   })
 
   test("omits Reference while it does not exist", () => {
@@ -70,7 +70,7 @@ describe("footerColumns", () => {
 
   test("keeps the product pages and the project column when no docs exist", () => {
     expect(footerColumns(resolveDocLinks(new Set()))).toEqual([
-      { title: "Product", items: [build, grafana, signals] },
+      { title: "Product", items: [build, migrate, signals] },
       {
         title: "Project",
         items: [
@@ -85,7 +85,7 @@ describe("footerColumns", () => {
 
 describe("isCurrentPage", () => {
   test.each([
-    ["/grafana/", "/grafana/", true],
+    ["/migrate/", "/migrate/", true],
     ["/docs/self-hosting/#quick-start", "/docs/self-hosting/", false],
     ["/docs/self-hosting/#quick-start", "/docs/self-hosting/#quick-start", false],
     ["/build/", "/", false],

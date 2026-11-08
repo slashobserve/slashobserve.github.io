@@ -4,13 +4,13 @@ export type NavItem = { label: string; href: string }
 
 export const GITHUB_URL = "https://github.com/slashobserve/slashobserve"
 export const BUILD_PATH = "/build/"
-export const GRAFANA_PATH = "/grafana/"
+export const MIGRATE_PATH = "/migrate/"
 export const SIGNALS_PATH = "/signals/"
 export const DOCS_HOME_PATH = "/docs/"
 
 export const PRODUCT_LINKS: NavItem[] = [
   { label: "Build", href: BUILD_PATH },
-  { label: "Coming from Grafana", href: GRAFANA_PATH },
+  { label: "Migrate", href: MIGRATE_PATH },
   { label: "Signals", href: SIGNALS_PATH },
 ]
 

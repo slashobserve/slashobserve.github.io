@@ -17,7 +17,7 @@ const rows: { feature: string; status: Status; note: NotePart[] }[] = [
     feature: "Time series, stat, gauge, bar gauge, table, text, logs, traces",
     status: "Maps",
     note: [
-      "Each becomes the matching ObserveSpec panel with its units, thresholds, overrides and legend, when its datasource is Prometheus or ClickHouse.",
+      "Each becomes the matching ObserveSpec panel with its units, thresholds, overrides and legend, when its datasource is Prometheus, ClickHouse, Loki or Tempo.",
     ],
   },
   {
@@ -36,6 +36,15 @@ const rows: { feature: string; status: Status; note: NotePart[] }[] = [
     feature: "Rows and collapsed rows",
     status: "Maps",
     note: ["Rows become row panels; collapsed state and repeat are kept."],
+  },
+  {
+    feature: "Elasticsearch and OpenSearch panels",
+    status: "Changes",
+    note: [
+      "A logs panel imports its Lucene query as a line query. A count over time keeps its query. Other metrics and bucket aggregations become a Query DSL body the panel runs as is. A geohash grid or a PPL query is dropped and the reason is listed. Terms variables become ",
+      { mono: "label_values(...)" },
+      ".",
+    ],
   },
   {
     feature: "Folders, tags, dashboard links",
@@ -80,7 +89,7 @@ const rows: { feature: string; status: Status; note: NotePart[] }[] = [
     feature: "Other datasources",
     status: "Waits",
     note: [
-      "Panels on a datasource type SlashObserve does not query yet (Loki, Tempo, Elasticsearch and others) import as placeholders that keep the title, layout and reason. The original dashboard JSON stays with the import record.",
+      "Panels on a datasource type SlashObserve does not query (InfluxDB, CloudWatch, Jaeger and others) import as placeholders that keep the title, layout and reason. The original dashboard JSON stays with the import record.",
     ],
   },
 ]

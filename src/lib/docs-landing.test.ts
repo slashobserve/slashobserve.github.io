@@ -90,8 +90,8 @@ describe("the landing groups at the pinned docs", () => {
   const topics = resolveGroups(TOPIC_GROUPS, pinnedDocs)
   const linksOf = (title: string) => topics.find((found) => found.title === title)?.links
 
-  test("Coming from Grafana is left out until its pages exist", () => {
-    expect(linksOf("Coming from Grafana")).toBeUndefined()
+  test("Migrate is left out until its pages exist", () => {
+    expect(linksOf("Migrate")).toBeUndefined()
   })
 
   test("Signals holds only the stores that have a page", () => {
@@ -120,18 +120,33 @@ describe("the landing groups at the pinned docs", () => {
 })
 
 describe("the landing groups once the switch guide exists", () => {
-  const docs = new Set([...pinnedDocs, "docs/use/switch-from-grafana", "docs/operate/provisioning"])
+  const docs = new Set([
+    ...pinnedDocs,
+    "docs/use/switch-from-grafana",
+    "docs/operate/provisioning",
+    "docs/connect/elasticsearch",
+    "docs/connect/opensearch",
+  ])
   const topics = resolveGroups(TOPIC_GROUPS, docs)
 
-  test("Coming from Grafana links the switch guide and its import section, never the file import guide", () => {
-    expect(topics.find((found) => found.title === "Coming from Grafana")?.links).toEqual([
+  test("Migrate links the switch guide and its import section, never the file import guide", () => {
+    expect(topics.find((found) => found.title === "Migrate")?.links).toEqual([
       { label: "Connect a Grafana", href: "/docs/use/switch-from-grafana/" },
       { label: "Import and re-import", href: "/docs/use/switch-from-grafana/#import" },
       { label: "Provisioning from files", href: "/docs/operate/provisioning/" },
+      { label: "Connect Elasticsearch", href: "/docs/connect/elasticsearch/" },
+      { label: "Connect OpenSearch", href: "/docs/connect/opensearch/" },
     ])
   })
 
+  test("Signals links Elasticsearch and OpenSearch to the Elasticsearch page", () => {
+    expect(topics.find((found) => found.title === "Signals")?.links).toContainEqual({
+      label: "Elasticsearch and OpenSearch",
+      href: "/docs/connect/elasticsearch/",
+    })
+  })
+
   test("keeps all four topic groups in canvas order", () => {
-    expect(topics.map((found) => found.title)).toEqual(["Build", "Coming from Grafana", "Signals", "Operate"])
+    expect(topics.map((found) => found.title)).toEqual(["Build", "Migrate", "Signals", "Operate"])
   })
 })
