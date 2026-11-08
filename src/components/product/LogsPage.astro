@@ -13,13 +13,13 @@ interface LogLine {
 
 const appOf = (pod: string) => pod.slice(0, pod.lastIndexOf("-"))
 
-const QUERY = '{namespace="shop"} | json'
+const QUERY = "service.name:checkout"
 
 const lines: LogLine[] = [
   { time: "14:02:11.204", pod: "checkout-0", level: "Error", text: "payment declined order=8812 reason=card_declined" },
-  { time: "14:02:11.198", pod: "frontend-1", level: "Info", text: "GET /cart 200 12ms" },
+  { time: "14:02:11.198", pod: "checkout-1", level: "Info", text: "GET /cart 200 12ms" },
   { time: "14:02:10.911", pod: "checkout-0", level: "Warning", text: "db pool near max in_use=19 max=20" },
-  { time: "14:02:10.877", pod: "payments-0", level: "Info", text: "charge ok amount=4900" },
+  { time: "14:02:10.877", pod: "checkout-2", level: "Info", text: "charge ok amount=4900" },
   {
     time: "14:02:09.540",
     pod: "checkout-0",
@@ -27,23 +27,22 @@ const lines: LogLine[] = [
     text: "upstream timeout upstream=payments after=2.0s",
     selected: true,
   },
-  { time: "14:02:09.102", pod: "frontend-0", level: "Info", text: "GET /product/41 200 8ms" },
-  { time: "14:02:08.990", pod: "inventory-0", level: "Info", text: "reserve ok sku=41 qty=1" },
+  { time: "14:02:09.102", pod: "checkout-1", level: "Info", text: "GET /product/41 200 8ms" },
+  { time: "14:02:08.990", pod: "checkout-2", level: "Info", text: "reserve ok sku=41 qty=1" },
   { time: "14:02:08.421", pod: "checkout-0", level: "Error", text: "payment declined order=8809 reason=timeout" },
 ]
 
 const details = [
   ["Time", "2026-11-06 14:02:09"],
-  ["Body", "upstream timeout upstream=payments after=2.0s"],
-  ["app", "checkout"],
-  ["detected_level", "error"],
-  ["namespace", "shop"],
-  ["pod", "checkout-0"],
+  ["level", "error"],
+  ["service", "checkout"],
   ["trace_id", TRACE_ID],
+  ["_index", "logs-shop-2026.11.06"],
+  ["pod", "checkout-0"],
 ]
 ---
 
-<Window url={`${HOST}/logs?ds=loki&q=${QUERY}`} label="The logs page">
+<Window url={`${HOST}/logs?ds=prod-es&q=${QUERY}`} label="The logs page on an Elasticsearch datasource">
   <div class="logs">
     <div class="row head">
       <span class="title">Logs</span>
@@ -55,16 +54,16 @@ const details = [
     </div>
     <div class="row source">
       <span class="label">Datasource</span>
-      <span class="select">Loki (Loki)<span class="k" aria-hidden="true">▾</span></span>
-      <span class="btn btn-sm">Label browser</span>
+      <span class="select">prod-es Elasticsearch logs-* @timestamp<span class="k" aria-hidden="true">▾</span></span>
+      <span class="btn btn-sm">Fields</span>
     </div>
     <div class="mono code"><span class="k">1</span><span>{QUERY}</span></div>
     <span class="btn btn-primary btn-sm run">Run query</span>
     <div class="row options">
-      <span class="row">Order <span class="select">Newest first<span class="k" aria-hidden="true">▾</span></span></span>
-      <span class="row"><span class="box" aria-hidden="true"></span>Wrap lines</span>
-      <span class="row"><span class="box on" aria-hidden="true">✓</span>Show time</span>
-      <span class="row hide-sm">Deduplication <span class="select">No deduplication<span class="k" aria-hidden="true">▾</span></span></span>
+      <span class="row">Sort <span class="select">Newest first<span class="k" aria-hidden="true">▾</span></span></span>
+      <span class="btn btn-sm">Wrap</span>
+      <span class="btn btn-sm">JSON</span>
+      <span class="btn btn-sm hide-sm">Columns</span>
     </div>
     <div class="results g1-sm">
       <div class="lines">
@@ -72,7 +71,7 @@ const details = [
           lines.map(({ time, pod, level, text, selected }) => (
             <div class:list={["line", { selected }]}>
               <span class="k">2026-11-06 {time}</span>
-              <span class="mono k labels">app={appOf(pod)} pod={pod}</span>
+              <span class="mono k labels">service.name={appOf(pod)} pod={pod}</span>
               <span class="row level">
                 <LevelIcon level={level} />
                 {level}
@@ -84,9 +83,11 @@ const details = [
       </div>
       <div class="detail">
         <span class="row detail-actions">
-          <span class="btn btn-sm">Show context</span>
-          <span class="btn btn-sm">Open trace</span>
+          <span class="btn btn-sm">Surrounding documents</span>
+          <span class="btn btn-sm">Copy line</span>
+          <span class="btn btn-sm">Copy link</span>
         </span>
+        <span class="trace-link">Open trace {TRACE_ID.slice(0, 8)}</span>
         <div class="fields">
           {
             details.map(([key, value]) => (
@@ -165,22 +166,6 @@ const details = [
     gap: 8px 16px;
   }
 
-  .box {
-    display: inline-grid;
-    place-items: center;
-    width: 12px;
-    height: 12px;
-    border: 1px solid var(--border-strong);
-    border-radius: 3px;
-    font-size: 9px;
-  }
-
-  .box.on {
-    border-color: var(--primary);
-    background: var(--primary);
-    color: var(--pfg);
-  }
-
   .results {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 290px;
@@ -226,6 +211,15 @@ const details = [
 
   .detail-actions {
     gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .trace-link {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .fields {

@@ -47,7 +47,7 @@ describe("llmsIndex", () => {
       [
         "# SlashObserve",
         "",
-        "> Observability dashboards from a sentence, on your own data.",
+        "> Metrics, logs and traces on your own data, for humans and agents.",
         "",
         "Full documentation in one file: https://slashobserve.com/llms-full.txt",
         "",
@@ -70,7 +70,7 @@ describe("llmsFull", () => {
       [
         "# SlashObserve",
         "",
-        "> Observability dashboards from a sentence, on your own data.",
+        "> Metrics, logs and traces on your own data, for humans and agents.",
         "",
         "Index: https://slashobserve.com/llms.txt",
         "",

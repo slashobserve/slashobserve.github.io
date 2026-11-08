@@ -20,17 +20,18 @@ const links = await getDocLinks()
 
 <MarketingLayout
   title="SlashObserve: observability workspace for humans and agents"
-  description="Ask for a dashboard in a sentence and get one that works, on the Prometheus, ClickHouse, Loki and Tempo you already run. Open source and self-hosted."
+  description="Metrics, logs and traces across Prometheus, ClickHouse, Loki, Tempo, Elasticsearch and OpenSearch, with dashboards, a logs page, a trace view and an agent that queries all of them. Ask for a dashboard in a sentence and get one that works. Open source and self-hosted."
 >
   <HomeHero />
   <BuildPlayback space="home" />
   <Section>
     <Split start={0.8} end={1.2}>
       <div slot="start" class="statement">
-        <h2 class="h2">Your Grafana dashboards come along.</h2>
+        <h2 class="h2">Bring what you built.</h2>
         <p class="lead lead-17">
-          Their folders, variables and links come too. Panels the importer cannot match go to the repair queue, a
-          failing query can get a fix from the agent, and every old link keeps resolving.
+          Grafana dashboards come across with their folders, variables and links, and every old link keeps resolving.
+          Elasticsearch and OpenSearch indices connect as they are, and the KQL you typed in Discover runs here. Panels
+          the importer cannot match go to the repair queue, where the agent fixes a failing query when you ask.
         </p>
         <a href={MIGRATE_PATH} class="arrow-link">Migrate →</a>
       </div>
@@ -40,7 +41,7 @@ const links = await getDocLinks()
   <Section>
     <SectionHead
       title="Metrics, logs and traces, on the stores you already run."
-      lead="Prometheus, ClickHouse, Loki and Tempo. A log line opens its trace."
+      lead="Prometheus, ClickHouse, Loki, Tempo, Elasticsearch and OpenSearch. One logs page and one trace view read all of them, and a log line opens its trace."
     />
     <div class="cols3"><CheckoutPanels /><LogsTail /><TraceSummary /></div>
     <p class="more"><a href={SIGNALS_PATH} class="arrow-link">Signals →</a></p>

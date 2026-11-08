@@ -4,14 +4,16 @@ import { HOST, TRACE_ID } from "./screen-ids"
 import { LOG_LINK_RANGE, ROOT, SELECTED_SPAN, SPANS, TICKS, TRACE_START, hasChildren } from "./trace"
 
 const selected = SPANS.find((span) => span.selected) ?? ROOT
+const SERVICE_COUNT = new Set(SPANS.map((span) => span.service)).size
+const ERROR_COUNT = SPANS.filter((span) => span.error).length
 ---
 
 <Window url={`${HOST}/t/${TRACE_ID}?ds=tempo`} label="The trace view">
   <div class="page">
     <div class="head">
       <div class="head-text">
-        <span class="title">Trace {TRACE_ID.slice(0, 8)}</span>
-        <span class="mono k trace-id">{TRACE_ID}</span>
+        <span class="title">{ROOT.service} {ROOT.operation}</span>
+        <span class="k trace-id">Duration {ROOT.duration} · Spans {SPANS.length} · Services {SERVICE_COUNT} · Errors {ERROR_COUNT}</span>
       </div>
       <span class="row head-actions">
         <span class="btn btn-sm hide-xs">{LOG_LINK_RANGE}</span>

@@ -1,6 +1,6 @@
 import type { DocsPageRef, OrderedGroup } from "./docs-sidebar"
 
-const TAGLINE = "Observability dashboards from a sentence, on your own data."
+const TAGLINE = "Metrics, logs and traces on your own data, for humans and agents."
 
 function tidyBody(body: string): string {
   return `${body.replace(/^\n+/, "").trimEnd()}\n`
