@@ -1,15 +1,20 @@
 ---
+import { getCollection } from "astro:content"
 import "../styles/docs-shell.css"
 import BaseLayout from "./BaseLayout.astro"
 import DocsDrawer from "@/components/docs/DocsDrawer.astro"
+import AgentLine from "@/components/docs/AgentLine.astro"
 import DocsFooter from "@/components/docs/DocsFooter.astro"
 import DocsHeader from "@/components/docs/DocsHeader.astro"
 import PageIntro from "@/components/docs/PageIntro.astro"
 import PageLinks from "@/components/docs/PageLinks.astro"
+import RailLinks from "@/components/docs/RailLinks.astro"
 import { Pagination } from "@/components/ui/pagination"
 import { Sidebar } from "@/components/ui/sidebar"
 import { MobileTOC, TOC } from "@/components/ui/toc"
+import { pageSection } from "@/lib/agent-text"
 import type { DocsGroup, PrevNext } from "@/lib/docs-sidebar"
+import { pageRefOf } from "@/lib/get-docs"
 import type { MarkdownHeading } from "astro"
 
 interface Props {
@@ -28,6 +33,8 @@ const { title, description, sidebar, section, headings, prevNext, markdownUrl, e
   Astro.props
 
 const hasHeadings = headings.length > 0
+const entry = (await getCollection("docs")).find((doc) => `${pageRefOf(doc).href}index.md` === markdownUrl)
+const markdown = entry ? pageSection(pageRefOf(entry), entry.body ?? "", Astro.site!) : undefined
 ---
 
 <BaseLayout title={title} description={description} markdownUrl={markdownUrl} lastUpdated={lastUpdated}>
@@ -42,7 +49,7 @@ const hasHeadings = headings.length > 0
     </aside>
     <main id="main-content" tabindex="-1" transition:name="nb-content" class="docs-main">
       <article class="docs-article" data-pagefind-body>
-        <PageIntro section={section} title={title} description={description} />
+        <PageIntro section={section} title={title} description={description} markdown={markdown} />
         {
           hasHeadings && (
             <div class="docs-toc-bar" data-pagefind-ignore>
@@ -55,11 +62,13 @@ const hasHeadings = headings.length > 0
       <div class="docs-end">
         <PageLinks editUrl={editUrl} markdownUrl={markdownUrl} lastUpdated={lastUpdated} />
         <Pagination prevNext={prevNext} />
+        <AgentLine />
         <DocsFooter />
       </div>
     </main>
     <aside class="docs-rail" aria-label="On this page" data-nb-toc-scroll-host>
       {hasHeadings && <TOC headings={headings} />}
+      <RailLinks editUrl={editUrl} />
     </aside>
   </div>
   <DocsDrawer />

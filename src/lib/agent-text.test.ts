@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { llmsFull, llmsIndex, pageMarkdown } from "./agent-text"
+import { llmsFull, llmsIndex, pageMarkdown, pageSection } from "./agent-text"
 import type { DocsPageRef, OrderedGroup } from "./docs-sidebar"
 
 const SITE = new URL("https://slashobserve.com")
@@ -36,6 +36,26 @@ describe("pageMarkdown", () => {
         "",
         "Run it.",
         "",
+      ].join("\n"),
+    )
+  })
+})
+
+describe("pageSection", () => {
+  test("puts the title, description and source links above the trimmed body", () => {
+    expect(pageSection(quickStart, "\n\nRun it.\n\n## Step\n\nDone.\n\n", SITE)).toBe(
+      [
+        "# Quick start",
+        "",
+        '> Run the "demo" stack.',
+        "",
+        "Source: https://slashobserve.com/docs/get-started/quick-start/ · Markdown: https://slashobserve.com/docs/get-started/quick-start/index.md",
+        "",
+        "Run it.",
+        "",
+        "## Step",
+        "",
+        "Done.",
       ].join("\n"),
     )
   })

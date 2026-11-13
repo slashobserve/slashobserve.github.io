@@ -43,7 +43,7 @@ export function SocialCardImage({ section, title, colors }: Props) {
             display: "flex",
             fontSize: 76,
             fontWeight: 600,
-            letterSpacing: "-0.035em",
+            letterSpacing: "-0.045em",
             lineHeight: 1.02,
             maxWidth: 960,
             textWrap: "balance",
@@ -58,8 +58,9 @@ export function SocialCardImage({ section, title, colors }: Props) {
             fontFamily: "Geist Mono",
             fontSize: 24,
             color: colors.mfg,
+            backgroundColor: colors.canvas,
             border: `1px solid ${colors.border}`,
-            borderRadius: 10,
+            borderRadius: 6,
             padding: "14px 20px",
           }}
         >

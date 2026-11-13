@@ -1,0 +1,66 @@
+---
+interface Props {
+  markdown: string
+}
+
+const { markdown } = Astro.props
+---
+
+<button type="button" class="copy-md" data-copy-markdown data-pagefind-ignore data-markdown={markdown} aria-live="polite" hidden>
+  Copy as Markdown
+</button>
+
+<style>
+  .copy-md {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    gap: 6px;
+    height: 28px;
+    margin: 0 0 0 auto;
+    padding: 0 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card);
+    color: var(--fg);
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      border-color 120ms,
+      background-color 120ms;
+  }
+
+  .copy-md[hidden] {
+    display: none;
+  }
+
+  .copy-md:hover {
+    border-color: var(--border-strong);
+    background: var(--muted);
+  }
+
+  .copy-md[data-state="copied"] {
+    color: var(--ok);
+  }
+
+  .copy-md:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+
+  .copy-md :global(svg) {
+    width: 14px;
+    height: 14px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .copy-md {
+      transition: none;
+    }
+  }
+</style>

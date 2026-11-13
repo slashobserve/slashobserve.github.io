@@ -1,24 +1,29 @@
 ---
+import CopyMarkdown from "./CopyMarkdown.astro"
 import { inlineCodeSegments } from "@/lib/inline-code"
 
 interface Props {
   section: string | null
   title: string
   description?: string
+  markdown?: string
 }
 
-const { section, title, description } = Astro.props
+const { section, title, description, markdown } = Astro.props
 const lead = description ? inlineCodeSegments(description) : []
 ---
 
 <div class="docs-intro">
-  {
-    section && (
-      <p class="eyebrow" data-pagefind-meta="section">
-        {section}
-      </p>
-    )
-  }
+  <div class="top">
+    {
+      section && (
+        <p class="eyebrow" data-pagefind-meta="section">
+          {section}
+        </p>
+      )
+    }
+    {markdown && <CopyMarkdown markdown={markdown} />}
+  </div>
   <h1>{title}</h1>
   {
     lead.length > 0 && (
@@ -35,8 +40,16 @@ const lead = description ? inlineCodeSegments(description) : []
     padding-bottom: 40px;
   }
 
+  .docs-intro .top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 28px;
+    margin-bottom: 12px;
+  }
+
   .docs-intro .eyebrow {
-    margin: 0 0 12px;
+    margin: 0;
     font-family: var(--font-mono);
     font-size: 12px;
     line-height: 16px;

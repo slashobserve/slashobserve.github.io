@@ -6,8 +6,9 @@ describe("cardColors", () => {
   test("maps the light theme tokens", () => {
     const colors = cardColors(themeTokens(readTokensCss(), "light"))
     expect(colors.bg).toBe("#ffffff")
+    expect(colors.canvas).toBe("#fafafb")
     expect(colors.brand).toBe("#097d84")
-    expect(Object.keys(colors).sort()).toEqual(["bg", "border", "brand", "fg", "mfg"])
+    expect(Object.keys(colors).sort()).toEqual(["bg", "border", "brand", "canvas", "fg", "mfg"])
   })
 
   test("names the missing token", () => {

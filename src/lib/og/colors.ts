@@ -2,6 +2,7 @@ import type { Tokens } from "../tokens"
 
 export type CardColors = {
   bg: string
+  canvas: string
   fg: string
   mfg: string
   brand: string
@@ -10,6 +11,7 @@ export type CardColors = {
 
 const tokenNames: Record<keyof CardColors, string> = {
   bg: "--bg",
+  canvas: "--canvas",
   fg: "--fg",
   mfg: "--mfg",
   brand: "--brand",

@@ -53,21 +53,26 @@ export function llmsIndex(groups: OrderedGroup[], site: URL): string {
     .replace(/\n+$/, "\n")
 }
 
-export function llmsFull(
-  groups: OrderedGroup[],
-  bodies: Map<string, string>,
-  site: URL,
-): string {
-  const pages = groups.flatMap((group) => group.pages).flatMap((page) => [
-    "",
+export function pageSection(page: DocsPageRef, body: string, site: URL): string {
+  return [
     `# ${page.title}`,
     "",
     `> ${page.description}`,
     "",
     `Source: ${pageUrl(page, site)} · Markdown: ${markdownUrl(page, site)}`,
     "",
-    tidyBody(bodies.get(page.id) ?? "").trimEnd(),
-  ])
+    tidyBody(body).trimEnd(),
+  ].join("\n")
+}
+
+export function llmsFull(
+  groups: OrderedGroup[],
+  bodies: Map<string, string>,
+  site: URL,
+): string {
+  const pages = groups
+    .flatMap((group) => group.pages)
+    .flatMap((page) => ["", pageSection(page, bodies.get(page.id) ?? "", site)])
   return [
     "# SlashObserve",
     "",
