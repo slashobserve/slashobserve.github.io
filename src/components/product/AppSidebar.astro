@@ -1,0 +1,309 @@
+---
+import Wordmark from "../site/Wordmark.astro"
+import Mark from "./Mark.astro"
+
+type Item = "Home" | "Inbox" | "Observations" | "Dashboards" | "Logs" | "Traces" | "Agents" | "Datasources" | "Settings"
+
+interface Props {
+  active?: Item
+  compact?: boolean
+  class?: string
+}
+
+const { active, compact = false, class: className } = Astro.props
+
+const icons: Record<Item, string> = {
+  Home: '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  Inbox:
+    '<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
+  Observations:
+    '<path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><rect width="16" height="20" x="4" y="2" rx="2"/><path d="M9.5 8h5"/><path d="M9.5 12H16"/><path d="M9.5 16H14"/>',
+  Dashboards:
+    '<rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>',
+  Logs: '<path d="M3 5h1"/><path d="M3 12h1"/><path d="M3 19h1"/><path d="M8 5h1"/><path d="M8 12h1"/><path d="M8 19h1"/><path d="M13 5h8"/><path d="M13 12h8"/><path d="M13 19h8"/>',
+  Traces: '<path d="M10 6h8"/><path d="M12 16h6"/><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M8 11h7"/>',
+  Agents:
+    '<path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/>',
+  Datasources: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/>',
+  Settings:
+    '<path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/>',
+}
+
+const search = '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>'
+const collapse = '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/>'
+
+const main: Item[] = ["Home", "Inbox", "Observations", "Dashboards", "Logs", "Traces", "Agents"]
+const workspace: Item[] = ["Datasources", "Settings"]
+
+const openObservations = ["Checkout errors after the payments deploy"]
+const pinnedDashboards = ["Checkout health", "Node health"]
+const sublists: Partial<Record<Item, { label: string; entries: string[]; dot: boolean }>> = {
+  Observations: { label: "Open observations", entries: openObservations, dot: true },
+  Dashboards: { label: "Pinned dashboards", entries: pinnedDashboards, dot: false },
+}
+const mainEntries = main.map((label) => ({ label, sub: sublists[label] }))
+---
+
+<nav class:list={["sb", { compact }, className]} aria-label="Main">
+  {
+    !compact && (
+      <span class="brand">
+        <Wordmark size={17} />
+      </span>
+    )
+  }
+  <span class="search">
+    <svg viewBox="0 0 24 24" aria-hidden="true" set:html={search} />
+    {
+      !compact && (
+        <>
+          <span class="ell">Search or jump to</span>
+          <kbd aria-hidden="true">⌘K</kbd>
+        </>
+      )
+    }
+  </span>
+  <div class="items">
+    {
+      mainEntries.map(({ label, sub }) => (
+        <>
+          <span class="it" aria-current={label === active ? "page" : undefined}>
+            <svg viewBox="0 0 24 24" aria-hidden="true" set:html={icons[label]} />
+            {!compact && <span class="ell">{label}</span>}
+            {!compact && label === "Inbox" && <span class="count">3</span>}
+          </span>
+          {!compact && sub && (
+            <ul class="sub" aria-label={sub.label}>
+              {sub.entries.map((entry) => (
+                <li class="subit">
+                  {sub.dot && <span class="dot" aria-hidden="true" />}
+                  <span class="ell">{entry}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
+      ))
+    }
+    <div class="group" role="group" aria-label="Workspace">
+      {!compact && <span class="group-label">Workspace</span>}
+      {
+        workspace.map((label) => (
+          <span class="it" aria-current={label === active ? "page" : undefined}>
+            <svg viewBox="0 0 24 24" aria-hidden="true" set:html={icons[label]} />
+            {!compact && <span class="ell">{label}</span>}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+  <div class="account">
+    <Mark kind="person" initials="AD" tint={1} size={20} />
+    {
+      !compact && (
+        <>
+          <span class="ell k">admin@example.com</span>
+          <svg class="collapse" viewBox="0 0 24 24" aria-hidden="true" set:html={collapse} />
+        </>
+      )
+    }
+  </div>
+</nav>
+
+<style>
+  .sb {
+    box-sizing: border-box;
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: 2px;
+    width: 204px;
+    padding: 12px 8px;
+    border-right: 1px solid var(--border);
+    background: var(--chrome);
+    font-size: 13px;
+  }
+
+  .sb.compact {
+    width: 52px;
+    align-items: center;
+    padding: 12px 6px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0 8px;
+    margin-bottom: 2px;
+  }
+
+  .search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-sizing: border-box;
+    height: 30px;
+    padding: 0 8px;
+    margin-bottom: 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--mfg);
+    font-size: 12.5px;
+  }
+
+  .compact .search {
+    border-color: transparent;
+    background: transparent;
+  }
+
+  .search svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  kbd {
+    margin-left: auto;
+    padding: 0 5px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font: inherit;
+    font-size: 11.5px;
+  }
+
+  .items {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 2px;
+    min-height: 0;
+  }
+
+  .compact .items {
+    align-items: center;
+  }
+
+  .it {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 30px;
+    padding: 0 8px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    color: var(--fg);
+    white-space: nowrap;
+  }
+
+  .compact .it {
+    width: 34px;
+    height: 34px;
+    box-sizing: border-box;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .it[aria-current="page"] {
+    border-color: var(--border);
+    background: var(--card);
+    font-weight: 500;
+  }
+
+  svg {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .ell {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .count {
+    display: grid;
+    place-items: center;
+    min-width: 18px;
+    height: 18px;
+    box-sizing: border-box;
+    margin-left: auto;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--primary);
+    color: var(--pfg);
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .sub {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0 0 0 18px;
+    padding: 0 0 0 6px;
+    border-left: 1px solid var(--border);
+    list-style: none;
+  }
+
+  .subit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 28px;
+    padding: 0 8px;
+    color: var(--fg);
+    font-size: 12.5px;
+  }
+
+  .dot {
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ok);
+  }
+
+  .group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .compact .group {
+    align-items: center;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+
+  .group-label {
+    padding: 14px 8px 6px;
+    color: var(--mfg);
+    font-size: 12px;
+  }
+
+  .account {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    font-size: 12.5px;
+  }
+
+  .compact .account {
+    padding: 8px 0 0;
+  }
+
+  .collapse {
+    margin-left: auto;
+    color: var(--mfg);
+  }
+</style>
