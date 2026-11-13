@@ -56,10 +56,16 @@ const rows: QueuedDashboard[] = [
   { name: "Checkout service", folder: "Platform / Shop", unverified: "1 panel", placeholders: 0, repair: null, canRepair: true },
   { name: "Graphite legacy", folder: "Infra", unverified: "None", placeholders: 4, repair: null, canRepair: false },
 ]
+
+interface Props {
+  onStage?: boolean
+}
+
+const { onStage = false } = Astro.props
 ---
 
 <div class="repair-stack">
-  <Window url={`${HOST}/dashboards?kind=imported`} label="The imported dashboards that are not verified">
+  <Window url={onStage ? undefined : `${HOST}/dashboards?kind=imported`} label="The imported dashboards that are not verified">
     <div class="row filters">
       <span class="field k">Filter by title</span>
       <span class="select">Folder: any<span class="k" aria-hidden="true">▾</span></span>

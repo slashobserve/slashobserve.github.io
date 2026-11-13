@@ -6,7 +6,6 @@ import StartSection from "../components/observations/StartSection.astro"
 import ObservationScreen from "../components/product/ObservationScreen.astro"
 import PageOpening from "../components/site/PageOpening.astro"
 import RunsOnBand from "../components/site/RunsOnBand.astro"
-import Stage from "../components/site/Stage.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
 import { getDocLinks } from "../lib/get-doc-links"
 
@@ -41,7 +40,7 @@ const links = await getDocLinks()
   </PageOpening>
   <section class="wrap screen">
     <div data-in-view="rise">
-      <Stage><ObservationScreen /></Stage>
+      <ObservationScreen />
     </div>
   </section>
   <StartSection />

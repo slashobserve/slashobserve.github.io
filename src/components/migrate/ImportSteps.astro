@@ -2,7 +2,6 @@
 import GrafanaSettings from "../product/GrafanaSettings.astro"
 import RepairQueue from "../product/RepairQueue.astro"
 import Section from "../site/Section.astro"
-import Stage from "../site/Stage.astro"
 
 const stages = ["Connect", "Import", "Repair", "Keep the links"]
 ---
@@ -55,12 +54,10 @@ const stages = ["Connect", "Import", "Repair", "Keep the links"]
       </div>
     </div>
     <div class="step-stage" data-in-view="rise">
-      <Stage>
-        <div class="step-windows">
-          <GrafanaSettings />
-          <RepairQueue />
-        </div>
-      </Stage>
+      <div class="step-windows">
+        <GrafanaSettings />
+        <RepairQueue />
+      </div>
     </div>
   </div>
 </Section>

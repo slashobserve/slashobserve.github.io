@@ -1,6 +1,5 @@
 ---
 import Mark from "./Mark.astro"
-import Window from "./Window.astro"
 
 type Author =
   | { kind: "person"; initials: string; tint: 1 | 2 | 3 | 4 }
@@ -70,58 +69,56 @@ const groups: { label: string; items: Item[] }[] = [
 const selected = groups.flatMap(({ items }) => items).find((item) => item.selected)!
 ---
 
-<div class="inbox">
-  <Window label="The inbox">
-    <div class="page">
-      <div class="page-head">
-        <span class="title">Inbox</span>
-        <span class="button">Mark all read</span>
-      </div>
-      <div class="split">
-        <div class="list">
-          <div class="tabs" aria-hidden="true">
-            {TABS.map((tab, index) => <span class:list={["tab", { on: index === 0 }]}>{tab}</span>)}
-          </div>
-          {
-            groups.map(({ label, items }) => (
-              <section class="group">
-                <h3 class="group-label">{label}</h3>
-                <ul>
-                  {items.map(({ author, actor, verb, object, reason, time, unread, selected }) => (
-                    <li class:list={["row-item", { selected }]}>
-                      {author.kind === "agent" ? (
-                        <Mark kind="agent" size={28} />
-                      ) : (
-                        <Mark kind={author.kind} initials={author.initials} tint={author.kind === "person" ? author.tint : undefined} size={28} />
-                      )}
-                      <span class="body">
-                        <span class="sentence">
-                          {actor} {verb} <b>{object}</b>
-                        </span>
-                        <span class="k meta">
-                          {reason && <span class="reason">{reason}</span>}
-                          {time}
-                        </span>
-                      </span>
-                      {unread && <span class="unread" aria-hidden="true" />}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            ))
-          }
-        </div>
-        <section class="detail" aria-label="Selected item">
-          <h3 class="detail-title">{selected.actor} {selected.verb} {selected.object}</h3>
-          <p class="k meta">
-            {selected.reason && <span class="reason">{selected.reason}</span>}
-            {selected.time}
-          </p>
-          <span class="button">Open</span>
-        </section>
-      </div>
+<div class="inbox" role="group" aria-label="The inbox">
+  <div class="page">
+    <div class="page-head">
+      <span class="title">Inbox</span>
+      <span class="button">Mark all read</span>
     </div>
-  </Window>
+    <div class="split">
+      <div class="list">
+        <div class="tabs" aria-hidden="true">
+          {TABS.map((tab, index) => <span class:list={["tab", { on: index === 0 }]}>{tab}</span>)}
+        </div>
+        {
+          groups.map(({ label, items }) => (
+            <section class="group">
+              <h3 class="group-label">{label}</h3>
+              <ul>
+                {items.map(({ author, actor, verb, object, reason, time, unread, selected }) => (
+                  <li class:list={["row-item", { selected }]}>
+                    {author.kind === "agent" ? (
+                      <Mark kind="agent" size={28} />
+                    ) : (
+                      <Mark kind={author.kind} initials={author.initials} tint={author.kind === "person" ? author.tint : undefined} size={28} />
+                    )}
+                    <span class="body">
+                      <span class="sentence">
+                        {actor} {verb} <b>{object}</b>
+                      </span>
+                      <span class="k meta">
+                        {reason && <span class="reason">{reason}</span>}
+                        {time}
+                      </span>
+                    </span>
+                    {unread && <span class="unread" aria-hidden="true" />}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))
+        }
+      </div>
+      <section class="detail" aria-label="Selected item">
+        <h3 class="detail-title">{selected.actor} {selected.verb} {selected.object}</h3>
+        <p class="k meta">
+          {selected.reason && <span class="reason">{selected.reason}</span>}
+          {selected.time}
+        </p>
+        <span class="button">Open</span>
+      </section>
+    </div>
+  </div>
 </div>
 
 <style>
@@ -135,7 +132,6 @@ const selected = groups.flatMap(({ items }) => items).find((item) => item.select
     display: flex;
     flex-direction: column;
     gap: 12px;
-    padding: 16px 16px 14px;
     font-size: 13px;
   }
 
@@ -167,7 +163,8 @@ const selected = groups.flatMap(({ items }) => items).find((item) => item.select
   .split {
     display: grid;
     grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
-    align-items: stretch;
+    align-items: start;
+    gap: 12px;
   }
 
   .list {
@@ -175,7 +172,10 @@ const selected = groups.flatMap(({ items }) => items).find((item) => item.select
     flex-direction: column;
     gap: 4px;
     min-width: 0;
-    padding-right: 16px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
   }
 
   .tabs {
@@ -285,8 +285,10 @@ const selected = groups.flatMap(({ items }) => items).find((item) => item.select
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
-    padding: 4px 0 4px 20px;
-    border-left: 1px solid var(--border);
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
   }
 
   .detail-title {
@@ -298,16 +300,8 @@ const selected = groups.flatMap(({ items }) => items).find((item) => item.select
   }
 
   @media (max-width: 900px) {
-    .page {
-      padding: 12px;
-    }
-
     .split {
       grid-template-columns: minmax(0, 1fr);
-    }
-
-    .list {
-      padding-right: 0;
     }
 
     .detail {

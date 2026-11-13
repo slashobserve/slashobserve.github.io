@@ -3,7 +3,6 @@ import { INSTALL_COMMAND } from "../../lib/site-facts"
 import Mark from "../product/Mark.astro"
 import ObservationScreen from "../product/ObservationScreen.astro"
 import CopyCommand from "../site/CopyCommand.astro"
-import Stage from "../site/Stage.astro"
 
 interface Props {
   quickStart: string | null
@@ -39,7 +38,7 @@ const { quickStart } = Astro.props
     </p>
   </div>
   <div class="wrap screen" data-sequence>
-    <Stage><ObservationScreen /></Stage>
+    <ObservationScreen />
   </div>
 </section>
 

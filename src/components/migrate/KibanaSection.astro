@@ -2,7 +2,6 @@
 import Window from "../product/Window.astro"
 import Section from "../site/Section.astro"
 import SectionHead from "../site/SectionHead.astro"
-import Stage from "../site/Stage.astro"
 import type { DocLinks } from "../../lib/doc-links"
 
 interface Props {
@@ -55,11 +54,9 @@ const QUERY_FORMS = [
       </p>
     </div>
     <div class="kibana-side" data-in-view="rise">
-      <Stage>
-        <Window label="The three query forms on an Elasticsearch or OpenSearch datasource">
-          <div class="term">{QUERY_FORMS.map((line) => <span class="tl">{line}</span>)}</div>
-        </Window>
-      </Stage>
+      <Window label="The three query forms on an Elasticsearch or OpenSearch datasource">
+        <div class="term">{QUERY_FORMS.map((line) => <span class="tl">{line}</span>)}</div>
+      </Window>
       <div class="kibana-links">
         {links.elasticsearch && <a class="arrow" href={links.elasticsearch}>Connect Elasticsearch →</a>}
         {links.opensearch && <a class="arrow" href={links.opensearch}>Connect OpenSearch →</a>}
@@ -91,7 +88,7 @@ const QUERY_FORMS = [
     min-width: 0;
   }
 
-  .kibana-side > :global(.stage) {
+  .kibana-side > :global(.win) {
     align-self: stretch;
   }
 

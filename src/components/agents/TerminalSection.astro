@@ -1,7 +1,6 @@
 ---
 import Section from "../site/Section.astro"
 import Split from "../site/Split.astro"
-import Stage from "../site/Stage.astro"
 import TerminalVerbs from "./TerminalVerbs.astro"
 
 interface Props {
@@ -29,7 +28,7 @@ const { cliObservations } = Astro.props
       }
     </div>
     <div slot="end" data-in-view="rise">
-      <Stage><TerminalVerbs /></Stage>
+      <TerminalVerbs />
     </div>
   </Split>
 </Section>
