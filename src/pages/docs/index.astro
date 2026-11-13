@@ -5,6 +5,7 @@ import CliReference from "@/components/product/CliReference.astro"
 import McpConfig from "@/components/product/McpConfig.astro"
 import DocsSearch from "@/components/site/DocsSearch.astro"
 import PageOpening from "@/components/site/PageOpening.astro"
+import Stage from "@/components/site/Stage.astro"
 import MarketingLayout from "@/layouts/MarketingLayout.astro"
 import { REFERENCE_GROUP, TOPIC_GROUPS, resolveGroups } from "@/lib/docs-landing"
 import { getDocIds } from "@/lib/get-doc-links"
@@ -29,7 +30,7 @@ const [reference] = resolveGroups([REFERENCE_GROUP], ids)
   <section class="wrap landing-top">
     <div class="cols2 top-grid">
       <QuickStart />
-      <div class="topics g1-sm">
+      <div class="lined topics">
         {topics.map((group) => <LinkGroup group={group} />)}
       </div>
     </div>
@@ -37,10 +38,16 @@ const [reference] = resolveGroups([REFERENCE_GROUP], ids)
 
   <section class="ruled">
     <div class="wrap landing-ref">
-      <div class="cols3">
-        <CliReference />
-        <McpConfig />
-        {reference && <LinkGroup group={reference} />}
+      <div class="split ref-split" data-in-view="rise">
+        <Stage>
+          <CliReference />
+        </Stage>
+        <div class="ref-side">
+          <Stage>
+            <McpConfig />
+          </Stage>
+          {reference && <LinkGroup group={reference} />}
+        </div>
       </div>
     </div>
   </section>
@@ -53,16 +60,56 @@ const [reference] = resolveGroups([REFERENCE_GROUP], ids)
 
   .top-grid {
     align-items: start;
+    gap: 40px;
   }
 
   .topics {
-    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
   }
 
   .landing-ref {
     padding-top: 56px;
     padding-bottom: 80px;
   }
+
+  .ref-split {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: start;
+    gap: 40px;
+  }
+
+  .ref-side {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    min-width: 0;
+  }
+
+  @media (max-width: 900px) {
+    .landing-top {
+      padding-bottom: 40px;
+    }
+
+    .ref-split {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+    }
+
+    .landing-ref {
+      padding-top: 40px;
+      padding-bottom: 56px;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .topics {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
 </style>
+
+<script>
+  import { watchInView } from "../../lib/client/in-view"
+
+  watchInView()
+</script>
