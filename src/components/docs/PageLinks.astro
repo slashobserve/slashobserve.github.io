@@ -21,7 +21,7 @@ const updated = lastUpdated
     <div class="links">
       <div class="actions">
         {editUrl && (
-          <a href={editUrl} target="_blank" rel="noopener">
+          <a class="edit" href={editUrl} target="_blank" rel="noopener">
             <GitHubIcon size={14} />
             Edit this page on GitHub
           </a>
@@ -78,5 +78,11 @@ const updated = lastUpdated
 
   .updated {
     margin: 0;
+  }
+
+  @media (min-width: 80rem) {
+    .edit {
+      display: none;
+    }
   }
 </style>

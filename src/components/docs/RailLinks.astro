@@ -1,0 +1,55 @@
+---
+interface Props {
+  editUrl?: string
+}
+
+const { editUrl } = Astro.props
+---
+
+<ul class="rail-links" data-pagefind-ignore>
+  {
+    editUrl && (
+      <li>
+        <a href={editUrl} target="_blank" rel="noopener">
+          Edit this page
+        </a>
+      </li>
+    )
+  }
+  <li><a href="/llms.txt">llms.txt</a></li>
+</ul>
+
+<style>
+  .rail-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 16px 0 0;
+    padding: 16px 0 0;
+    border-top: 1px solid var(--border);
+    list-style: none;
+    font-size: 13px;
+    line-height: 20px;
+  }
+
+  a {
+    color: var(--mfg);
+    text-decoration: none;
+    transition: color 120ms;
+  }
+
+  a:hover {
+    color: var(--fg);
+  }
+
+  a:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    a {
+      transition: none;
+    }
+  }
+</style>

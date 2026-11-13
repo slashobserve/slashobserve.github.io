@@ -23,10 +23,10 @@ Docs content is written in the core repo `slashobserve/slashobserve` under `docs
 - `src/components/home/`: the home page sections (hero with the observation drawing, stores strip, shared rules, the tour with its sticky rail, bring what you built).
 - `src/components/observations/`, `src/components/agents/`, `src/components/migrate/`, `src/components/signals/` and `src/components/docs-landing/`: those pages' sections; each drawing sits on a stage inside a `data-in-view="rise"` wrapper, and the page script calls `watchInView()`.
 - `src/components/product/`: the drawn product screens, one component per window, named for what it shows (screenshots of the seeded demo replace them later), plus the `Window`, `Mark` (the round person, agent and connected-agent author mark), `Panel`, `TimeSeries`, `Sparklines` and `SameLink` pieces, the shared `screen-ids.ts` and `trace.ts` data; the `BuildStage.tsx` island, styled by `build-stage.css`, is mounted on /dashboards, on a stage.
-- `src/components/docs/` and `src/components/ui/`: the docs shell, sidebar, TOC, search and pager.
+- `src/components/docs/` and `src/components/ui/`: the docs shell, sidebar, TOC and its "Edit this page" links, search, pager, the "Copy as Markdown" button (rendered hidden, shown by script only when the clipboard API exists; it copies `pageSection` from `src/lib/agent-text.ts`, the same text `llms-full.txt` holds per page) and the closing line that points agents to `/llms.txt` and `/llms-full.txt`.
 - `src/layouts/`: page layouts.
 - `src/lib/`: pure helpers.
-- `src/lib/client/`: browser helpers for copy buttons, heading anchors, mounting and scroll lock.
+- `src/lib/client/`: browser helpers for copy buttons (code blocks and Copy as Markdown, in `copy-buttons.ts`), heading anchors, mounting and scroll lock.
 - `src/lib/og/`: the social card registry, colours and renderer (Satori and resvg, fonts from `@fontsource/geist`).
 - `src/styles/tokens.css`: the only colour definitions.
 - `scripts/`: the prebuild (docs sync, schema, corpus, import coverage, generated reference), the reference generators in `scripts/reference/`, and the link check.
