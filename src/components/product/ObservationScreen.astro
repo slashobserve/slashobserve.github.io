@@ -2,7 +2,8 @@
 import AppSidebar from "./AppSidebar.astro"
 import Discussion from "./Discussion.astro"
 import Mark from "./Mark.astro"
-import Panel from "./Panel.astro"
+import PanelBlock from "./PanelBlock.astro"
+import TextBlock from "./TextBlock.astro"
 import TimeSeries from "./TimeSeries.astro"
 import Window from "./Window.astro"
 import { HOST } from "./screen-ids"
@@ -61,30 +62,27 @@ const share = '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1
               <span class="btn btn-sm">Resolve</span>
             </div>
           </div>
-          <div class="text">
-            <p>
-              Server errors on /api/checkout jumped from 0.1% to 2% within five minutes of the payments rollout. p95
-              latency stayed flat, so this looks like a failing call rather than load.
-            </p>
-            <div class="foot">
-              <span class="byline"><Mark kind="person" initials="AD" tint={1} size={20} />Added by admin</span>
-            </div>
-          </div>
-          <div class="block">
-            <Panel title="Server error ratio by route">
-              <TimeSeries
-                viewBox="0 0 400 120"
-                height="120px"
-                yTicks={["3%", "2%", "1%", "0%"]}
-                xTicks={["16:10", "16:20", "16:30", "16:40", "16:50", "17:00"]}
-                series={[...series]}
-              />
-            </Panel>
-            <div class="foot">
-              <span class="caption"><span class="dot" aria-hidden="true"></span>Prometheus, live</span>
-              <span class="byline"><Mark kind="person" initials="AD" tint={1} size={20} />Added by admin</span>
-            </div>
-          </div>
+          <TextBlock>
+            Server errors on /api/checkout jumped from 0.1% to 2% within five minutes of the payments rollout. p95 latency
+            stayed flat, so this looks like a failing call rather than load.
+          </TextBlock>
+          <PanelBlock
+            title="Server error ratio by route"
+            caption="Prometheus, live"
+            live
+            author="person"
+            initials="AD"
+            tint={1}
+            byline="Added by admin"
+          >
+            <TimeSeries
+              viewBox="0 0 400 120"
+              height="120px"
+              yTicks={["3%", "2%", "1%", "0%"]}
+              xTicks={["16:10", "16:20", "16:30", "16:40", "16:50", "17:00"]}
+              series={[...series]}
+            />
+          </PanelBlock>
           <div class="add-row">
             <span class="k">Add a block</span>
             <span class="btn btn-sm">Text</span>
@@ -224,49 +222,6 @@ const share = '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1
 
   .folder {
     color: var(--fg);
-  }
-
-  .text {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .text p {
-    max-width: 640px;
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.6;
-  }
-
-  .block {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .foot {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 4px 16px;
-    padding: 0 2px;
-    color: var(--mfg);
-    font-size: 12px;
-  }
-
-  .caption,
-  .byline {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    min-width: 0;
-  }
-
-  .byline {
-    margin-left: auto;
-    gap: 8px;
   }
 
   .add-row {

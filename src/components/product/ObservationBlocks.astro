@@ -1,6 +1,7 @@
 ---
-import Mark from "./Mark.astro"
-import Panel from "./Panel.astro"
+import InlineCode from "./InlineCode.astro"
+import PanelBlock from "./PanelBlock.astro"
+import TextBlock from "./TextBlock.astro"
 import TimeSeries from "./TimeSeries.astro"
 
 const errorRatio = [
@@ -31,45 +32,41 @@ const latency = [
 ---
 
 <div class="blocks" role="group" aria-label="Observation blocks">
-  <div class="text">
-    <p>
-      The 5xx on /api/checkout carry <code>payments: context deadline exceeded</code>, and they start 3 minutes after the
-      rollout.
-    </p>
-    <div class="foot">
-      <span class="byline"><Mark kind="agent" size={20} />From Observe Agent, added by admin</span>
-    </div>
-  </div>
-  <div class="block">
-    <Panel title="Server error ratio by route">
-      <TimeSeries
-        viewBox="0 0 400 120"
-        height="96px"
-        yTicks={["3%", "2%", "1%", "0%"]}
-        xTicks={["16:10", "16:30", "16:50", "17:00"]}
-        series={[...errorRatio]}
-      />
-    </Panel>
-    <div class="foot">
-      <span class="caption"><span class="dot" aria-hidden="true"></span>Prometheus, live</span>
-      <span class="byline"><Mark kind="agent" size={20} />From Observe Agent</span>
-    </div>
-  </div>
-  <div class="block">
-    <Panel title="Snapshot">
-      <TimeSeries
-        viewBox="0 0 400 80"
-        height="64px"
-        yTicks={["300 ms", "150 ms", "0 s"]}
-        xTicks={["16:30", "16:50", "17:05"]}
-        series={[...latency]}
-      />
-    </Panel>
-    <div class="foot">
-      <span class="caption">Frozen, 2026-11-06 16:30 to 2026-11-06 17:05</span>
-      <span class="byline"><Mark kind="person" initials="JP" tint={4} size={20} />Added by Jo Park</span>
-    </div>
-  </div>
+  <TextBlock>
+    The 5xx on /api/checkout carry <InlineCode>payments: context deadline exceeded</InlineCode>, and they start 3 minutes
+    after the rollout.
+  </TextBlock>
+  <PanelBlock
+    title="Server error ratio by route"
+    caption="Prometheus, live"
+    live
+    author="agent"
+    byline="From Observe Agent"
+  >
+    <TimeSeries
+      viewBox="0 0 400 120"
+      height="96px"
+      yTicks={["3%", "2%", "1%", "0%"]}
+      xTicks={["16:10", "16:30", "16:50", "17:00"]}
+      series={[...errorRatio]}
+    />
+  </PanelBlock>
+  <PanelBlock
+    title="Snapshot"
+    caption="Frozen, 2026-11-06 16:30 to 2026-11-06 17:05"
+    author="person"
+    initials="JP"
+    tint={4}
+    byline="Added by Jo Park"
+  >
+    <TimeSeries
+      viewBox="0 0 400 80"
+      height="64px"
+      yTicks={["300 ms", "150 ms", "0 s"]}
+      xTicks={["16:30", "16:50", "17:05"]}
+      series={[...latency]}
+    />
+  </PanelBlock>
 </div>
 
 <style>
@@ -80,60 +77,5 @@ const latency = [
     min-width: 0;
     font-size: 13px;
     line-height: 1.45;
-  }
-
-  .text,
-  .block {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    min-width: 0;
-  }
-
-  p {
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.6;
-    overflow-wrap: anywhere;
-  }
-
-  code {
-    padding: 1px 5px;
-    border-radius: 4px;
-    background: var(--muted);
-    font-family: var(--font-mono);
-    font-size: 0.9em;
-  }
-
-  .foot {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 4px 16px;
-    padding: 0 2px;
-    color: var(--mfg);
-    font-size: 12px;
-  }
-
-  .caption,
-  .byline {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    min-width: 0;
-  }
-
-  .byline {
-    margin-left: auto;
-    gap: 8px;
-  }
-
-  .dot {
-    flex: none;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--ok);
   }
 </style>

@@ -1,5 +1,7 @@
 ---
-import Mark from "./Mark.astro"
+import InlineCode from "./InlineCode.astro"
+import Mention from "./Mention.astro"
+import Message from "./Message.astro"
 
 interface Props {
   class?: string
@@ -18,33 +20,16 @@ const send = '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>'
     <span class="icon-btn" aria-hidden="true"><svg viewBox="0 0 24 24" set:html={hide} /></span>
   </header>
   <ol class="messages" aria-label="Messages">
-    <li class="msg" data-msg="1">
-      <Mark kind="person" initials="AD" tint={1} size={24} />
-      <div class="msg-body">
-        <div class="msg-head"><b>admin</b><span class="k">17:02</span></div>
-        <p><span class="at">@observe</span> can we confirm the errors come from the payments client timeout?</p>
-        <span class="btn btn-sm add">Add to page</span>
-      </div>
-    </li>
-    <li class="msg" data-msg="2">
-      <Mark kind="agent" size={24} />
-      <div class="msg-body">
-        <div class="msg-head"><b>Observe Agent for admin</b><span class="k">17:03</span></div>
-        <p>
-          Yes. 94% of the 5xx on /api/checkout carry <code>payments: context deadline exceeded</code>, and they start 3
-          minutes after the rollout.
-        </p>
-        <span class="btn btn-sm add">Add to page</span>
-      </div>
-    </li>
-    <li class="msg" data-msg="3">
-      <Mark kind="person" initials="JP" tint={4} size={24} />
-      <div class="msg-body">
-        <div class="msg-head"><b>Jo Park</b><span class="k">17:06</span></div>
-        <p>That matches the new 2s client timeout in the payments chart. Adding the snapshot to the page.</p>
-        <span class="btn btn-sm add">Add to page</span>
-      </div>
-    </li>
+    <Message as="li" author="person" initials="AD" tint={1} name="admin" time="17:02">
+      <Mention /> can we confirm the errors come from the payments client timeout?
+    </Message>
+    <Message as="li" author="agent" name="Observe Agent for admin" time="17:03">
+      Yes. 94% of the 5xx on /api/checkout carry <InlineCode>payments: context deadline exceeded</InlineCode>, and they
+      start 3 minutes after the rollout.
+    </Message>
+    <Message as="li" author="person" initials="JP" tint={4} name="Jo Park" time="17:06">
+      That matches the new 2s client timeout in the payments chart. Adding the snapshot to the page.
+    </Message>
   </ol>
   <div class="composer-wrap">
     <div class="composer">
@@ -112,68 +97,6 @@ const send = '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>'
     margin: 0;
     padding: 4px 0;
     list-style: none;
-  }
-
-  .msg {
-    display: flex;
-    gap: 10px;
-    padding: 10px 16px;
-  }
-
-  .msg-body {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-  }
-
-  .msg-head {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 0 8px;
-  }
-
-  .msg-head b {
-    font-weight: 600;
-  }
-
-  .msg-head .k {
-    font-size: 12px;
-  }
-
-  p {
-    margin: 0;
-    line-height: 1.6;
-    overflow-wrap: anywhere;
-  }
-
-  .at {
-    padding: 0 3px;
-    border-radius: 4px;
-    background: var(--accent-container);
-    color: var(--on-accent-container);
-    font-weight: 600;
-  }
-
-  code {
-    padding: 1px 5px;
-    border-radius: 4px;
-    background: var(--muted);
-    font-family: var(--font-mono);
-    font-size: 0.9em;
-  }
-
-  .add {
-    align-self: flex-start;
-    min-height: 28px;
-    margin-left: -8px;
-    padding: 0 8px;
-    border-color: transparent;
-    background: transparent;
-    color: var(--mfg);
-    font-size: 12.5px;
   }
 
   .composer-wrap {

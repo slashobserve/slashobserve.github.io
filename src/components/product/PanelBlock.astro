@@ -1,0 +1,65 @@
+---
+import Mark from "./Mark.astro"
+import Panel from "./Panel.astro"
+
+interface Props {
+  title: string
+  caption: string
+  live?: boolean
+  byline: string
+  author: "person" | "agent"
+  initials?: string
+  tint?: 1 | 2 | 3 | 4
+}
+
+const { title, caption, live = false, byline, author, initials, tint } = Astro.props
+---
+
+<div class="block">
+  <Panel title={title}><slot /></Panel>
+  <div class="foot">
+    <span class="caption">{live && <span class="dot" aria-hidden="true"></span>}{caption}</span>
+    <span class="byline"><Mark kind={author} initials={initials} tint={tint} size={20} />{byline}</span>
+  </div>
+</div>
+
+<style>
+  .block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    padding: 0 2px;
+    color: var(--mfg);
+    font-size: 12px;
+  }
+
+  .caption,
+  .byline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .byline {
+    margin-left: auto;
+    gap: 8px;
+  }
+
+  .dot {
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ok);
+  }
+</style>
