@@ -10,10 +10,10 @@
 	--nb-card: var(--bg);
 	--nb-card-foreground: var(--fg);
 
-	--nb-muted: var(--muted-bg);
+	--nb-muted: var(--muted);
 	--nb-muted-foreground: var(--mfg);
 
-	--nb-accent: var(--muted-bg);
+	--nb-accent: var(--muted);
 	--nb-accent-foreground: var(--fg);
 
 	--nb-primary: var(--primary);
@@ -21,17 +21,17 @@
 	--nb-primary-hover: color-mix(in oklab, var(--primary) 85%, var(--bg));
 
 	--nb-brand: var(--brand);
-	--nb-brand-wash: var(--sel);
+	--nb-brand-wash: var(--accent-container);
 
 	--nb-border: var(--border);
 	--nb-border-strong: var(--border-strong);
-	--nb-selected: var(--sel);
+	--nb-selected: var(--accent-container);
 	--nb-code-tint: color-mix(in oklab, var(--fg) 6%, transparent);
 	--nb-ring: var(--brand);
 
 	--nb-info: var(--brand);
 	--nb-info-foreground: var(--brand-text);
-	--nb-info-muted: var(--brand-muted);
+	--nb-info-muted: var(--accent-container);
 
 	--nb-success: var(--ok);
 	--nb-success-foreground: var(--ok);
@@ -139,7 +139,7 @@ body {
 }
 
 ::selection {
-	background: var(--sel);
+	background: var(--accent-container);
 	color: var(--fg);
 }
 
@@ -211,7 +211,7 @@ body {
 	padding: 0 3rem 0 1.25rem;
 	box-sizing: border-box;
 	border-bottom: 1px solid var(--border);
-	background: var(--muted-bg);
+	background: var(--muted);
 	color: var(--mfg);
 	font-family: var(--font-mono);
 	font-size: 0.75rem;

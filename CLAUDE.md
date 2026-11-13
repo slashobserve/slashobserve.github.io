@@ -18,11 +18,11 @@ Docs content is written in the core repo `slashobserve/slashobserve` under `docs
 
 ## Layout
 
-- `src/pages/`: home, /build, /migrate, /signals, 404, the /docs/ landing page (/features redirects to /build/ and /grafana to /migrate/ through `redirects` in `astro.config.ts`), `llms.txt`, `llms-full.txt` and `robots.txt`, `og/[card].png.ts` for marketing social cards and `og/docs/[...slug].png.ts` for one card per docs page.
-- `src/components/site/`: shared header, footer, wordmark, theme toggle, page opening, section, section head, split, band, the "Runs on" band, the surfaces section and the docs search, plus the theme script, the GitHub icon and the site commit line the docs footer shares.
+- `src/pages/`: home, /dashboards, /migrate, /signals, 404, the /docs/ landing page (/build and /features redirect to /dashboards/ and /grafana to /migrate/ through `redirects` in `astro.config.ts`), `llms.txt`, `llms-full.txt` and `robots.txt`, `og/[card].png.ts` for marketing social cards and `og/docs/[...slug].png.ts` for one card per docs page.
+- `src/components/site/`: shared header, footer, wordmark, theme toggle, page opening, section, section head, split, stage (the bordered box product drawings sit in), band, the "Runs on" band, the surfaces section and the docs search, plus the theme script, the GitHub icon and the site commit line the docs footer shares.
 - `src/components/home/`: home page sections.
 - `src/components/migrate/`, `src/components/signals/` and `src/components/docs-landing/`: those pages' sections.
-- `src/components/product/`: the drawn product screens, one component per window, named for what it shows (screenshots of the seeded demo replace them later), plus the `Window`, `Panel`, `TimeSeries`, `Bars`, `Sparklines` and `SameLink` pieces, the shared `screen-ids.ts` and `trace.ts` data; `BuildPlayback.astro` mounts the `BuildStage.tsx` island, styled by `build-stage.css`.
+- `src/components/product/`: the drawn product screens, one component per window, named for what it shows (screenshots of the seeded demo replace them later), plus the `Window`, `Mark` (the round person, agent and connected-agent author mark), `Panel`, `TimeSeries`, `Bars`, `Sparklines` and `SameLink` pieces, the shared `screen-ids.ts` and `trace.ts` data; `BuildPlayback.astro` mounts the `BuildStage.tsx` island, styled by `build-stage.css`.
 - `src/components/docs/` and `src/components/ui/`: the docs shell, sidebar, TOC, search and pager.
 - `src/layouts/`: page layouts.
 - `src/lib/`: pure helpers.
@@ -47,7 +47,7 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 - No milestone names anywhere on the site.
 - Numbers about the product come from generated data or the synced schema, never typed by hand.
 - Importer numbers on /migrate come from `src/generated/import-corpus.json`, which the prebuild builds from the core goldens in `pkg/grafana/testdata/golden`, and from `src/generated/import-coverage.json`, which it builds from the core option catalogs and gap files in `pkg/grafana/testdata/conformance`.
-- The canvas's `[N]` placeholders come from generators (`src/generated/`, the synced schema); a placeholder no generator fills is left out of the page, while numbers drawn inside a product screen are part of the drawing.
+- The boards' `[N]` placeholders come from generators (`src/generated/`, the synced schema); a placeholder no generator fills is left out of the page, while numbers drawn inside a product screen are part of the drawing.
 - The footer shows only the site repo's short commit SHA, unlinked and without a label, read from git by the prebuild into `src/generated/site.json`; when git cannot be read the line is omitted.
 - The prebuild writes `public/install.sh` (git-ignored) from the core checkout's `install.sh`, else from core `main` on GitHub, and fails the build when neither gives a `#!/bin/sh` script; so the install command `curl -fsSL https://slashobserve.com/install.sh | sh` always works and pages show it unconditionally.
 - The only domain is slashobserve.com; the site never names the GitHub Pages host. No live demo link anywhere; the demo is `make demo`.
@@ -62,9 +62,10 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 - Primary buttons use `--primary` (teal).
 - One teal accent for the main action, the wordmark slash, the Observe Agent mark, selection, focus rings and the docs accents: `--primary` is the action fill, `--brand` and `--brand-text` are the accent text colour (the page eyebrow, link hovers and info callouts); a unit test holds the accent to AA on page, card and chrome, primary button text to AA on `--primary`, focus rings to 3:1 and small muted text to AA.
 - The wordmark slash takes the accent.
+- Each colour has one token name: `--card`, `--muted` and `--accent-container` (selected rows, selection) have no aliases.
 - No shadows anywhere on the site: borders do the separating.
-- Product drawings sit on a stage (`--chrome`, bordered).
-- People and agents are drawn with the one round mark; person tints (`--p1` to `--p4`) appear only in marks.
+- Product drawings sit on a stage (`site/Stage.astro`: `--chrome`, bordered, 14px radius).
+- People and agents are drawn with the one round mark (`product/Mark.astro`); person tints (`--p1` to `--p4`) appear only in marks.
 - Blue appears only as chart series colours (`--s1`) in product depictions; status colours and code highlighting keep their hues.
 - The band (`.band`) is ink in light and the chrome colour in dark, with a top border (`--band-edge`): `--band-bg` with `--band-fg` and `--band-mfg` text and `--band-line` borders; focus rings inside it use `--band-fg`.
 - `src/styles/marketing.css` is wrapped in `@layer site`, so unlayered component styles win over it without specificity tricks.
@@ -73,10 +74,10 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 - Never use gradient-filled text or buttons, backdrop blur, numbered section labels, emoji, stock illustrations or coloured left-border callouts.
 - Docs stay calm: flat background, 1px borders.
 - Tailwind utilities appear only in the docs components.
-- The "Rethink, November" page of the website design canvas (https://claude.ai/artifact/RmvoELniBmxQFpW6MNQqPU, local copy `../docs/site/rethink-november/`) is the layout spec for the marketing pages and the /docs/ landing; the copy in this repo is the source of truth for wording, because every product claim was checked against the core code and the canvas still carries the earlier wording: `gen/head.html` (tokens and classes), `gen/build.py` (header, footer, page frame, the build playback), `gen/*.body.html` (pages) and the phone boards and screenshots (390px). Docs content pages keep their own design.
-- Shared marketing styles live in `src/styles/marketing.css` (the canvas classes, phone rules at 900px); `site/PageOpening.astro` opens a page, `site/Section.astro`, `SectionHead.astro` and `Split.astro` lay out sections, `site/Band.astro` is the inverted band, and `product/Window.astro` frames every drawn screen.
+- The "Rethink, November" boards (local copy `../docs/site/rethink-november/project/`) are the layout spec for the marketing pages and the /docs/ landing; each board's `<style>` block, scoped under `.so`, gives sizes, spacing and colours, and its `.so.ph` rules are the phone layout, which the site applies at 900px and below. The copy in this repo is the source of truth for wording, because every product claim was checked against the core code and the boards may carry earlier wording. Docs content pages keep their own design.
+- Shared marketing styles live in `src/styles/marketing.css` (the boards' classes: `wrap`, `h1` to `h3`, `lead`, `section`, `section-head`, `lined`, `split`, `btn`, `cmd`, `arrow`; phone rules at 900px); `site/PageOpening.astro` opens a page left-aligned, `site/Section.astro`, `SectionHead.astro` and `Split.astro` lay out sections, `site/Band.astro` is the inverted band, `site/Stage.astro` holds drawings and `product/Window.astro` frames every drawn screen.
 - Phones: no horizontal page scroll at 390px; tables sit in `.scroll` wrappers; terminal and code blocks scroll inside themselves.
-- The docs follow their own design in the site's brand, not the canvas.
+- The docs follow their own design in the site's brand, not the boards.
 
 ## Code rules
 

@@ -50,7 +50,7 @@ html:root {
 
 .docs-icon-btn:hover {
   border-color: var(--border-strong);
-  background: var(--muted-bg);
+  background: var(--muted);
 }
 
 .docs-icon-btn::before {

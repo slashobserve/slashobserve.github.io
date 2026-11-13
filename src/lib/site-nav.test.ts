@@ -5,24 +5,24 @@ import { PRODUCT_LINKS, docsHomeHref, footerColumns, getStartedHref, headerNav, 
 const withoutReference = new Set(["docs/get-started/quick-start", "docs/get-started/install"])
 const withReference = new Set([...withoutReference, "docs/reference/configuration"])
 
-const build = { label: "Build", href: "/build/" }
-const migrate = { label: "Migrate", href: "/migrate/" }
+const dashboards = { label: "Dashboards", href: "/dashboards/" }
 const signals = { label: "Signals", href: "/signals/" }
+const migrate = { label: "Migrate", href: "/migrate/" }
 const selfHost = { label: "Self-host", href: "/docs/get-started/install/" }
 
 describe("PRODUCT_LINKS", () => {
-  test("lists Build, Migrate and Signals", () => {
-    expect(PRODUCT_LINKS).toEqual([build, migrate, signals])
+  test("lists Dashboards, Signals and Migrate", () => {
+    expect(PRODUCT_LINKS).toEqual([dashboards, signals, migrate])
   })
 })
 
 describe("headerNav", () => {
   test("lists the product pages then Docs, without Self-host", () => {
-    expect(headerNav(resolveDocLinks(withReference))).toEqual([build, migrate, signals, { label: "Docs", href: "/docs/" }])
+    expect(headerNav(resolveDocLinks(withReference))).toEqual([dashboards, signals, migrate, { label: "Docs", href: "/docs/" }])
   })
 
   test("keeps only the product pages when no docs exist", () => {
-    expect(headerNav(resolveDocLinks(new Set()))).toEqual([build, migrate, signals])
+    expect(headerNav(resolveDocLinks(new Set()))).toEqual([dashboards, signals, migrate])
   })
 })
 
@@ -54,23 +54,29 @@ describe("docsHomeHref", () => {
 describe("footerColumns", () => {
   test("lists the product pages and Self-host in the Product column", () => {
     const product = footerColumns(resolveDocLinks(withReference)).find((column) => column.title === "Product")
-    expect(product?.items).toEqual([build, migrate, signals, selfHost])
+    expect(product?.items).toEqual([dashboards, signals, migrate, selfHost])
   })
 
   test("omits Reference while it does not exist", () => {
     const columns = footerColumns(resolveDocLinks(withoutReference))
     expect(columns.map((column) => column.title)).toEqual(["Product", "Docs", "Project"])
-    expect(columns[1].items.map((item) => item.label)).toEqual(["Overview", "Quick start", "Install"])
+    expect(columns[1].items.map((item) => item.label)).toEqual(["Overview", "Quick start", "Install", "llms.txt"])
   })
 
   test("includes Reference once it exists", () => {
     const docs = footerColumns(resolveDocLinks(withReference)).find((column) => column.title === "Docs")
-    expect(docs?.items.map((item) => item.label)).toEqual(["Overview", "Quick start", "Install", "Reference"])
+    expect(docs?.items.map((item) => item.label)).toEqual(["Overview", "Quick start", "Install", "Reference", "llms.txt"])
   })
 
-  test("keeps the product pages and the project column when no docs exist", () => {
+  test("links llms.txt in the Docs column", () => {
+    const docs = footerColumns(resolveDocLinks(withReference)).find((column) => column.title === "Docs")
+    expect(docs?.items).toContainEqual({ label: "llms.txt", href: "/llms.txt" })
+  })
+
+  test("keeps the product pages, llms.txt and the project column when no docs exist", () => {
     expect(footerColumns(resolveDocLinks(new Set()))).toEqual([
-      { title: "Product", items: [build, migrate, signals] },
+      { title: "Product", items: [dashboards, signals, migrate] },
+      { title: "Docs", items: [{ label: "llms.txt", href: "/llms.txt" }] },
       {
         title: "Project",
         items: [
@@ -88,8 +94,8 @@ describe("isCurrentPage", () => {
     ["/migrate/", "/migrate/", true],
     ["/docs/self-hosting/#quick-start", "/docs/self-hosting/", false],
     ["/docs/self-hosting/#quick-start", "/docs/self-hosting/#quick-start", false],
-    ["/build/", "/", false],
-    ["/build/", "/build", false],
+    ["/dashboards/", "/", false],
+    ["/dashboards/", "/dashboards", false],
   ])("href %s on path %s is %p", (href, pathname, expected) => {
     expect(isCurrentPage(href, pathname)).toBe(expected)
   })

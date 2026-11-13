@@ -3,7 +3,7 @@
     flex: 1;
   }
 
-  .stage-play {
+  .btn.stage-play {
     flex: none;
     min-height: 28px;
     font-size: 12px;

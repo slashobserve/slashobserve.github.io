@@ -45,7 +45,7 @@ describe("accent palette", () => {
     const t = themeTokens(readTokensCss(), theme)
     const colour = (name: string) => parseColor(t[name])
     const ratio = (text: string, surface: string) => contrastRatio(colour(text), colour(surface))
-    const surfaces = ["--bg", "--card", "--chrome", "--canvas", "--muted", "--surface", "--muted-bg"]
+    const surfaces = ["--bg", "--card", "--chrome", "--canvas", "--muted"]
 
     test(`accent text passes AA on page, card and chrome in ${theme}`, () => {
       for (const text of ["--brand", "--brand-text"]) {

@@ -2,22 +2,12 @@
 interface Props {
   title: string
   lead?: string
-  space?: 40 | 32 | 28
 }
 
-const { title, lead, space = 40 } = Astro.props
+const { title, lead } = Astro.props
 ---
 
-<div class="section-head" style={`margin-bottom:${space}px`}>
+<div class="section-head">
   <h2 class="h2">{title}</h2>
-  {lead && <p class="lead lead-17">{lead}</p>}
+  {lead && <p class="lead">{lead}</p>}
 </div>
-
-<style>
-  .section-head {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    max-width: 760px;
-  }
-</style>

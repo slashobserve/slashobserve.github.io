@@ -1,0 +1,27 @@
+---
+interface Props {
+  class?: string
+}
+
+const { class: className } = Astro.props
+---
+
+<div class:list={["stage", className]}><slot /></div>
+
+<style>
+  .stage {
+    box-sizing: border-box;
+    min-width: 0;
+    padding: 28px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--chrome);
+  }
+
+  @media (max-width: 900px) {
+    .stage {
+      padding: 12px;
+      border-radius: 12px;
+    }
+  }
+</style>

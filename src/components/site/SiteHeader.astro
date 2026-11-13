@@ -15,10 +15,10 @@ const navItems = headerNav(links)
 const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? "page" : undefined)
 ---
 
-<div class="header-bar" data-site-bar>
-  <header class="wrap" data-site-header>
+<div class="header-bar">
+  <header class="wrap">
     <a class="home" href="/" aria-label="SlashObserve home">
-      <Wordmark size={21} />
+      <Wordmark size={22} />
     </a>
     <nav aria-label="Main" class="nav main-nav hide-sm">
       {navItems.map((item) => (
@@ -28,12 +28,10 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
       ))}
     </nav>
     <div class="actions">
-      <a class="github hide-sm" href={GITHUB_URL}>
-        <GitHubIcon size={15} />GitHub
-      </a>
+      <a class="github hide-sm" href={GITHUB_URL}>GitHub</a>
       <ThemeToggle />
       {getStarted && (
-        <a class="btn btn-primary btn-sm get-started" href={getStarted}>
+        <a class="btn btn-primary btn-sm get-started hide-sm" href={getStarted}>
           Get started
         </a>
       )}
@@ -90,35 +88,20 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
     position: sticky;
     top: 0;
     z-index: 30;
-    transition: background-color 160ms ease;
-  }
-
-  .header-bar[data-scrolled] {
+    border-bottom: 1px solid var(--border);
     background: var(--bg);
   }
 
   header {
-    position: relative;
     display: flex;
     align-items: center;
-    gap: 18px;
-    min-height: 64px;
+    gap: 36px;
+    height: 64px;
   }
 
   .home {
     text-decoration: none;
     color: var(--fg);
-  }
-
-  .main-nav {
-    display: flex;
-    gap: 2px;
-    align-items: center;
-    margin-left: 8px;
-  }
-
-  .main-nav a {
-    white-space: nowrap;
   }
 
   .actions {
@@ -129,12 +112,8 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
   }
 
   .github {
-    display: inline-flex;
-    gap: 6px;
-    align-items: center;
-    padding: 8px 10px;
-    border-radius: 6px;
-    font-size: 14px;
+    padding: 0 10px;
+    font-size: 14.5px;
     color: var(--mfg);
     text-decoration: none;
   }
@@ -144,17 +123,13 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
   }
 
   .get-started {
-    min-height: 36px;
+    margin-left: 8px;
   }
 
   .menu-toggle {
     display: none;
     flex: none;
     padding: 0;
-  }
-
-  .menu-toggle:hover {
-    color: var(--fg);
   }
 
   .menu-toggle .icon-close,
@@ -175,7 +150,7 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
     display: flex;
     flex-direction: column;
     gap: 4px;
-    padding: 12px 24px 20px;
+    padding: 12px 16px 20px;
     box-sizing: border-box;
     background: var(--bg);
     border-bottom: 1px solid var(--border);
@@ -198,13 +173,24 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
   }
 
   .menu-link:hover {
-    background: var(--muted-bg);
+    background: var(--muted);
     color: var(--fg);
   }
 
+  .menu-link[aria-current="page"] {
+    font-weight: 500;
+  }
+
   @media (max-width: 900px) {
+    header {
+      height: 56px;
+    }
+
     .menu-toggle {
       display: inline-flex;
+      width: 44px;
+      height: 44px;
+      margin-right: -10px;
     }
   }
 
@@ -225,14 +211,6 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
   const MOBILE_QUERY = "(max-width: 900px)"
   const toggle = document.querySelector<HTMLButtonElement>(".menu-toggle")
   const panel = document.getElementById("site-menu")
-  const bar = document.querySelector<HTMLElement>("[data-site-bar]")
-
-  if (bar) {
-    const markScrolled = () => bar.toggleAttribute("data-scrolled", scrollY > 0)
-    markScrolled()
-    addEventListener("scroll", markScrolled, { passive: true })
-  }
-
   if (toggle && panel) {
     const setOpen = (open: boolean) => {
       panel.hidden = !open

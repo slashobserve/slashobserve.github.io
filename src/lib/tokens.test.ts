@@ -67,6 +67,12 @@ describe("tokens.css", () => {
     }
   })
 
+  test("the card, muted and accent container tokens have no alias names", () => {
+    for (const alias of ["--surface", "--muted-bg", "--sel", "--brand-muted"]) {
+      expect(blocks.light).not.toHaveProperty(alias)
+    }
+  })
+
   test("both font stacks start with the self-hosted Geist variable fonts", () => {
     expect(blocks.shared["--font-sans"]).toStartWith('"Geist Variable"')
     expect(blocks.shared["--font-mono"]).toStartWith('"Geist Mono Variable"')

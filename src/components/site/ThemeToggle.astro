@@ -34,17 +34,18 @@ const { bordered = false } = Astro.props
     align-items: center;
     justify-content: center;
     flex: none;
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     padding: 0;
     border: 0;
-    border-radius: 8px;
+    border-radius: 6px;
     background: transparent;
     color: var(--mfg);
     cursor: pointer;
   }
 
   .theme-toggle:hover {
+    background: var(--muted);
     color: var(--fg);
   }
 
@@ -66,7 +67,7 @@ const { bordered = false } = Astro.props
 
   .theme-toggle.bordered:hover {
     border-color: var(--border-strong);
-    background: var(--muted-bg);
+    background: var(--muted);
   }
 
   .theme-toggle:focus-visible {

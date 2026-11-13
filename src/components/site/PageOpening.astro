@@ -1,13 +1,12 @@
 ---
 interface Props {
   title: string
-  size?: 60 | 56
 }
 
-const { title, size = 60 } = Astro.props
+const { title } = Astro.props
 ---
 
-<section class="wrap hero">
-  <h1 class:list={["h1", size === 56 ? "h1-56" : "h1-60"]}>{title}</h1>
+<section class="wrap open">
+  <h1 class="h1 h1-56">{title}</h1>
   <slot />
 </section>

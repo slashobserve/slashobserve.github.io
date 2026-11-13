@@ -47,7 +47,7 @@
   padding: 1rem 1.25rem;
   border: 1px solid var(--border);
   border-radius: var(--nb-radius);
-  background: var(--muted-bg);
+  background: var(--muted);
   font-size: 0.9375rem;
   line-height: 1.625rem;
 }
@@ -259,7 +259,7 @@
 
 .docs-content :where(th:not([class])) {
   padding: 0.625rem 0.875rem;
-  background: var(--muted-bg);
+  background: var(--muted);
   font-size: 0.8125rem;
   line-height: 1.25rem;
   font-weight: 500;
@@ -321,7 +321,7 @@
 }
 
 .docs-content :where(mark:not([class])) {
-  background: var(--sel);
+  background: var(--accent-container);
   color: var(--fg);
   line-height: 1;
   border-radius: var(--nb-radius-sm);

@@ -28,7 +28,7 @@ const stats = [
   description="Coming from Grafana, Kibana or OpenSearch Dashboards? Grafana dashboards import with their folders, variables and links. Elasticsearch and OpenSearch connect as they are, and the KQL you typed in Discover runs there. Saved objects are not imported."
 >
   <PageOpening title="Coming from Grafana, Kibana or OpenSearch Dashboards?">
-    <p class="lead lead-20">
+    <p class="lead">
       Connect the stores you already have and keep the habits you already have. A Grafana comes across one dashboard at a
       time with every query checked. An Elasticsearch or OpenSearch index connects as it is, and the KQL you typed in
       Discover runs here. Nothing is written back to any of them.
@@ -54,17 +54,16 @@ const stats = [
     <SectionHead
       title="From Grafana: every dashboard, every query checked."
       lead="Connect a Grafana with a read-only token. Every dashboard comes across with its folder, tags, variables and links; unmatched panels are listed, not hidden; every imported query runs, and the ones that fail go to a repair queue. The old links keep resolving."
-      space={32}
     />
   </Section>
   <ImportStats stats={stats} />
   <ImportSteps />
   <ImportCoverageTable />
   <Section>
-    <Split start={0.8} end={1.2} gap={48}>
+    <Split>
       <div class="script-copy" slot="start">
         <h2 class="h2">The same import, scripted.</h2>
-        <p class="lead lead-17">
+        <p class="lead">
           Everything the Settings page does is a verb, so a migration can run from CI or a runbook and be repeated.
         </p>
       </div>
