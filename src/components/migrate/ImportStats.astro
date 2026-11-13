@@ -9,7 +9,7 @@ const { stats } = Astro.props
 {
   stats.length > 0 && (
     <section class="wrap stats-wrap">
-      <div class="strip" style={`--cols:${stats.length}`}>
+      <div class="lined strip" style={`--cols:${stats.length}`}>
         {stats.map((stat) => (
           <div class="stat">
             <span class="stat-value">{stat.value}</span>
@@ -28,18 +28,13 @@ const { stats } = Astro.props
   }
 
   .strip {
-    display: grid;
     grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
-    gap: 24px;
-    padding: 32px 0;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
   }
 
   .stat {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
   }
 
   .stat-value {

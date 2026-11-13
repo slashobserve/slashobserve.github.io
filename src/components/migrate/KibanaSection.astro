@@ -2,6 +2,7 @@
 import Window from "../product/Window.astro"
 import Section from "../site/Section.astro"
 import SectionHead from "../site/SectionHead.astro"
+import Stage from "../site/Stage.astro"
 import type { DocLinks } from "../../lib/doc-links"
 
 interface Props {
@@ -53,12 +54,16 @@ const QUERY_FORMS = [
         Dashboards stay where they are; describe the dashboard you want and the agent builds it against the same index.
       </p>
     </div>
-    <div class="kibana-side">
-      <Window label="The three query forms on an Elasticsearch or OpenSearch datasource">
-        <div class="term">{QUERY_FORMS.map((line) => <span class="tl">{line}</span>)}</div>
-      </Window>
-      {links.elasticsearch && <a class="arrow-link" href={links.elasticsearch}>Connect Elasticsearch →</a>}
-      {links.opensearch && <a class="arrow-link" href={links.opensearch}>Connect OpenSearch →</a>}
+    <div class="kibana-side" data-in-view="rise">
+      <Stage>
+        <Window label="The three query forms on an Elasticsearch or OpenSearch datasource">
+          <div class="term">{QUERY_FORMS.map((line) => <span class="tl">{line}</span>)}</div>
+        </Window>
+      </Stage>
+      <div class="kibana-links">
+        {links.elasticsearch && <a class="arrow" href={links.elasticsearch}>Connect Elasticsearch →</a>}
+        {links.opensearch && <a class="arrow" href={links.opensearch}>Connect OpenSearch →</a>}
+      </div>
     </div>
   </div>
 </Section>
@@ -86,11 +91,13 @@ const QUERY_FORMS = [
     min-width: 0;
   }
 
-  .kibana-side :global(.win) {
+  .kibana-side > :global(.stage) {
     align-self: stretch;
   }
 
-  .arrow-link {
-    text-decoration: none;
+  .kibana-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
   }
 </style>

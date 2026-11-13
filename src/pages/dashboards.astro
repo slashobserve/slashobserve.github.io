@@ -1,11 +1,14 @@
 ---
-import BuildPlayback from "../components/product/BuildPlayback.astro"
+import "../components/product/build-stage.css"
+import BuildStage from "../components/product/BuildStage"
+import DashboardActivity from "../components/product/DashboardActivity.astro"
 import MetricInventory from "../components/product/MetricInventory.astro"
 import VersionHistory from "../components/product/VersionHistory.astro"
 import PageOpening from "../components/site/PageOpening.astro"
 import RunsOnBand from "../components/site/RunsOnBand.astro"
 import Section from "../components/site/Section.astro"
 import Split from "../components/site/Split.astro"
+import Stage from "../components/site/Stage.astro"
 import SurfacesSection from "../components/site/SurfacesSection.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
 import { getDocLinks } from "../lib/get-doc-links"
@@ -24,7 +27,10 @@ const links = await getDocLinks()
       and every panel the agent adds or changes is run before the save.
     </p>
   </PageOpening>
-  <BuildPlayback space="page" />
+  <section class="wrap playback">
+    <div data-in-view="rise"><Stage><BuildStage client:visible /></Stage></div>
+    <p class="hint playback-caption">A build, played back.</p>
+  </section>
   <Section>
     <Split>
       <div slot="start" class="statement inventory-statement">
@@ -40,12 +46,12 @@ const links = await getDocLinks()
           <span class="chip"><span class="dot tone-ok"></span>0 uncovered</span>
         </div>
       </div>
-      <MetricInventory slot="end" />
+      <div slot="end" data-in-view="rise"><Stage><MetricInventory /></Stage></div>
     </Split>
   </Section>
   <Section>
     <Split rev>
-      <VersionHistory slot="start" />
+      <div slot="start" data-in-view="rise"><Stage><VersionHistory /></Stage></div>
       <div slot="end" class="statement">
         <h2 class="h2">Every change is a version.</h2>
         <p class="lead">
@@ -55,11 +61,30 @@ const links = await getDocLinks()
       </div>
     </Split>
   </Section>
+  <Section>
+    <Split>
+      <div slot="start" class="statement">
+        <h2 class="h2">Comments, requests and versions in one timeline.</h2>
+        <p class="lead">
+          Choose Activity on a dashboard and its comments, the requests people sent to the agent and its saved versions
+          sit in one list, sorted by time. Show narrows it to open comments or to changes only, and Panel narrows it to
+          one panel. A request to the agent shows the version it resolved by.
+        </p>
+      </div>
+      <div slot="end" data-in-view="rise"><Stage><DashboardActivity /></Stage></div>
+    </Split>
+  </Section>
   <SurfacesSection
     lead="The tools behind the built-in agent are served over MCP too. Claude Code and other MCP clients build, read and repair dashboards with the same metric inventory. Same save checks everywhere."
   />
   <RunsOnBand quickStart={links.quickStart} />
 </MarketingLayout>
+
+<script>
+  import { watchInView } from "../lib/client/in-view"
+
+  watchInView()
+</script>
 
 <style>
   .statement {
@@ -75,5 +100,19 @@ const links = await getDocLinks()
   .inventory-chips {
     gap: 8px;
     flex-wrap: wrap;
+  }
+
+  .playback {
+    padding-bottom: 96px;
+  }
+
+  .playback-caption {
+    margin: 18px 0 0;
+  }
+
+  @media (max-width: 900px) {
+    .playback {
+      padding-bottom: 64px;
+    }
   }
 </style>

@@ -1,0 +1,42 @@
+---
+import { languagesOf, stores } from "./stores"
+---
+
+<div class="lined lined-6 strip">
+  {
+    stores.map((store) => (
+      <div class="cell">
+        <span class="name">{store.store}</span>
+        <span class="mono k language">{languagesOf(store)}</span>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .strip {
+    align-self: stretch;
+    margin-top: 10px;
+  }
+
+  .cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .name {
+    font-weight: 500;
+    font-size: 15px;
+  }
+
+  .language {
+    font-size: 12.5px;
+  }
+
+  @media (min-width: 901px) and (max-width: 1100px) {
+    .strip {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

@@ -2,10 +2,12 @@
 import LogsPage from "../components/product/LogsPage.astro"
 import PanelEditorPreview from "../components/product/PanelEditorPreview.astro"
 import TraceView from "../components/product/TraceView.astro"
+import StoreStrip from "../components/signals/StoreStrip.astro"
 import StoresTable from "../components/signals/StoresTable.astro"
 import PageOpening from "../components/site/PageOpening.astro"
 import Section from "../components/site/Section.astro"
 import Split from "../components/site/Split.astro"
+import Stage from "../components/site/Stage.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
 ---
 
@@ -18,19 +20,14 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
       Prometheus or ClickHouse for metrics. Loki, ClickHouse, Elasticsearch or OpenSearch for logs. Tempo or ClickHouse for
       traces. Dashboards mix them, the agent queries all of them, and a log line with a trace id opens the trace.
     </p>
-    <div class="row chips">
-      <span class="chip">Prometheus</span>
-      <span class="chip">ClickHouse</span>
-      <span class="chip">Loki</span>
-      <span class="chip">Elasticsearch</span>
-      <span class="chip">OpenSearch</span>
-      <span class="chip">Tempo</span>
-    </div>
+    <StoreStrip />
   </PageOpening>
-  <section class="wrap logs-wrap"><LogsPage /></section>
+  <section class="wrap logs-wrap">
+    <div data-in-view="rise"><Stage><LogsPage /></Stage></div>
+  </section>
   <Section>
     <Split rev>
-      <TraceView slot="start" />
+      <div slot="start" data-in-view="rise"><Stage><TraceView /></Stage></div>
       <div slot="end" class="copy">
         <h2 class="h2">The trace view.</h2>
         <p class="lead">
@@ -54,18 +51,19 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
           before you save.
         </p>
       </div>
-      <PanelEditorPreview slot="end" />
+      <div slot="end" data-in-view="rise"><Stage><PanelEditorPreview /></Stage></div>
     </Split>
   </Section>
   <StoresTable />
 </MarketingLayout>
 
-<style>
-  .chips {
-    gap: 8px;
-    flex-wrap: wrap;
-  }
+<script>
+  import { watchInView } from "../lib/client/in-view"
 
+  watchInView()
+</script>
+
+<style>
   .logs-wrap {
     padding-bottom: 96px;
   }

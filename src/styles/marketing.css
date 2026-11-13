@@ -3,7 +3,6 @@ html{scroll-padding-top:80px}
 body{margin:0}
 .site{position:relative;isolation:isolate;background-color:var(--bg);color:var(--fg);font-family:var(--font-sans);font-size:15px;line-height:1.55;min-height:100vh;-webkit-font-smoothing:antialiased}
 .site>main{overflow-x:clip}
-.dots{background-image:radial-gradient(var(--grid) 1px,transparent 1.2px);background-size:28px 28px}
 :where(.site) a{color:var(--fg)}
 :where(.site) a:hover{color:var(--mfg)}
 :where(.site) button{font:inherit;color:inherit;cursor:pointer}

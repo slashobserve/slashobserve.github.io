@@ -4,6 +4,7 @@ import CliBuild from "../product/CliBuild.astro"
 import McpBuild from "../product/McpBuild.astro"
 import Section from "./Section.astro"
 import SectionHead from "./SectionHead.astro"
+import Stage from "./Stage.astro"
 
 interface Props {
   lead: string
@@ -14,5 +15,7 @@ const { lead } = Astro.props
 
 <Section>
   <SectionHead title="In the browser, the terminal, or your own agent." lead={lead} />
-  <div class="cols3"><ChatFollowUp /><CliBuild /><McpBuild /></div>
+  <div data-in-view="rise">
+    <Stage><div class="cols3"><ChatFollowUp /><CliBuild /><McpBuild /></div></Stage>
+  </div>
 </Section>

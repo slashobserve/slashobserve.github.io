@@ -1,19 +1,20 @@
 ---
 import Window from "../product/Window.astro"
+import CopyCommand from "../site/CopyCommand.astro"
 import { INSTALL_COMMAND } from "../../lib/site-facts"
 ---
 
 <Window title="Quick start" lights={false}>
   <div class="body">
     <p class="p">
-      Two minutes with Docker, wherever Docker runs. The demo ships a shop, Prometheus, ClickHouse, Loki, Tempo and
-      three reference dashboards.
+      About a minute on a fast connection, with Docker and git. The demo ships a shop, Prometheus, ClickHouse, Loki,
+      Tempo and three reference dashboards.
     </p>
     <div class="code"><span class="tl">git clone https://github.com/slashobserve/slashobserve</span><span class="tl">cd slashobserve &amp;&amp; make demo</span><span class="tl">open http://localhost:8080</span></div>
     <p class="p">When you want the agent, export a model key before <span class="mono">make demo</span>:</p>
     <div class="code"><span class="tl">export SLASHOBSERVE_LLM_PROVIDER=anthropic</span><span class="tl">{"export SLASHOBSERVE_LLM_API_KEY=<your Anthropic API key>"}</span></div>
     <p class="p">The CLI installs with one line:</p>
-    <div class="code">{INSTALL_COMMAND}</div>
+    <CopyCommand command={INSTALL_COMMAND} />
   </div>
 </Window>
 

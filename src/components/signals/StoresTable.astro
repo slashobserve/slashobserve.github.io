@@ -1,64 +1,11 @@
 ---
 import Section from "../site/Section.astro"
-
-type Language = string | null
-
-interface Store {
-  store: string
-  metrics: Language
-  logs: Language
-  traces: Language
-  discovery: string
-}
-
-const stores: Store[] = [
-  {
-    store: "Prometheus",
-    metrics: "PromQL",
-    logs: null,
-    traces: null,
-    discovery: "metric inventory by family, labels, label values, series per family",
-  },
-  {
-    store: "ClickHouse",
-    metrics: "SQL",
-    logs: "SQL",
-    traces: "SQL",
-    discovery: "tables in the configured database, columns and types, sample rows",
-  },
-  {
-    store: "Loki",
-    metrics: null,
-    logs: "LogQL",
-    traces: null,
-    discovery: "stream labels and values, line samples",
-  },
-  {
-    store: "Elasticsearch",
-    metrics: null,
-    logs: "KQL, Lucene, Query DSL",
-    traces: null,
-    discovery: "fields and kinds from the mapping, values per field, sample documents",
-  },
-  {
-    store: "OpenSearch",
-    metrics: null,
-    logs: "KQL, Lucene, Query DSL",
-    traces: null,
-    discovery: "fields and kinds from the mapping, values per field, sample documents",
-  },
-  {
-    store: "Tempo",
-    metrics: null,
-    logs: null,
-    traces: "TraceQL",
-    discovery: "service names, span names, attribute keys and values",
-  },
-]
+import SectionHead from "../site/SectionHead.astro"
+import { stores } from "./stores"
 ---
 
 <Section>
-  <h2 class="h2 stores-title">What each store gives the agent.</h2>
+  <SectionHead title="What each store gives the agent." />
   <div class="win">
     <div class="scroll">
       <table class="tbl stores">
@@ -69,7 +16,7 @@ const stores: Store[] = [
           {
             stores.map(({ store, metrics, logs, traces, discovery }) => (
               <tr>
-                <td>{store}</td>
+                <td class="store">{store}</td>
                 {[metrics, logs, traces].map((language) =>
                   language === null ? (
                     <td class="k">
@@ -99,13 +46,13 @@ const stores: Store[] = [
 </Section>
 
 <style>
-  .stores-title {
-    margin-bottom: 28px;
-  }
-
   .stores {
     font-size: 13.5px;
     min-width: 680px;
+  }
+
+  .store {
+    font-weight: 500;
   }
 
   .stores-note {
