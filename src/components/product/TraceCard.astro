@@ -1,0 +1,184 @@
+---
+import LevelIcon from "./LevelIcon.astro"
+import Window from "./Window.astro"
+import { ROOT, SLOWEST_ON_CRITICAL_PATH, SPANS, TRACE_START } from "./trace"
+
+const stats = [
+  { label: "Duration", value: ROOT.duration },
+  { label: "Spans", value: String(SPANS.length) },
+  { label: "Services", value: String(new Set(SPANS.map(({ service }) => service)).size) },
+  { label: "Errors", value: String(SPANS.filter(({ error }) => error).length), critical: true },
+  { label: "Started", value: TRACE_START },
+]
+---
+
+<Window label="A trace">
+  <div class="trace-card" data-in-view>
+    <div class="head">
+      <span class="title">{ROOT.service} {ROOT.operation}</span>
+      <span class="action">Copy trace id</span>
+    </div>
+    <div class="stats">
+      {
+        stats.map(({ label, value, critical }) => (
+          <span class="stat">
+            <span class="k">{label}</span>
+            <span class:list={["num", { "fg-crit": critical }]}>{value}</span>
+          </span>
+        ))
+      }
+      <span class="stat">
+        <span class="k">Slowest service</span>
+        <span>
+          {SLOWEST_ON_CRITICAL_PATH.service}, <span class="num">{SLOWEST_ON_CRITICAL_PATH.duration}</span> on the critical path
+        </span>
+      </span>
+    </div>
+    <div class="spans">
+      {
+        SPANS.map(({ service, operation, depth, tone, width, offset, duration, error, selected }, index) => (
+          <div class:list={["span", { selected }]}>
+            <span class="name" style={`padding-left:${depth * 10}px`}>
+              <span class="label-text">
+                <span class="k">{service}</span> {operation}
+              </span>
+              {error && <LevelIcon level="Error" />}
+            </span>
+            <span class="track">
+              <span class={`bar tone-${tone}`} style={`width:${width}%;margin-left:${offset}%;--i:${index}`} data-grow />
+            </span>
+            <span class="k num length">{duration}</span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</Window>
+
+<style>
+  .trace-card {
+    min-width: 0;
+  }
+
+  .head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px 8px;
+  }
+
+  .title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+
+  .action {
+    flex: none;
+    padding: 3px 9px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card);
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 16px;
+    padding: 0 14px 10px;
+    font-size: 12px;
+  }
+
+  .stat {
+    display: inline-flex;
+    gap: 6px;
+  }
+
+  .num {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .spans {
+    padding: 6px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .span {
+    display: grid;
+    grid-template-columns: minmax(0, 190px) minmax(0, 1fr) 52px;
+    gap: 10px;
+    align-items: center;
+    padding: 5px 14px;
+    font-size: 12px;
+  }
+
+  .selected {
+    background: var(--accent-container);
+  }
+
+  .name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .label-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .track {
+    display: block;
+    min-width: 0;
+  }
+
+  .bar {
+    display: block;
+    height: 10px;
+    border-radius: 3px;
+    background: var(--tone);
+  }
+
+  .length {
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 900px) {
+    .span {
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas:
+        "name length"
+        "track track";
+      gap: 3px 8px;
+      padding: 5px 10px;
+    }
+
+    .name {
+      grid-area: name;
+    }
+
+    .length {
+      grid-area: length;
+    }
+
+    .track {
+      grid-area: track;
+    }
+  }
+</style>
+
+<script>
+  import { watchInView } from "../../lib/client/in-view"
+
+  watchInView()
+</script>

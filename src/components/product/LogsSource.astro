@@ -1,0 +1,322 @@
+---
+import LevelIcon, { type Level } from "./LevelIcon.astro"
+import Window from "./Window.astro"
+import { TRACE_ID } from "./screen-ids"
+
+interface LogLine {
+  time: string
+  level: Level
+  text: string
+  selected?: boolean
+}
+
+const QUERY =
+  "SELECT Timestamp, SeverityText, Body, TraceId FROM otel_logs WHERE $__timeFilter(Timestamp) AND ServiceName = 'checkout' ORDER BY Timestamp DESC LIMIT 200"
+
+const lines: LogLine[] = [
+  { time: "14:02:11.204", level: "Error", text: "payment declined order=8812 reason=card_declined" },
+  { time: "14:02:11.198", level: "Info", text: "GET /cart 200 12ms" },
+  { time: "14:02:10.911", level: "Warning", text: "db pool near max in_use=19 max=20" },
+  { time: "14:02:09.671", level: "Error", text: "upstream timeout upstream=payments after=2.0s", selected: true },
+  { time: "14:02:09.102", level: "Info", text: "GET /product/41 200 8ms" },
+  { time: "14:02:08.990", level: "Info", text: "reserve ok sku=41 qty=1" },
+]
+
+const details = [
+  ["Timestamp", "2026-11-06 14:02:09.671"],
+  ["SeverityText", "ERROR"],
+  ["TraceId", TRACE_ID],
+]
+
+const levels = [
+  { name: "Error", count: "87", tone: "crit" },
+  { name: "Warning", count: "214", tone: "warn" },
+  { name: "Info", count: "903", tone: "s1" },
+]
+---
+
+<Window label="The logs page on a ClickHouse datasource">
+  <div class="logs">
+    <div class="head">
+      <span class="title">Logs</span>
+      <span class="k description"
+        >Search one datasource in its own query language, narrow by field, then jump to the trace.</span
+      >
+    </div>
+    <div class="toolbar">
+      <span class="seg" aria-hidden="true"><span>Ask</span><span class="on">SQL</span></span>
+      <span class="controls">
+        <span class="pick">prod-ch ClickHouse <span class="k" aria-hidden="true">▾</span></span>
+        <span class="pick">Last 1 hour <span class="k" aria-hidden="true">▾</span></span>
+      </span>
+    </div>
+    <div class="query mono"><span class="k">1</span><span>{QUERY}</span></div>
+    <div class="run"><span class="primary">Run query</span></div>
+    <div class="volume">
+      <span class="k">1,204 lines in the last hour</span>
+      <span class="chips">
+        <span class="chip">All <b>1,204</b></span>
+        {
+          levels.map(({ name, count, tone }) => (
+            <span class="chip">
+              <i class={`tone-${tone}`} />
+              {name} <b>{count}</b>
+            </span>
+          ))
+        }
+      </span>
+    </div>
+    <div class="lines">
+      {
+        lines.map(({ time, level, text, selected }) => (
+          <>
+            <div class:list={["line", { selected }]}>
+              <span class="k">{time}</span>
+              <span class="level">
+                <LevelIcon level={level} />
+                {level}
+              </span>
+              <span class="mono message">{text}</span>
+            </div>
+            {selected && (
+              <div class="detail">
+                <span class="actions">
+                  <span class="small">Show context</span>
+                  <span class="small">Open trace</span>
+                </span>
+                <dl>
+                  {details.map(([key, value]) => (
+                    <>
+                      <dt class="k mono">{key}</dt>
+                      <dd class="mono">{value}</dd>
+                    </>
+                  ))}
+                </dl>
+              </div>
+            )}
+          </>
+        ))
+      }
+    </div>
+  </div>
+</Window>
+
+<style>
+  .logs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 0 0;
+    font-size: 12px;
+    min-width: 0;
+  }
+
+  .head,
+  .toolbar,
+  .query,
+  .run,
+  .volume {
+    margin: 0 14px;
+  }
+
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .title {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .description {
+    line-height: 1.4;
+  }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px 10px;
+  }
+
+  .seg {
+    display: inline-flex;
+    padding: 2px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--muted);
+  }
+
+  .seg span {
+    padding: 2px 10px;
+    border-radius: 4px;
+    color: var(--mfg);
+  }
+
+  .seg .on {
+    background: var(--card);
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .pick,
+  .small,
+  .primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .primary {
+    border-color: transparent;
+    background: var(--primary);
+    color: var(--pfg);
+  }
+
+  .small {
+    padding: 2px 8px;
+  }
+
+  .query {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 12px;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--canvas);
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  .volume {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px 10px;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 1px 7px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--muted);
+    white-space: nowrap;
+  }
+
+  .chip b {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .chip i {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--tone);
+  }
+
+  .lines {
+    margin-top: 2px;
+    padding: 4px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .line {
+    display: grid;
+    grid-template-columns: auto 76px minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    padding: 5px 14px;
+    white-space: nowrap;
+  }
+
+  .line .k {
+    font-family: var(--font-mono);
+  }
+
+  .level {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .message {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .selected {
+    background: var(--accent-container);
+  }
+
+  .detail {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 6px 14px 10px;
+    background: var(--accent-container);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  dl {
+    display: grid;
+    grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
+    gap: 2px 12px;
+    margin: 0;
+  }
+
+  dt,
+  dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 900px) {
+    .line {
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 2px 10px;
+      padding: 6px 10px;
+    }
+
+    .message {
+      grid-column: 1 / -1;
+    }
+
+    .detail {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+</style>
