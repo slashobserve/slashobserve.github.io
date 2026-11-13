@@ -1,52 +1,95 @@
 ---
 import { INSTALL_COMMAND } from "../../lib/site-facts"
+import Mark from "../product/Mark.astro"
+import ObservationScreen from "../product/ObservationScreen.astro"
+import Stage from "../site/Stage.astro"
 import CopyCommand from "./CopyCommand.astro"
+
+interface Props {
+  quickStart: string | null
+}
+
+const { quickStart } = Astro.props
 ---
 
-<section class="wrap hero">
-  <h1 class="h1"><span class="h1-top">Observability workspace</span><span class="h1-sub">for humans and agents.</span></h1>
-  <p class="lead">
-    Metrics, logs and traces across Prometheus, ClickHouse, Loki, Tempo, Elasticsearch and OpenSearch. Ask for a
-    dashboard in a sentence and get one that works; search logs and traces in the language each store speaks. Every query
-    runs before it is saved.
-  </p>
-  <div class="hero-row"><CopyCommand command={INSTALL_COMMAND} /></div>
-  <p class="hint">
-    Installs the observe CLI on macOS and Linux. The server is one binary beside Postgres; it runs in your network and
-    sends only the agent's tool results to the model you configure.
-  </p>
+<section>
+  <div class="wrap hero">
+    <h1 class="h1">
+      Observability workspace<br />for{" "}
+      <span class="nowrap"
+        ><span class="marks"><Mark kind="person" initials="AD" tint={1} /><Mark kind="person" initials="JP" tint={4} /></span
+        >humans</span
+      >{" "}and{" "}
+      <span class="nowrap"
+        ><span class="marks"><Mark kind="agent" /><Mark kind="connected" initials="CC" /></span>agents.</span
+      >
+    </h1>
+    <p class="lead">
+      Dashboards, logs, traces and investigations in one place your team shares with its agents. The queries an agent
+      adds or changes run before they are saved, every dashboard and observation change has an author, and all of it
+      reads the stores you already run.
+    </p>
+    <div class="cta">
+      {quickStart && <a class="btn btn-primary" href={quickStart}>Read the quick start</a>}
+      <CopyCommand command={INSTALL_COMMAND} />
+    </div>
+    <p class="hint">
+      Installs the observe CLI on macOS and Linux. The server is one binary beside Postgres; it runs in your network and
+      sends only the agent's tool results to the model you configure.
+    </p>
+  </div>
+  <div class="wrap screen" data-sequence>
+    <Stage><ObservationScreen /></Stage>
+  </div>
 </section>
 
 <style>
-  .h1-top {
-    display: block;
-    font-weight: 700;
+  .hero {
+    padding-bottom: 0;
   }
 
-  .h1-sub {
-    display: block;
-    margin-top: 0.18em;
-    font-size: 0.56em;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    color: var(--mfg);
+  .marks {
+    display: inline-flex;
+    margin-right: 0.16em;
+    vertical-align: 0.08em;
   }
 
-  .hero-row {
+  .marks :global(.mark) {
+    font-size: 0.7em !important;
+    outline: 0.07em solid var(--bg);
+  }
+
+  .marks :global(.mark + .mark) {
+    margin-left: -0.2em;
+  }
+
+  .cta {
     display: flex;
-    justify-content: flex-start;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
     max-width: 100%;
   }
 
   .hint {
+    max-width: 640px;
     margin: 0;
+    font-size: 14px;
+  }
+
+  .screen {
+    margin-top: 64px;
   }
 
   @media (max-width: 900px) {
-    .hero-row {
+    .cta {
       flex-direction: column;
       align-items: stretch;
       width: 100%;
+    }
+
+    .screen {
+      margin-top: 36px;
     }
   }
 </style>
