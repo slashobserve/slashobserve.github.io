@@ -2,10 +2,10 @@
 import { AGENTS_PATH, DASHBOARDS_PATH, OBSERVATIONS_PATH, SIGNALS_PATH } from "../../lib/site-nav"
 import { railItems, tourTitle } from "../../lib/tour"
 import AgentsScreen from "../product/AgentsScreen.astro"
-import AnswerToBlock from "../product/AnswerToBlock.astro"
 import DashboardActivity from "../product/DashboardActivity.astro"
 import InboxScreen from "../product/InboxScreen.astro"
 import LogsSource from "../product/LogsSource.astro"
+import MessageToBlock from "../product/MessageToBlock.astro"
 import PublishRca from "../product/PublishRca.astro"
 import TraceCard from "../product/TraceCard.astro"
 import Section from "../site/Section.astro"
@@ -94,7 +94,7 @@ const items = railItems(stops)
                 {id === "inbox" && <InboxScreen />}
                 {id === "observations" && (
                   <div class="pair pair-top">
-                    <AnswerToBlock />
+                    <MessageToBlock />
                     <PublishRca />
                   </div>
                 )}

@@ -1,5 +1,4 @@
 ---
-import InlineCode from "./InlineCode.astro"
 import Mention from "./Mention.astro"
 import Message from "./Message.astro"
 
@@ -24,11 +23,10 @@ const send = '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>'
       <Mention /> can we confirm the errors come from the payments client timeout?
     </Message>
     <Message as="li" seq={1} author="agent" name="Observe Agent for admin" time="17:03">
-      Yes. 94% of the 5xx on /api/checkout carry <InlineCode>payments: context deadline exceeded</InlineCode>, and they
-      start 3 minutes after the rollout.
+      Wrote the answer into this observation: Checkout errors began with the payments rollout.
     </Message>
     <Message as="li" seq={2} author="person" initials="JP" tint={4} name="Jo Park" time="17:06">
-      That matches the new 2s client timeout in the payments chart. Adding the snapshot to the page.
+      That matches the new 2s client timeout in the payments chart.
     </Message>
   </ol>
   <div class="composer-wrap">
