@@ -1,6 +1,6 @@
 ---
 import Window from "../product/Window.astro"
-import CopyCmd from "./CopyCmd.astro"
+import CopyCommand from "../site/CopyCommand.astro"
 import { INSTALL_COMMAND } from "../../lib/site-facts"
 ---
 
@@ -14,7 +14,7 @@ import { INSTALL_COMMAND } from "../../lib/site-facts"
     <p class="p">When you want the agent, export a model key before <span class="mono">make demo</span>:</p>
     <div class="code"><span class="tl">export SLASHOBSERVE_LLM_PROVIDER=anthropic</span><span class="tl">{"export SLASHOBSERVE_LLM_API_KEY=<your Anthropic API key>"}</span></div>
     <p class="p">The CLI installs with one line:</p>
-    <CopyCmd command={INSTALL_COMMAND} />
+    <CopyCommand command={INSTALL_COMMAND} />
   </div>
 </Window>
 

@@ -10,7 +10,7 @@ const [head, ...piped] = command.split(" | ")
 <div class="cmd command" data-command={command}>
   <span class="prompt" aria-hidden="true">$</span>
   <span class="text" title={command}>{head}{piped.map((segment) => <span class="piped"> | {segment}</span>)}</span>
-  <button type="button" class="copy">Copy</button>
+  <button type="button" class="copy" hidden>Copy</button>
   <span class="sr-only status" role="status"></span>
 </div>
 
@@ -73,7 +73,8 @@ const [head, ...piped] = command.split(" | ")
     const button = row.querySelector<HTMLButtonElement>(".copy")
     const text = row.querySelector(".text")
     const status = row.querySelector(".status")
-    if (!button || !text || !status) return
+    if (!button || !text || !status || !navigator.clipboard) return
+    button.hidden = false
 
     let resetTimer: ReturnType<typeof setTimeout> | undefined
 
