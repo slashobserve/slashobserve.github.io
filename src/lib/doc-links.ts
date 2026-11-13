@@ -10,6 +10,12 @@ export type DocLinkKey =
   | "oidc"
   | "llm"
   | "cli"
+  | "cliObservations"
+  | "observations"
+  | "agents"
+  | "proposals"
+  | "inbox"
+  | "connectAgent"
   | "datasources"
   | "elasticsearch"
   | "opensearch"
@@ -28,6 +34,12 @@ export const DOC_LINK_CANDIDATES: Record<DocLinkKey, readonly string[]> = {
   oidc: ["docs/connect/oidc"],
   llm: ["docs/connect/llm-providers"],
   cli: ["docs/use/cli"],
+  cliObservations: ["docs/use/cli#observations"],
+  observations: ["docs/use/observations"],
+  agents: ["docs/use/agents"],
+  proposals: ["docs/concepts/proposals"],
+  inbox: ["docs/use/inbox"],
+  connectAgent: ["docs/use/mcp#connect-your-own-agent"],
   datasources: ["docs/connect/prometheus"],
   elasticsearch: ["docs/connect/elasticsearch"],
   opensearch: ["docs/connect/opensearch"],

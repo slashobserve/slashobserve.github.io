@@ -7,6 +7,10 @@ const corePages = new Set([
   "docs/use/import-grafana",
   "docs/use/mcp",
   "docs/use/cli",
+  "docs/use/observations",
+  "docs/use/agents",
+  "docs/use/inbox",
+  "docs/concepts/proposals",
   "docs/teams/roles",
   "docs/teams/folders",
   "docs/connect/oidc",
@@ -29,6 +33,12 @@ describe("resolveDocLinks", () => {
       oidc: "/docs/connect/oidc/",
       llm: "/docs/connect/llm-providers/",
       cli: "/docs/use/cli/",
+      cliObservations: "/docs/use/cli/#observations",
+      observations: "/docs/use/observations/",
+      agents: "/docs/use/agents/",
+      proposals: "/docs/concepts/proposals/",
+      inbox: "/docs/use/inbox/",
+      connectAgent: "/docs/use/mcp/#connect-your-own-agent",
       datasources: "/docs/connect/prometheus/",
       elasticsearch: null,
       opensearch: null,
@@ -46,6 +56,17 @@ describe("resolveDocLinks", () => {
     const links = resolveDocLinks(withoutRoles)
     expect(links.roles).toBeNull()
     expect(links.folders).toBe("/docs/teams/folders/")
+  })
+
+  test("returns null for the observation and agent pages until core has them", () => {
+    const bare = new Set(["docs/use/mcp", "docs/use/cli"])
+    const links = resolveDocLinks(bare)
+    expect(links.observations).toBeNull()
+    expect(links.agents).toBeNull()
+    expect(links.proposals).toBeNull()
+    expect(links.inbox).toBeNull()
+    expect(links.connectAgent).toBe("/docs/use/mcp/#connect-your-own-agent")
+    expect(links.cliObservations).toBe("/docs/use/cli/#observations")
   })
 
   test("returns null for every key when no docs exist", () => {
