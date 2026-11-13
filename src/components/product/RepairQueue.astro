@@ -63,7 +63,7 @@ interface Props {
 const { onStage = false } = Astro.props
 ---
 
-<Window url={onStage ? undefined : `${HOST}/dashboards?kind=imported`} label="The imported dashboards that are not verified">
+<Window url={`${HOST}/dashboards?kind=imported`} {onStage} label="The imported dashboards that are not verified">
   <div class="row filters">
     <span class="field k">Filter by title</span>
     <span class="select">Folder: any<span class="k" aria-hidden="true">▾</span></span>
@@ -164,12 +164,9 @@ const { onStage = false } = Astro.props
   }
 
   .repair {
-    min-height: 0;
-    padding: 4px 8px;
+    min-height: 24px;
+    padding: 0 8px;
     font-size: 11px;
-    line-height: 1.25;
-    white-space: normal;
-    text-align: center;
   }
 
   .queue {
