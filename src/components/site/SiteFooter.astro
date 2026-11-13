@@ -14,19 +14,18 @@ const { links } = Astro.props
 <footer class="foot">
   <div class="wrap foot-grid">
     <div class="brand">
-      <span class="brand-mark"><Wordmark size={18} /></span>
-      <span class="tagline">Metrics, logs and traces on your own data, for humans and agents. Open source under Apache-2.0.</span>
+      <span class="brand-mark"><Wordmark size={19} /></span>
+      <span>Observability workspace for humans and agents. Metrics, logs and traces on your own data. Open source under Apache-2.0.</span>
       <span class="legal">
         Grafana is a trademark of Grafana Labs. Elasticsearch and Kibana are trademarks of Elasticsearch B.V. OpenSearch is a trademark of LF Projects, LLC. SlashObserve is not affiliated with or endorsed by any of them.
       </span>
-      <span>No analytics, no cookies.</span>
-      <SiteCommit />
+      <span class="legal">No analytics, no cookies.<SiteCommit /></span>
     </div>
     <nav aria-label="Footer" class="columns">
       {
         footerColumns(links).map((column) => (
           <div>
-            <span class="label title">{column.title}</span>
+            <span class="title">{column.title}</span>
             {column.items.map((item) => (
               <a href={item.href}>{item.label}</a>
             ))}
@@ -40,48 +39,51 @@ const { links } = Astro.props
 <style>
   .foot {
     border-top: 1px solid var(--border);
-    padding-top: 48px;
-    padding-bottom: 40px;
-    font-size: 13px;
-    color: var(--mfg);
+    font-size: 14px;
   }
 
   .foot-grid {
     display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr 1fr;
-    gap: 32px;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 64px;
+    padding-top: 56px;
+    padding-bottom: 56px;
   }
 
   .brand {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    max-width: 420px;
+    color: var(--mfg);
   }
 
   .brand-mark {
     color: var(--fg);
   }
 
-  .tagline {
-    max-width: 36ch;
-  }
-
   .legal {
-    max-width: 40ch;
+    font-size: 12.5px;
   }
 
   .columns {
-    display: contents;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    align-content: start;
+  }
+
+  .columns div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
   .title {
-    display: block;
-    margin-bottom: 8px;
+    font-weight: 500;
   }
 
   a {
-    display: block;
-    padding: 3px 0;
     color: var(--mfg);
     text-decoration: none;
   }
@@ -92,11 +94,18 @@ const { links } = Astro.props
 
   @media (max-width: 900px) {
     .foot-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 32px;
+      padding-top: 40px;
+      padding-bottom: 40px;
+    }
+
+    .columns {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .brand {
-      grid-column: 1 / -1;
+    a {
+      padding: 6px 0;
     }
   }
 </style>

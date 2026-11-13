@@ -3,15 +3,16 @@ import type { DocLinks } from "./doc-links"
 export type NavItem = { label: string; href: string }
 
 export const GITHUB_URL = "https://github.com/slashobserve/slashobserve"
-export const BUILD_PATH = "/build/"
+export const DASHBOARDS_PATH = "/dashboards/"
 export const MIGRATE_PATH = "/migrate/"
 export const SIGNALS_PATH = "/signals/"
 export const DOCS_HOME_PATH = "/docs/"
+export const LLMS_TXT_PATH = "/llms.txt"
 
 export const PRODUCT_LINKS: NavItem[] = [
-  { label: "Build", href: BUILD_PATH },
-  { label: "Migrate", href: MIGRATE_PATH },
+  { label: "Dashboards", href: DASHBOARDS_PATH },
   { label: "Signals", href: SIGNALS_PATH },
+  { label: "Migrate", href: MIGRATE_PATH },
 ]
 
 export function getStartedHref(links: DocLinks): string | null {
@@ -47,6 +48,7 @@ export function footerColumns(links: DocLinks): { title: string; items: NavItem[
         ["Quick start", links.quickStart],
         ["Install", links.install],
         ["Reference", links.reference],
+        ["llms.txt", LLMS_TXT_PATH],
       ]),
     },
     {

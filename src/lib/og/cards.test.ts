@@ -4,7 +4,7 @@ import { SOCIAL_CARDS, cardFor, cardImagePath } from "./cards"
 describe("cardFor", () => {
   test.each([
     ["/", "home"],
-    ["/build/", "build"],
+    ["/dashboards/", "dashboards"],
     ["/migrate/", "migrate"],
     ["/migrate", "migrate"],
     ["/signals/", "signals"],
@@ -13,7 +13,7 @@ describe("cardFor", () => {
     expect(cardFor(pathname)?.id).toBe(id)
   })
 
-  test.each(["/features/", "/404.html", "/docs/self-hosting/", "/migrate/extra/"])("returns null for %s", (pathname) => {
+  test.each(["/build/", "/features/", "/404.html", "/docs/self-hosting/", "/migrate/extra/"])("returns null for %s", (pathname) => {
     expect(cardFor(pathname)).toBeNull()
   })
 })

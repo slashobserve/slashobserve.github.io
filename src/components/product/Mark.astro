@@ -1,0 +1,73 @@
+---
+interface Props {
+  kind: "person" | "agent" | "connected"
+  initials?: string
+  tint?: 1 | 2 | 3 | 4
+  size?: number
+}
+
+const { kind, initials, tint = 1, size = 24 } = Astro.props
+const text = kind === "agent" ? "/" : initials
+---
+
+<span class:list={["mark", kind, kind === "person" && `tint-${tint}`]} style={`font-size:${size}px`} aria-hidden="true"
+  ><b>{text}</b></span
+>
+
+<style>
+  .mark {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    box-sizing: border-box;
+    width: 1em;
+    height: 1em;
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0;
+    vertical-align: middle;
+  }
+
+  .mark b {
+    font-size: 0.42em;
+    font-weight: inherit;
+  }
+
+  .tint-1 {
+    background: var(--p1);
+    color: var(--p1-fg);
+  }
+
+  .tint-2 {
+    background: var(--p2);
+    color: var(--p2-fg);
+  }
+
+  .tint-3 {
+    background: var(--p3);
+    color: var(--p3-fg);
+  }
+
+  .tint-4 {
+    background: var(--p4);
+    color: var(--p4-fg);
+  }
+
+  .agent {
+    background: var(--primary);
+    color: var(--pfg);
+    font-weight: 700;
+  }
+
+  .agent b {
+    font-size: 0.5em;
+  }
+
+  .connected {
+    border: 1.5px solid var(--fg);
+    background: var(--card);
+    color: var(--fg);
+  }
+</style>

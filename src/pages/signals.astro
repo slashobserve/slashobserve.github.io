@@ -14,7 +14,7 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
   description="Metrics, logs and traces from Prometheus, ClickHouse, Loki, Elasticsearch, OpenSearch and Tempo in one place: PromQL, SQL, LogQL, KQL (with Lucene and the Query DSL) and TraceQL. Dashboards mix them and a log line opens its trace."
 >
   <PageOpening title="Three signals, six stores, one place to look.">
-    <p class="lead lead-20">
+    <p class="lead">
       Prometheus or ClickHouse for metrics. Loki, ClickHouse, Elasticsearch or OpenSearch for logs. Tempo or ClickHouse for
       traces. Dashboards mix them, the agent queries all of them, and a log line with a trace id opens the trace.
     </p>
@@ -29,11 +29,11 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
   </PageOpening>
   <section class="wrap logs-wrap"><LogsPage /></section>
   <Section>
-    <Split start={1.25} end={0.75} gap={48}>
+    <Split rev>
       <TraceView slot="start" />
       <div slot="end" class="copy">
         <h2 class="h2">The trace view.</h2>
-        <p class="lead lead-17">
+        <p class="lead">
           A waterfall per trace, the slow span selected, its attributes beside it. Tempo or the OpenTelemetry tables
           in ClickHouse, with TraceQL or SQL behind it.
         </p>
@@ -41,10 +41,10 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
     </Split>
   </Section>
   <Section>
-    <Split start={0.75} end={1.25} gap={48}>
+    <Split>
       <div slot="start" class="copy">
         <h2 class="h2">Try a query before you save it.</h2>
-        <p class="lead lead-17">
+        <p class="lead">
           The logs page takes one store at a time in its own language: LogQL on Loki, SQL on ClickHouse, KQL on
           Elasticsearch or OpenSearch, with Lucene or the Query DSL when you want them. "Show context", or "Surrounding documents" on
           Elasticsearch and OpenSearch, brings up the lines around a line, a line with a trace id opens its trace, and "Add to dashboard" saves the query as a logs

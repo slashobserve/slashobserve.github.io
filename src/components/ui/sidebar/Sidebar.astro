@@ -86,13 +86,13 @@ const labelId = (label: string, index: number) =>
 
   [data-nb-sidebar] :global(li > a:hover) {
     color: var(--fg);
-    background: var(--muted-bg);
+    background: var(--muted);
   }
 
   [data-nb-sidebar] :global(li > a[aria-current="page"]) {
     color: var(--fg);
     font-weight: 500;
-    background: var(--sel);
+    background: var(--accent-container);
   }
 
   [data-nb-sidebar] :global(li > a:focus-visible) {
@@ -125,7 +125,7 @@ const labelId = (label: string, index: number) =>
 
   [data-nb-sidebar] :global(.subgroup-summary:hover) {
     color: var(--fg);
-    background: var(--muted-bg);
+    background: var(--muted);
   }
 
   [data-nb-sidebar] :global(.subgroup-summary.current) {

@@ -14,11 +14,11 @@ const links = await getDocLinks()
 ---
 
 <MarketingLayout
-  title="Build | SlashObserve"
+  title="Dashboards | SlashObserve"
   description="Ask for a dashboard in a sentence: the agent inventories the metric families in scope, runs every panel it adds before the save, and ends with a version and a link."
 >
   <PageOpening title="Ask for a dashboard. Get one that works.">
-    <p class="lead lead-20">
+    <p class="lead">
       The agent takes an inventory of the metric families in scope before it plans, saves one panel at a time, and ends
       with a version and a link. Every family in scope, apart from runtime metrics, ends in a panel or a stated reason,
       and every panel the agent adds or changes is run before the save.
@@ -26,10 +26,10 @@ const links = await getDocLinks()
   </PageOpening>
   <BuildPlayback space="page" />
   <Section>
-    <Split start={0.85} end={1.15}>
+    <Split>
       <div slot="start" class="statement inventory-statement">
         <h2 class="h2">Every family in scope is accounted for.</h2>
-        <p class="lead lead-17">
+        <p class="lead">
           Before it plans, the agent takes an inventory of every metric family in scope: a job, a service, a namespace,
           or a table. Every family in scope, apart from runtime metrics, ends in a panel or a stated reason, and the
           save result lists anything uncovered. Runtime metrics are counted, not listed.
@@ -44,11 +44,11 @@ const links = await getDocLinks()
     </Split>
   </Section>
   <Section>
-    <Split start={1.15} end={0.85}>
+    <Split rev>
       <VersionHistory slot="start" />
       <div slot="end" class="statement">
         <h2 class="h2">Every change is a version.</h2>
-        <p class="lead lead-17">
+        <p class="lead">
           A build becomes one version. A follow-up in the chat, an edit in the panel editor, an agent repair, each is
           another, with a diff and a restore. A comment can be sent to the agent, and its change is a version too.
         </p>

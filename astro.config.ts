@@ -10,7 +10,7 @@ import { promql } from "./src/lib/shiki/promql"
 export default defineConfig({
   site: "https://slashobserve.com",
   trailingSlash: "always",
-  redirects: { "/features": "/build/", "/grafana": "/migrate/" },
+  redirects: { "/build": "/dashboards/", "/features": "/dashboards/", "/grafana": "/migrate/" },
   output: "static",
   vite: { plugins: [tailwindcss()] },
   markdown: {

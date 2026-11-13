@@ -39,7 +39,7 @@ bun run check:links
 
 ## Layout
 
-- `src/pages/`: the home, `/build`, `/migrate`, `/signals` and 404 pages, the docs routes and the social cards.
+- `src/pages/`: the home, `/dashboards`, `/migrate`, `/signals` and 404 pages, the docs routes and the social cards.
 - `src/components/`: Astro and React components, grouped by page.
 - `src/layouts/`: base, marketing and docs layouts.
 - `src/styles/`: global, marketing, docs and prose styles, with the colour tokens in `tokens.css`.
