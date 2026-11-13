@@ -51,47 +51,45 @@ const share = '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1
           </span>
         </span>
       </div>
-      <div class="body">
-        <div class="page">
-          <div class="head">
-            <span class="title">{TITLE}</span>
-            <div class="meta">
-              <span class="state"><span class="dot" aria-hidden="true"></span>Open</span>
-              <span class="k">Started by admin, 13 h ago</span>
-              <span class="k">In <span class="folder">Checkout</span></span>
-              <span class="btn btn-sm">Resolve</span>
-            </div>
-          </div>
-          <TextBlock>
-            Server errors on /api/checkout jumped from 0.1% to 2% within five minutes of the payments rollout. p95 latency
-            stayed flat, so this looks like a failing call rather than load.
-          </TextBlock>
-          <PanelBlock
-            title="Server error ratio by route"
-            caption="Prometheus, live"
-            live
-            author="agent"
-            byline="From Observe Agent"
-          >
-            <TimeSeries
-              viewBox="0 0 400 120"
-              height="120px"
-              yTicks={["3%", "2%", "1%", "0%"]}
-              xTicks={["16:10", "16:20", "16:30", "16:40", "16:50", "17:00"]}
-              series={[...series]}
-            />
-          </PanelBlock>
-          <div class="add-row">
-            <span class="k">Add a block</span>
-            <span class="btn btn-sm">Text</span>
-            <span class="btn btn-sm">Panel</span>
-            <span class="btn btn-sm">Logs</span>
-            <span class="btn btn-sm">Snapshot</span>
+      <div class="page">
+        <div class="head">
+          <span class="title">{TITLE}</span>
+          <div class="meta">
+            <span class="state"><span class="dot" aria-hidden="true"></span>Open</span>
+            <span class="k">Started by admin, 13 h ago</span>
+            <span class="k">In <span class="folder">Checkout</span></span>
+            <span class="btn btn-sm">Resolve</span>
           </div>
         </div>
-        <div class="discussion"><Discussion /></div>
+        <TextBlock>
+          Server errors on /api/checkout jumped from 0.1% to 2% within five minutes of the payments rollout. p95 latency
+          stayed flat, so this looks like a failing call rather than load.
+        </TextBlock>
+        <PanelBlock
+          title="Server error ratio by route"
+          caption="Prometheus, live"
+          live
+          author="agent"
+          byline="From Observe Agent"
+        >
+          <TimeSeries
+            viewBox="0 0 400 120"
+            height="120px"
+            yTicks={["3%", "2%", "1%", "0%"]}
+            xTicks={["16:10", "16:20", "16:30", "16:40", "16:50", "17:00"]}
+            series={[...series]}
+          />
+        </PanelBlock>
+        <div class="add-row">
+          <span class="k">Add a block</span>
+          <span class="btn btn-sm">Text</span>
+          <span class="btn btn-sm">Panel</span>
+          <span class="btn btn-sm">Logs</span>
+          <span class="btn btn-sm">Snapshot</span>
+        </div>
       </div>
     </div>
+    <div class="discussion"><Discussion /></div>
   </div>
 </Window>
 
@@ -155,26 +153,19 @@ const share = '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1
     stroke-linejoin: round;
   }
 
-  .body {
-    display: flex;
-    flex: 1;
-    gap: 20px;
-    align-items: stretch;
-    padding: 8px 12px 16px 24px;
-  }
-
   .page {
     display: flex;
     flex: 1;
     flex-direction: column;
     gap: 18px;
     min-width: 0;
+    padding: 8px 20px 16px 24px;
   }
 
   .discussion {
     display: flex;
     flex-direction: column;
-    width: 340px;
+    width: 348px;
     flex: none;
   }
 
@@ -244,14 +235,17 @@ const share = '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1
       padding: 8px 16px;
     }
 
-    .body {
-      flex-direction: column;
-      gap: 16px;
+    .page {
       padding: 8px 16px 16px;
     }
 
     .discussion {
       width: auto;
+    }
+
+    .discussion :global(.pane) {
+      border-left: 0;
+      border-top: 1px solid var(--border);
     }
   }
 </style>

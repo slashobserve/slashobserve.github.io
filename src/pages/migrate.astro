@@ -9,7 +9,6 @@ import PageOpening from "../components/site/PageOpening.astro"
 import Section from "../components/site/Section.astro"
 import SectionHead from "../components/site/SectionHead.astro"
 import Split from "../components/site/Split.astro"
-import Stage from "../components/site/Stage.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
 import { getDocLinks } from "../lib/get-doc-links"
 import { cleanImportPercent, readImportCorpus } from "../lib/import-corpus"
@@ -68,7 +67,7 @@ const stats = [
           Everything the Settings page does is a verb, so a migration can run from CI or a runbook and be repeated.
         </p>
       </div>
-      <div slot="end" data-in-view="rise"><Stage><ImportScript /></Stage></div>
+      <div slot="end" data-in-view="rise"><ImportScript /></div>
     </Split>
   </Section>
   <KibanaSection links={links} />

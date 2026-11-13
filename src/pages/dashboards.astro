@@ -8,7 +8,6 @@ import PageOpening from "../components/site/PageOpening.astro"
 import RunsOnBand from "../components/site/RunsOnBand.astro"
 import Section from "../components/site/Section.astro"
 import Split from "../components/site/Split.astro"
-import Stage from "../components/site/Stage.astro"
 import SurfacesSection from "../components/site/SurfacesSection.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
 import { getDocLinks } from "../lib/get-doc-links"
@@ -28,7 +27,7 @@ const links = await getDocLinks()
     </p>
   </PageOpening>
   <section class="wrap playback">
-    <div data-in-view="rise"><Stage><BuildStage client:visible /></Stage></div>
+    <div data-in-view="rise"><BuildStage client:visible /></div>
     <p class="hint playback-caption">A build, played back.</p>
   </section>
   <Section>
@@ -46,12 +45,12 @@ const links = await getDocLinks()
           <span class="chip"><span class="dot tone-ok"></span>0 uncovered</span>
         </div>
       </div>
-      <div slot="end" data-in-view="rise"><Stage><MetricInventory /></Stage></div>
+      <div slot="end" data-in-view="rise"><MetricInventory /></div>
     </Split>
   </Section>
   <Section>
     <Split rev>
-      <div slot="start" data-in-view="rise"><Stage><VersionHistory /></Stage></div>
+      <div slot="start" data-in-view="rise"><VersionHistory /></div>
       <div slot="end" class="statement">
         <h2 class="h2">Every change is a version.</h2>
         <p class="lead">
@@ -71,7 +70,7 @@ const links = await getDocLinks()
           one panel. A request to the agent shows the version it resolved by.
         </p>
       </div>
-      <div slot="end" data-in-view="rise"><Stage><DashboardActivity /></Stage></div>
+      <div slot="end" data-in-view="rise"><DashboardActivity /></div>
     </Split>
   </Section>
   <SurfacesSection

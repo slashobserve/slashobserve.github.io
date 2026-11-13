@@ -7,7 +7,6 @@ import StoresTable from "../components/signals/StoresTable.astro"
 import PageOpening from "../components/site/PageOpening.astro"
 import Section from "../components/site/Section.astro"
 import Split from "../components/site/Split.astro"
-import Stage from "../components/site/Stage.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
 ---
 
@@ -23,11 +22,11 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
     <StoreStrip />
   </PageOpening>
   <section class="wrap logs-wrap">
-    <div data-in-view="rise"><Stage><LogsPage /></Stage></div>
+    <div data-in-view="rise"><LogsPage /></div>
   </section>
   <Section>
     <Split rev>
-      <div slot="start" data-in-view="rise"><Stage><TraceView /></Stage></div>
+      <div slot="start" data-in-view="rise"><TraceView /></div>
       <div slot="end" class="copy">
         <h2 class="h2">The trace view.</h2>
         <p class="lead">
@@ -51,7 +50,7 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
           before you save.
         </p>
       </div>
-      <div slot="end" data-in-view="rise"><Stage><PanelEditorPreview /></Stage></div>
+      <div slot="end" data-in-view="rise"><PanelEditorPreview /></div>
     </Split>
   </Section>
   <StoresTable />

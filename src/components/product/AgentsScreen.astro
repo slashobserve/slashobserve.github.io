@@ -1,7 +1,5 @@
 ---
 import Mark from "./Mark.astro"
-import Window from "./Window.astro"
-import { HOST } from "./screen-ids"
 
 const stats = [
   { label: "Runs", value: "4" },
@@ -18,122 +16,120 @@ const connected = [
 const accounts = [{ name: "ci-bot", initials: "CB", status: "Listening", runs: 5, failed: 0 }]
 ---
 
-<Window url={`${HOST}/agents`} label="The Agents page">
-  <div class="agents">
-    <div class="row head">
-      <span class="title">Agents</span>
-      <span class="btn btn-primary btn-sm">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"
-          ><path d="M12 5v14M5 12h14"></path></svg
+<div class="agents" role="group" aria-label="The Agents page">
+  <div class="row head">
+    <span class="title">Agents</span>
+    <span class="btn btn-primary btn-sm">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"
+        ><path d="M12 5v14M5 12h14"></path></svg
+      >
+      Connect an agent
+    </span>
+  </div>
+
+  <section class="card observe" aria-label="Observe Agent">
+    <div class="row identity">
+      <Mark kind="agent" size={24} />
+      <span class="name">Observe Agent</span>
+      <span class="row on">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+          ><path d="m5 12 5 5 9-10"></path></svg
         >
-        Connect an agent
+        On
       </span>
+      <span class="k">anthropic claude-haiku-5-5</span>
     </div>
+    <dl class="stats">
+      {
+        stats.map(({ label, value }) => (
+          <div>
+            <dt class="k">{label}</dt>
+            <dd>{value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+    <p class="k scope">Last 7 days, everyone</p>
+  </section>
 
-    <section class="card observe" aria-label="Observe Agent">
-      <div class="row identity">
-        <Mark kind="agent" size={24} />
-        <span class="name">Observe Agent</span>
-        <span class="row on">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-            ><path d="m5 12 5 5 9-10"></path></svg
-          >
-          On
-        </span>
-        <span class="k">anthropic claude-haiku-5-5</span>
-      </div>
-      <dl class="stats">
-        {
-          stats.map(({ label, value }) => (
-            <div>
-              <dt class="k">{label}</dt>
-              <dd>{value}</dd>
-            </div>
-          ))
-        }
-      </dl>
-      <p class="k scope">Last 7 days, everyone</p>
-    </section>
-
-    <div class="block">
-      <h3 class="heading">Connected agents</h3>
-      <div class="card">
-        <table class="grid">
-          <thead>
-            <tr>
-              <th>Agent</th><th>Mode</th><th>Status</th><th>Writes in 7 days</th><th><span class="sr-only">Actions</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              connected.map(({ name, initials, mode, status, present, writes }) => (
-                <tr>
-                  <td>
-                    <span class="row">
-                      <Mark kind="connected" initials={initials} size={20} />
-                      <span class="person">{name}</span>
-                    </span>
-                  </td>
-                  <td>
-                    <span class="select">
-                      {mode}
-                      <span class="k" aria-hidden="true">▾</span>
-                    </span>
-                  </td>
-                  <td class="k">
-                    <span class="row status">
-                      {present && <span class:list={["dot", "tone-ok", { working: status === "Working" }]} />}
-                      {status}
-                    </span>
-                  </td>
-                  <td class="k">{writes}</td>
-                  <td class="action">
-                    <span class="manage">Manage in Settings</span>
-                  </td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="block">
-      <h3 class="heading">Service accounts that take runs</h3>
-      <div class="card">
-        <table class="grid">
-          <thead>
-            <tr>
-              <th>Name</th><th>Status</th><th>Runs in 7 days</th><th>Failed</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              accounts.map(({ name, initials, status, runs, failed }) => (
-                <tr>
-                  <td>
-                    <span class="row">
-                      <Mark kind="connected" initials={initials} size={20} />
-                      <span class="person">{name}</span>
-                    </span>
-                  </td>
-                  <td class="k">
-                    <span class="row status">
-                      <span class="dot tone-ok" />
-                      {status}
-                    </span>
-                  </td>
-                  <td class="k">{runs}</td>
-                  <td class="k">{failed}</td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
-      </div>
+  <div class="block">
+    <h3 class="heading">Connected agents</h3>
+    <div class="card">
+      <table class="grid">
+        <thead>
+          <tr>
+            <th>Agent</th><th>Mode</th><th>Status</th><th>Writes in 7 days</th><th><span class="sr-only">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            connected.map(({ name, initials, mode, status, present, writes }) => (
+              <tr>
+                <td>
+                  <span class="row">
+                    <Mark kind="connected" initials={initials} size={20} />
+                    <span class="person">{name}</span>
+                  </span>
+                </td>
+                <td>
+                  <span class="select">
+                    {mode}
+                    <span class="k" aria-hidden="true">▾</span>
+                  </span>
+                </td>
+                <td class="k">
+                  <span class="row status">
+                    {present && <span class:list={["dot", "tone-ok", { working: status === "Working" }]} />}
+                    {status}
+                  </span>
+                </td>
+                <td class="k">{writes}</td>
+                <td class="action">
+                  <span class="manage">Manage in Settings</span>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
     </div>
   </div>
-</Window>
+
+  <div class="block">
+    <h3 class="heading">Service accounts that take runs</h3>
+    <div class="card">
+      <table class="grid">
+        <thead>
+          <tr>
+            <th>Name</th><th>Status</th><th>Runs in 7 days</th><th>Failed</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            accounts.map(({ name, initials, status, runs, failed }) => (
+              <tr>
+                <td>
+                  <span class="row">
+                    <Mark kind="connected" initials={initials} size={20} />
+                    <span class="person">{name}</span>
+                  </span>
+                </td>
+                <td class="k">
+                  <span class="row status">
+                    <span class="dot tone-ok" />
+                    {status}
+                  </span>
+                </td>
+                <td class="k">{runs}</td>
+                <td class="k">{failed}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
 <style>
   .agents {
@@ -141,7 +137,6 @@ const accounts = [{ name: "ci-bot", initials: "CB", status: "Listening", runs: 5
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding: 16px;
     font-size: 13px;
   }
 

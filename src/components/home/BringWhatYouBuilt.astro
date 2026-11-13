@@ -3,6 +3,7 @@ import { MIGRATE_PATH } from "../../lib/site-nav"
 import RepairQueue from "../product/RepairQueue.astro"
 import Section from "../site/Section.astro"
 import Split from "../site/Split.astro"
+import Stage from "../site/Stage.astro"
 ---
 
 <Section>
@@ -16,7 +17,9 @@ import Split from "../site/Split.astro"
       </p>
       <a href={MIGRATE_PATH} class="arrow">Migrate →</a>
     </div>
-    <RepairQueue slot="end" />
+    <div slot="end" data-in-view="rise">
+      <Stage><RepairQueue onStage /></Stage>
+    </div>
   </Split>
 </Section>
 

@@ -5,7 +5,6 @@ import CliReference from "@/components/product/CliReference.astro"
 import McpConfig from "@/components/product/McpConfig.astro"
 import DocsSearch from "@/components/site/DocsSearch.astro"
 import PageOpening from "@/components/site/PageOpening.astro"
-import Stage from "@/components/site/Stage.astro"
 import MarketingLayout from "@/layouts/MarketingLayout.astro"
 import { REFERENCE_GROUP, TOPIC_GROUPS, resolveGroups } from "@/lib/docs-landing"
 import { getDocIds } from "@/lib/get-doc-links"
@@ -39,13 +38,9 @@ const [reference] = resolveGroups([REFERENCE_GROUP], ids)
   <section class="ruled">
     <div class="wrap landing-ref">
       <div class="split ref-split" data-in-view="rise">
-        <Stage>
-          <CliReference />
-        </Stage>
+        <CliReference />
         <div class="ref-side">
-          <Stage>
-            <McpConfig />
-          </Stage>
+          <McpConfig />
           {reference && <LinkGroup group={reference} />}
         </div>
       </div>
