@@ -19,6 +19,8 @@ export type DocLinkKey =
   | "datasources"
   | "elasticsearch"
   | "opensearch"
+  | "switchFromGrafana"
+  | "logsAndTraces"
 
 export type DocLinks = Record<DocLinkKey, string | null>
 
@@ -43,6 +45,8 @@ export const DOC_LINK_CANDIDATES: Record<DocLinkKey, readonly string[]> = {
   datasources: ["docs/connect/prometheus"],
   elasticsearch: ["docs/connect/elasticsearch"],
   opensearch: ["docs/connect/opensearch"],
+  switchFromGrafana: ["docs/use/switch-from-grafana"],
+  logsAndTraces: ["docs/use/logs-and-traces"],
 }
 
 export function resolveCandidate(candidate: string, existingIds: ReadonlySet<string>): string | null {

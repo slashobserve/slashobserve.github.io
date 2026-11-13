@@ -1,9 +1,10 @@
 ---
 import Window from "./Window.astro"
+import { GRAFANA_DASHBOARD_COUNT } from "./screen-ids"
 
 const CONNECTION_ID = "0b6f2c1e-7d4a-4f3b-9a51-2c8e6d1f0a37"
 ---
 
 <Window title="zsh">
-  <div class="term"><span class="tl"><span class="k">$</span> printf '%s' "$GRAFANA_TOKEN" | observe grafana connect \</span><span class="tl">{"    "}https://grafana.internal:3000 --token-stdin --name prod</span><span class="tl">Connected prod: {CONNECTION_ID}</span><span class="tl">Connected: 14 top-level folders, 212 dashboards.</span><span class="tl"> </span><span class="tl"><span class="k">$</span> observe grafana import {CONNECTION_ID} --all</span><span class="tl">212 done, 0 skipped, 0 failed of 212</span><span class="tl">3 dashboards have panels that did not verify</span><span class="tl"> </span><span class="tl k"># They wait in the repair queue, worked by the agent.</span></div>
+  <div class="term"><span class="tl"><span class="k">$</span> printf '%s' "$GRAFANA_TOKEN" | observe grafana connect \</span><span class="tl">{"    "}https://grafana.internal:3000 --token-stdin --name prod</span><span class="tl">Connected prod: {CONNECTION_ID}</span><span class="tl">Connected: 14 top-level folders, {GRAFANA_DASHBOARD_COUNT} dashboards.</span><span class="tl"> </span><span class="tl"><span class="k">$</span> observe grafana import {CONNECTION_ID} --all</span><span class="tl">{GRAFANA_DASHBOARD_COUNT} done, 0 skipped, 0 failed of {GRAFANA_DASHBOARD_COUNT}</span><span class="tl">3 dashboards have panels that did not verify</span><span class="tl"> </span><span class="tl k"># They wait in the repair queue, worked by the agent.</span></div>
 </Window>

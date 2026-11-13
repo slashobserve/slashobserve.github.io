@@ -1,0 +1,95 @@
+---
+import type { DocLinks } from "../../lib/doc-links"
+import type { TourLink, TourStopContent } from "../../lib/tour"
+import DatasourcesList from "../product/DatasourcesList.astro"
+import DiscoverPaste from "../product/DiscoverPaste.astro"
+import GrafanaSettings from "../product/GrafanaSettings.astro"
+import ImportProgress from "../product/ImportProgress.astro"
+import ImportScript from "../product/ImportScript.astro"
+import QueryForms from "../product/QueryForms.astro"
+import RepairQueue from "../product/RepairQueue.astro"
+import SameLink from "../product/SameLink.astro"
+import Tour from "../site/Tour.astro"
+
+interface Props {
+  links: DocLinks
+}
+
+const { links } = Astro.props
+
+const present = (candidates: (TourLink | null)[]): TourLink[] => candidates.filter((link) => link !== null)
+const link = (href: string | null, label: string): TourLink | null => (href ? { href, label } : null)
+
+const stops: TourStopContent[] = [
+  {
+    id: "connect",
+    place: "Connect",
+    title: "Connect a Grafana with a read-only token.",
+    text: "Admins open Settings and choose Grafana connection, then give it a Grafana URL and a service account token with the Viewer role on the folders to import. The test counts top-level folders and dashboards; the import form shows each Grafana datasource beside its match.",
+    links: present([link(links.switchFromGrafana, "Switch from Grafana")]),
+  },
+  {
+    id: "import",
+    place: "Import",
+    title: "Every dashboard comes across, every query checked.",
+    text: "Choose Import, then All folders and Start import. Every dashboard comes across with its tags, variables and links, every imported query runs, and the results list what failed, what needs repair, what imported and what was skipped. A nested folder path is kept as one folder titled Parent / Child. A second run skips dashboards unchanged in Grafana and saves a new version of those that changed; your edits stay in the version history. The same connect and import are observe grafana verbs, so a migration can run from CI or a runbook and be repeated.",
+    links: present([link(links.importGuide, "Import guide")]),
+  },
+  {
+    id: "repair",
+    place: "Repair",
+    title: "What did not verify waits in a repair queue.",
+    text: "Panels whose queries fail are marked unverified, never hidden, and wait in a repair queue; placeholders are listed for you to redo by hand. Repair with the agent rewrites their queries and saves a version you can diff, and Repair all queues every listed dashboard.",
+    links: [],
+  },
+  {
+    id: "old-links",
+    place: "Old links",
+    title: "Old links open the imported dashboard.",
+    text: "Every imported dashboard keeps its Grafana uid, so /d/<uid>/<slug> here redirects to the imported dashboard. Point the old hostname at SlashObserve and runbooks, wiki pages and alert links keep working.",
+    links: [],
+  },
+  {
+    id: "clusters",
+    place: "Clusters",
+    title: "Elasticsearch and OpenSearch connect as they are.",
+    text: "A datasource reads the indices your Discover data view did: a pattern such as logs-*, a data stream or an alias, with its time field. Basic auth, a bearer token or an API key. Elasticsearch 8 and 9, OpenSearch 2 and 3; the health check tells a wrong type, an unsupported version, an empty pattern and a missing time field apart.",
+    note: "Saved objects are not imported. Dashboards, saved searches and visualizations from Kibana or OpenSearch Dashboards stay where they are; describe the dashboard you want and the agent builds it against the same index.",
+    links: present([link(links.elasticsearch, "Connect Elasticsearch"), link(links.opensearch, "Connect OpenSearch")]),
+  },
+  {
+    id: "kql",
+    place: "KQL",
+    title: "Type the KQL you typed in Discover.",
+    text: "The server compiles KQL to Query DSL. It is a strict subset of Kibana's KQL, so a query Kibana accepts may be refused, with the mistake marked at the character. Start with lucene: for Lucene, or paste a {...} body for the Query DSL, aggregations included. Paste a Discover link and the page fills in the query, the time range, the columns and the filters it can apply, and says what it left out; the browser reads the link itself.",
+    links: present([link(links.logsAndTraces, "Logs and traces")]),
+  },
+]
+---
+
+<Tour
+  title="The move, in the order that works."
+  lead="Grafana first, one dashboard at a time with every query checked, then the Elasticsearch and OpenSearch clusters your Discover tab searched."
+  railLabel="The move"
+  stops={stops}
+>
+  <GrafanaSettings slot="connect" />
+  <div slot="import" class="stack"><ImportProgress /><ImportScript /></div>
+  <RepairQueue slot="repair" />
+  <SameLink slot="old-links" />
+  <DatasourcesList slot="clusters" />
+  <div slot="kql" class="cols2 pair-top"><DiscoverPaste /><QueryForms /></div>
+</Tour>
+
+<style>
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+  }
+
+  .pair-top {
+    align-items: start;
+  }
+</style>
