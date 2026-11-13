@@ -6,8 +6,8 @@ describe("cardColors", () => {
   test("maps the light theme tokens", () => {
     const colors = cardColors(themeTokens(readTokensCss(), "light"))
     expect(colors.bg).toBe("#ffffff")
-    expect(colors.brand).toBe("#0a0a0a")
-    expect(colors.halo).toBe("rgba(10,10,10,0.05)")
+    expect(colors.brand).toBe("#097d84")
+    expect(Object.keys(colors).sort()).toEqual(["bg", "border", "brand", "fg", "mfg"])
   })
 
   test("names the missing token", () => {
@@ -16,7 +16,7 @@ describe("cardColors", () => {
 
   test("throws when only one token is absent", () => {
     const light = themeTokens(readTokensCss(), "light")
-    delete light["--halo"]
-    expect(() => cardColors(light)).toThrow("tokens.css: --halo missing for the social card")
+    delete light["--brand"]
+    expect(() => cardColors(light)).toThrow("tokens.css: --brand missing for the social card")
   })
 })

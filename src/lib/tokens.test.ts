@@ -4,18 +4,18 @@ import { parseTokenBlocks, readTokensCss, themeTokens } from "./tokens"
 const lightBlock = `:root,
 :root[data-theme="light"] {
   --a: #111111;
-  --halo: rgba(1,2,3,0.5);
+  --b: #222222;
 }`
 
 const darkBlock = `:root[data-theme="dark"] {
   --a: #eeeeee;
-  --halo: rgba(4,5,6,0.25);
+  --b: #dddddd;
 }`
 
 const systemBlock = `@media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
     --a: #eeeeee;
-    --halo: rgba(4,5,6,0.25);
+    --b: #dddddd;
   }
 }`
 
@@ -29,9 +29,9 @@ const fixture = [lightBlock, darkBlock, systemBlock, sharedBlock].join("\n\n")
 describe("parseTokenBlocks", () => {
   test("reads the four blocks of a tokens file", () => {
     expect(parseTokenBlocks(fixture)).toEqual({
-      light: { "--a": "#111111", "--halo": "rgba(1,2,3,0.5)" },
-      dark: { "--a": "#eeeeee", "--halo": "rgba(4,5,6,0.25)" },
-      system: { "--a": "#eeeeee", "--halo": "rgba(4,5,6,0.25)" },
+      light: { "--a": "#111111", "--b": "#222222" },
+      dark: { "--a": "#eeeeee", "--b": "#dddddd" },
+      system: { "--a": "#eeeeee", "--b": "#dddddd" },
       shared: { "--font": '"Geist", sans-serif', "--a": "#999999" },
     })
   })
@@ -59,5 +59,16 @@ describe("tokens.css", () => {
 
   test("light and dark define the same tokens", () => {
     expect(Object.keys(blocks.light).sort()).toEqual(Object.keys(blocks.dark).sort())
+  })
+
+  test("no shadow, halo or gridline tokens remain", () => {
+    for (const name of Object.keys(blocks.light)) {
+      expect(name).not.toMatch(/shadow|halo|gridline/)
+    }
+  })
+
+  test("both font stacks start with the self-hosted Geist variable fonts", () => {
+    expect(blocks.shared["--font-sans"]).toStartWith('"Geist Variable"')
+    expect(blocks.shared["--font-mono"]).toStartWith('"Geist Mono Variable"')
   })
 })
