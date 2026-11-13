@@ -3,6 +3,18 @@ export interface TourStop {
   place: string
 }
 
+export interface TourLink {
+  href: string
+  label: string
+}
+
+export interface TourStopContent extends TourStop {
+  title: string
+  text: string
+  note?: string
+  links: readonly TourLink[]
+}
+
 export interface RailItem {
   id: string
   label: string

@@ -1,68 +1,31 @@
 ---
-import { AGENTS_PATH, DASHBOARDS_PATH, OBSERVATIONS_PATH, SIGNALS_PATH } from "../../lib/site-nav"
-import { railItems, tourTitle } from "../../lib/tour"
-import AgentsScreen from "../product/AgentsScreen.astro"
-import DashboardActivity from "../product/DashboardActivity.astro"
-import InboxScreen from "../product/InboxScreen.astro"
-import LogsSource from "../product/LogsSource.astro"
-import MessageToBlock from "../product/MessageToBlock.astro"
-import PublishRca from "../product/PublishRca.astro"
-import TraceCard from "../product/TraceCard.astro"
-import Section from "../site/Section.astro"
-import SectionHead from "../site/SectionHead.astro"
-import Stage from "../site/Stage.astro"
+import { railItems, type TourStopContent } from "../../lib/tour"
+import Section from "./Section.astro"
+import SectionHead from "./SectionHead.astro"
 
-const stops = [
-  {
-    id: "inbox",
-    place: "Inbox",
-    title: "Start from what needs you.",
-    text: "The Inbox keeps what asks something of you in one list: a proposal to merge, a block to keep, a mention, a reply, a failed run or a repair the agent saved. Each item shows why it is there, and the unread count follows you across browsers. It is the page the app opens on.",
-    href: null,
-    arrow: null,
-  },
-  {
-    id: "observations",
-    place: "Observations",
-    title: "An investigation is a page, not a chat log.",
-    text: "Text, panels, logs and snapshots are blocks on the page, and the discussion beside it holds messages until someone adds one to the page. Publish as RCA freezes the page into a numbered revision, and a person can share that revision read-only with a public link.",
-    href: OBSERVATIONS_PATH,
-    arrow: "Observations",
-  },
-  {
-    id: "dashboards",
-    place: "Dashboards",
-    title: "Ask for a dashboard. Get one that works.",
-    text: "The agent takes an inventory of the metric families in scope, runs each panel it adds or changes before the save, and ends with a version and a link. Comments, agent requests and saved versions share one Activity pane on the dashboard.",
-    href: DASHBOARDS_PATH,
-    arrow: "Dashboards",
-  },
-  {
-    id: "logs-and-traces",
-    place: "Logs and traces",
-    title: "Search in the language each store speaks.",
-    text: "Pick a datasource on the logs page and search it in its own language: LogQL on Loki, SQL on ClickHouse, KQL on Elasticsearch and OpenSearch. Traces on Tempo take TraceQL. A log line that carries a trace id opens that trace.",
-    href: SIGNALS_PATH,
-    arrow: "Signals",
-  },
-  {
-    id: "agents",
-    place: "Agents",
-    title: "Your agents work here too.",
-    text: "Observe Agent is built in and runs on the model you configure. Claude Code and other MCP clients connect as named agents, each set to save directly or to propose.",
-    href: AGENTS_PATH,
-    arrow: "Agents",
-  },
-]
+interface Props {
+  title: string
+  lead: string
+  railLabel: string
+  stops: readonly TourStopContent[]
+}
+
+const { title, lead, railLabel, stops } = Astro.props
 
 const items = railItems(stops)
+const drawings = await Promise.all(
+  stops.map(({ id }) => {
+    if (!Astro.slots.has(id)) throw new Error(`Tour stop ${id} has no drawing`)
+    return Astro.slots.render(id)
+  }),
+)
 ---
 
 <Section>
-  <SectionHead title={tourTitle(stops.length)} lead="Each stop is a place in the app's sidebar, drawn from the demo data." />
+  <SectionHead title={title} lead={lead} />
   <div class="tour">
-    <nav class="rail" aria-label="Tour" data-tour-rail>
-      <span class="rail-label">In the app</span>
+    <nav class="rail" aria-label={railLabel} data-tour-rail>
+      <span class="rail-label" aria-hidden="true">{railLabel}</span>
       {
         items.map(({ id, label, href }, index) => (
           <a class="item" href={href} data-tour-item={id} aria-current={index === 0 ? "location" : undefined}>
@@ -73,40 +36,31 @@ const items = railItems(stops)
     </nav>
     <div class="stops">
       {
-        stops.map(({ id, place, title, text, href, arrow }) => (
+        stops.map(({ id, place, title, text, note, links }, index) => (
           <article class="stop" id={id} data-tour-stop>
             <div class="stop-head">
               <div class="stop-title">
                 <span class="place k">{place}</span>
-                <h3 class="h3">{title}</h3>
+                <h3 class="h3" tabindex="-1" data-tour-heading>
+                  {title}
+                </h3>
               </div>
               <div class="stop-text">
                 <p class="p">{text}</p>
-                {href && arrow && (
-                  <a class="arrow" href={href}>
-                    {arrow} →
-                  </a>
+                {note && <p class="hint">{note}</p>}
+                {links.length > 0 && (
+                  <div class="stop-links">
+                    {links.map(({ href, label }) => (
+                      <a class="arrow" href={href}>
+                        {label} →
+                      </a>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>
-            <div data-in-view="rise">
-              <Stage>
-                {id === "inbox" && <InboxScreen />}
-                {id === "observations" && (
-                  <div class="pair pair-top">
-                    <MessageToBlock />
-                    <PublishRca />
-                  </div>
-                )}
-                {id === "dashboards" && <DashboardActivity />}
-                {id === "logs-and-traces" && (
-                  <div class="pair">
-                    <LogsSource />
-                    <TraceCard />
-                  </div>
-                )}
-                {id === "agents" && <AgentsScreen />}
-              </Stage>
+            <div class="drawing" data-in-view="rise">
+              <Fragment set:html={drawings[index]} />
             </div>
           </article>
         ))
@@ -218,14 +172,18 @@ const items = railItems(stops)
     font-size: 13.5px;
   }
 
-  .pair {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+  .stop-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
   }
 
-  .pair-top {
-    align-items: start;
+  .drawing {
+    min-width: 0;
+  }
+
+  .stop h3:focus {
+    outline: none;
   }
 
   @media (max-width: 900px) {
@@ -261,10 +219,6 @@ const items = railItems(stops)
     .stop-head {
       grid-template-columns: minmax(0, 1fr);
       gap: 12px;
-    }
-
-    .pair {
-      grid-template-columns: minmax(0, 1fr);
     }
   }
 </style>
@@ -316,6 +270,7 @@ const items = railItems(stops)
         event.preventDefault()
         const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches
         stops[index].scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" })
+        stops[index].querySelector<HTMLElement>("[data-tour-heading]")?.focus({ preventScroll: true })
         history.replaceState(null, "", item.hash)
         show(index)
       })
