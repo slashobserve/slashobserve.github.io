@@ -1,0 +1,66 @@
+---
+import Section from "../site/Section.astro"
+import Split from "../site/Split.astro"
+import Stage from "../site/Stage.astro"
+import ProposalCard from "../product/ProposalCard.astro"
+
+interface Props {
+  proposals: string | null
+  inbox: string | null
+}
+
+const { proposals, inbox } = Astro.props
+---
+
+<Section>
+  <Split>
+    <div slot="start" class="copy">
+      <h2 class="h2">Direct, or propose.</h2>
+      <p class="lead">
+        Each connected agent has a mode, and the Mode menu on its row changes it. Direct, the default, lets its saves change
+        dashboards as the person who connected it may. Propose makes every dashboard save a proposal that someone who can edit merges,
+        even when that person is an Editor.
+      </p>
+      <p class="lead">
+        A proposal lists what it changes and waits for Merge or Discard. It reaches reviewers in the Inbox, and no agent can change its
+        own mode.
+      </p>
+      {
+        (proposals || inbox) && (
+          <div class="row links">
+            {proposals && (
+              <a class="arrow" href={proposals}>
+                How proposals work →
+              </a>
+            )}
+            {inbox && (
+              <a class="arrow" href={inbox}>
+                The inbox →
+              </a>
+            )}
+          </div>
+        )
+      }
+    </div>
+    <div slot="end" data-in-view="rise">
+      <Stage><ProposalCard /></Stage>
+    </div>
+  </Split>
+</Section>
+
+<style>
+  .copy {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .copy .lead {
+    font-size: 17px;
+  }
+
+  .links {
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+</style>

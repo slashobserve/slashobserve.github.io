@@ -1,0 +1,38 @@
+---
+import Section from "../site/Section.astro"
+import Split from "../site/Split.astro"
+import Stage from "../site/Stage.astro"
+import AnswerToBlock from "../product/AnswerToBlock.astro"
+---
+
+<Section>
+  <Split>
+    <div slot="start" class="copy">
+      <h2 class="h2">The discussion is the scratch space.</h2>
+      <p class="lead">
+        The page has one discussion, beside the blocks. A message stays in it until someone chooses Add to page, which puts the
+        message's text on the page as a text block; someone who can only comment chooses Suggest for page.
+      </p>
+      <p class="lead">
+        Mention <span class="mono">@observe</span>, one of your connected agents or a service account that takes runs, and it starts
+        an investigation that writes its answer into the page as blocks. The server posts one status line in the discussion when the
+        run ends. Mentioning an agent needs the Editor role.
+      </p>
+    </div>
+    <div slot="end" data-in-view="rise">
+      <Stage><AnswerToBlock /></Stage>
+    </div>
+  </Split>
+</Section>
+
+<style>
+  .copy {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .copy .lead {
+    font-size: 17px;
+  }
+</style>

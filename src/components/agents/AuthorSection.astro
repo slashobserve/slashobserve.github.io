@@ -1,0 +1,36 @@
+---
+import Section from "../site/Section.astro"
+import Split from "../site/Split.astro"
+import Stage from "../site/Stage.astro"
+import Bylines from "../product/Bylines.astro"
+---
+
+<Section>
+  <Split rev>
+    <div slot="start" data-in-view="rise">
+      <Stage><Bylines /></Stage>
+    </div>
+    <div slot="end" class="copy">
+      <h2 class="h2">Every write has an author.</h2>
+      <p class="lead">
+        Each version, block and activity entry names who made it. The built-in agent shows as Observe Agent for admin, a connected
+        agent as admin (via Claude Code), and a service account under its own name.
+      </p>
+      <p class="lead">
+        The client name is chosen by the client, so it is a label: it never changes what the client may do.
+      </p>
+    </div>
+  </Split>
+</Section>
+
+<style>
+  .copy {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .copy .lead {
+    font-size: 17px;
+  }
+</style>

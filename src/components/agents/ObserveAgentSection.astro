@@ -1,0 +1,38 @@
+---
+import Section from "../site/Section.astro"
+import Split from "../site/Split.astro"
+import Stage from "../site/Stage.astro"
+import ChatFollowUp from "../product/ChatFollowUp.astro"
+---
+
+<Section ruled={false}>
+  <Split>
+    <div slot="start" class="copy">
+      <h2 class="h2">Observe Agent, on the model you configure.</h2>
+      <p class="lead">
+        Observe Agent is built in and runs on the model you set on the server: Anthropic, or any OpenAI-compatible server, including
+        one you run yourself. The Agents page shows whether it is on, which provider and model it uses, and its runs, failures, cost
+        and median wait over the last seven days.
+      </p>
+      <p class="lead">
+        What its tools return goes to that provider, so choose one whose data handling fits your data. The chat shows the steps the
+        tools report and the result, not the model's own text.
+      </p>
+    </div>
+    <div slot="end" data-in-view="rise">
+      <Stage><ChatFollowUp /></Stage>
+    </div>
+  </Split>
+</Section>
+
+<style>
+  .copy {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .copy .lead {
+    font-size: 17px;
+  }
+</style>

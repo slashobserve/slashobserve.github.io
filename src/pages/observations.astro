@@ -1,0 +1,75 @@
+---
+import BlocksSection from "../components/observations/BlocksSection.astro"
+import DiscussionSection from "../components/observations/DiscussionSection.astro"
+import PublishSection from "../components/observations/PublishSection.astro"
+import StartSection from "../components/observations/StartSection.astro"
+import ObservationScreen from "../components/product/ObservationScreen.astro"
+import PageOpening from "../components/site/PageOpening.astro"
+import RunsOnBand from "../components/site/RunsOnBand.astro"
+import Stage from "../components/site/Stage.astro"
+import MarketingLayout from "../layouts/MarketingLayout.astro"
+import { getDocLinks } from "../lib/get-doc-links"
+
+const links = await getDocLinks()
+---
+
+<MarketingLayout
+  title="Observations | SlashObserve"
+  description="An observation is a page about one question: text, panel and snapshot blocks that people and agents add, a discussion beside them, and an RCA you publish as numbered, frozen revisions."
+>
+  <PageOpening title="An investigation is a page, not a chat log.">
+    <p class="lead">
+      An observation is a page about one question. People and agents add text, panel and snapshot blocks as they learn, the
+      discussion sits beside the page, and a published RCA is a frozen, numbered revision of it.
+    </p>
+    {
+      (links.quickStart || links.observations) && (
+        <div class="row actions">
+          {links.quickStart && (
+            <a class="btn btn-primary" href={links.quickStart}>
+              Read the quick start
+            </a>
+          )}
+          {links.observations && (
+            <a class="arrow" href={links.observations}>
+              How observations work →
+            </a>
+          )}
+        </div>
+      )
+    }
+  </PageOpening>
+  <section class="wrap screen">
+    <div data-in-view="rise">
+      <Stage><ObservationScreen /></Stage>
+    </div>
+  </section>
+  <StartSection />
+  <BlocksSection />
+  <DiscussionSection />
+  <PublishSection />
+  <RunsOnBand quickStart={links.quickStart} />
+</MarketingLayout>
+
+<style>
+  .actions {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .screen {
+    padding-bottom: 84px;
+  }
+
+  @media (max-width: 900px) {
+    .screen {
+      padding-bottom: 56px;
+    }
+  }
+</style>
+
+<script>
+  import { watchInView } from "../lib/client/in-view"
+
+  watchInView()
+</script>

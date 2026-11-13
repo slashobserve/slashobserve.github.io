@@ -1,0 +1,37 @@
+---
+import Section from "../site/Section.astro"
+import Split from "../site/Split.astro"
+import Stage from "../site/Stage.astro"
+import ObservationBlocks from "../product/ObservationBlocks.astro"
+---
+
+<Section>
+  <Split rev>
+    <div slot="start" data-in-view="rise">
+      <Stage><ObservationBlocks /></Stage>
+    </div>
+    <div slot="end" class="copy">
+      <h2 class="h2">Text, panels and snapshots on one page.</h2>
+      <p class="lead">
+        A panel block is a copy of a dashboard panel with its own query, and it stays live on the page. A snapshot freezes the data of a
+        live panel at one moment, so the page keeps showing what you saw.
+      </p>
+      <p class="lead">
+        A panel or snapshot block names who added it, a person or Observe Agent. Someone who can only comment suggests a block instead,
+        and a person who can edit keeps it or discards it.
+      </p>
+    </div>
+  </Split>
+</Section>
+
+<style>
+  .copy {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .copy .lead {
+    font-size: 17px;
+  }
+</style>
