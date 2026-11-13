@@ -1,0 +1,75 @@
+@layer site {
+  @media (prefers-reduced-motion: no-preference) {
+    html.motion [data-in-view="rise"]:not([data-seen]) {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    html.motion [data-in-view="rise"][data-seen] {
+      animation: so-rise 600ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+    }
+
+    html.motion [data-in-view]:not([data-seen]) [data-reveal] {
+      clip-path: inset(-4px 100% -4px 0);
+    }
+
+    html.motion [data-in-view][data-seen] [data-reveal] {
+      animation: so-rv 1800ms cubic-bezier(0.3, 0, 0.2, 1) backwards;
+    }
+
+    html.motion [data-in-view] [data-grow] {
+      transform-origin: left center;
+    }
+
+    html.motion [data-in-view]:not([data-seen]) [data-grow] {
+      transform: scaleX(0);
+    }
+
+    html.motion [data-in-view][data-seen] [data-grow] {
+      animation: so-grow 900ms cubic-bezier(0.3, 0, 0.2, 1) calc(var(--i, 0) * 70ms) backwards;
+    }
+
+    .pulse {
+      animation: so-pulse 1600ms ease-in-out infinite;
+    }
+
+    @keyframes so-rise {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    @keyframes so-rv {
+      from {
+        clip-path: inset(-4px 100% -4px 0);
+      }
+      to {
+        clip-path: inset(-4px -4px -4px 0);
+      }
+    }
+
+    @keyframes so-grow {
+      from {
+        transform: scaleX(0);
+      }
+      to {
+        transform: scaleX(1);
+      }
+    }
+
+    @keyframes so-pulse {
+      0%,
+      100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.25;
+      }
+    }
+  }
+}
