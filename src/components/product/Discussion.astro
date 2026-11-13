@@ -1,0 +1,144 @@
+---
+import InlineCode from "./InlineCode.astro"
+import Mention from "./Mention.astro"
+import Message from "./Message.astro"
+
+interface Props {
+  class?: string
+}
+
+const { class: className } = Astro.props
+
+const hide = '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/><path d="m8 9 3 3-3 3"/>'
+const mention = '<circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/>'
+const send = '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>'
+---
+
+<aside class:list={["pane", className]} aria-label="Discussion">
+  <header class="pane-head">
+    <h2>Discussion</h2>
+    <span class="icon-btn" aria-hidden="true"><svg viewBox="0 0 24 24" set:html={hide} /></span>
+  </header>
+  <ol class="messages" aria-label="Messages">
+    <Message as="li" author="person" initials="AD" tint={1} name="admin" time="17:02">
+      <Mention /> can we confirm the errors come from the payments client timeout?
+    </Message>
+    <Message as="li" author="agent" name="Observe Agent for admin" time="17:03">
+      Yes. 94% of the 5xx on /api/checkout carry <InlineCode>payments: context deadline exceeded</InlineCode>, and they
+      start 3 minutes after the rollout.
+    </Message>
+    <Message as="li" author="person" initials="JP" tint={4} name="Jo Park" time="17:06">
+      That matches the new 2s client timeout in the payments chart. Adding the snapshot to the page.
+    </Message>
+  </ol>
+  <div class="composer-wrap">
+    <div class="composer">
+      <span class="placeholder">Message, or type @ to ask an agent</span>
+      <div class="composer-foot">
+        <span class="hint">Messages stay here until someone adds them to the page</span>
+        <span class="icon-btn" aria-hidden="true"><svg viewBox="0 0 24 24" set:html={mention} /></span>
+        <span class="send" aria-hidden="true"><svg viewBox="0 0 24 24" set:html={send} /></span>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .pane {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .pane-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 8px 6px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .icon-btn {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    color: var(--mfg);
+  }
+
+  svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .messages {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin: 0;
+    padding: 4px 0;
+    list-style: none;
+  }
+
+  .composer-wrap {
+    padding: 8px 16px 16px;
+  }
+
+  .composer {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
+  }
+
+  .placeholder {
+    padding: 10px 12px 6px;
+    color: var(--mfg);
+  }
+
+  .composer-foot {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 6px 6px 12px;
+  }
+
+  .hint {
+    flex: 1;
+    min-width: 0;
+    color: var(--mfg);
+    font-size: 12px;
+  }
+
+  .send {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: var(--primary);
+    color: var(--pfg);
+    opacity: 0.5;
+  }
+</style>

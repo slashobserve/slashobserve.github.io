@@ -1,0 +1,48 @@
+---
+import InlineCode from "./InlineCode.astro"
+import Message from "./Message.astro"
+import TextBlock from "./TextBlock.astro"
+
+const arrow = '<path d="M12 5v14"/><path d="m19 12-7 7-7-7"/>'
+---
+
+<div class="answer-to-block" role="group" aria-label="An agent answer added to the page as a text block">
+  <Message framed author="agent" name="Observe Agent for admin" time="17:03">
+    Yes. 94% of the 5xx on /api/checkout carry <InlineCode>payments: context deadline exceeded</InlineCode>, and they
+    start 3 minutes after the rollout.
+  </Message>
+  <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true" set:html={arrow} />
+  <div class="block">
+    <TextBlock>
+      Yes. 94% of the 5xx on /api/checkout carry <InlineCode>payments: context deadline exceeded</InlineCode>, and they
+      start 3 minutes after the rollout.
+    </TextBlock>
+  </div>
+</div>
+
+<style>
+  .answer-to-block {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    min-width: 0;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .arrow {
+    align-self: center;
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: var(--mfg);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .block {
+    padding: 4px 2px 0;
+  }
+</style>

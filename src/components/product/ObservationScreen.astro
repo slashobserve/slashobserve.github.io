@@ -1,0 +1,259 @@
+---
+import AppSidebar from "./AppSidebar.astro"
+import Discussion from "./Discussion.astro"
+import Mark from "./Mark.astro"
+import PanelBlock from "./PanelBlock.astro"
+import TextBlock from "./TextBlock.astro"
+import TimeSeries from "./TimeSeries.astro"
+import Window from "./Window.astro"
+import { HOST } from "./screen-ids"
+
+const OBSERVATION_ID = "9c4e2b7a-5d1f-4a3e-8b60-2f7d1c9a5e38"
+const TITLE = "Checkout errors after the payments deploy"
+
+const series = [
+  {
+    name: "/api/checkout",
+    tone: "s1",
+    d: "M0 112 L20 111 L40 113 L60 112 L80 111 L100 113 L120 112 L140 111 L160 112 L180 113 L196 110 L208 86 L220 58 L232 44 L246 42 L262 45 L280 40 L298 43 L316 41 L334 44 L352 40 L370 43 L386 41 L400 42",
+  },
+  {
+    name: "/api/orders/{id}",
+    tone: "s2",
+    d: "M0 105 L24 106 L48 104 L72 106 L96 105 L120 103 L144 106 L168 104 L192 105 L216 107 L240 104 L264 105 L288 103 L312 106 L336 104 L360 105 L400 104",
+  },
+  {
+    name: "/api/products",
+    tone: "s3",
+    d: "M0 109 L24 108 L48 110 L72 109 L96 108 L120 110 L144 109 L168 108 L192 110 L216 109 L240 108 L264 110 L288 109 L312 108 L336 110 L360 109 L400 109",
+  },
+] as const
+
+const share = '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>'
+---
+
+<Window url={`${HOST}/o/${OBSERVATION_ID}`} label="An observation with its discussion">
+  <div class="app">
+    <AppSidebar active="Observations" class="app-sidebar" />
+    <div class="main">
+      <div class="top">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <span class="k">Observations</span>
+          <span class="k" aria-hidden="true">/</span>
+          <span class="current">Observation</span>
+        </nav>
+        <span class="top-actions">
+          <Mark kind="person" initials="AD" tint={1} size={24} />
+          <span class="btn btn-sm">Publish as RCA</span>
+          <span class="btn btn-sm">
+            <svg viewBox="0 0 24 24" aria-hidden="true" set:html={share} />
+            Share
+          </span>
+        </span>
+      </div>
+      <div class="body">
+        <div class="page">
+          <div class="head">
+            <span class="title">{TITLE}</span>
+            <div class="meta">
+              <span class="state"><span class="dot" aria-hidden="true"></span>Open</span>
+              <span class="k">Started by admin, 13 h ago</span>
+              <span class="k">In <span class="folder">Checkout</span></span>
+              <span class="btn btn-sm">Resolve</span>
+            </div>
+          </div>
+          <TextBlock>
+            Server errors on /api/checkout jumped from 0.1% to 2% within five minutes of the payments rollout. p95 latency
+            stayed flat, so this looks like a failing call rather than load.
+          </TextBlock>
+          <PanelBlock
+            title="Server error ratio by route"
+            caption="Prometheus, live"
+            live
+            author="person"
+            initials="AD"
+            tint={1}
+            byline="Added by admin"
+          >
+            <TimeSeries
+              viewBox="0 0 400 120"
+              height="120px"
+              yTicks={["3%", "2%", "1%", "0%"]}
+              xTicks={["16:10", "16:20", "16:30", "16:40", "16:50", "17:00"]}
+              series={[...series]}
+            />
+          </PanelBlock>
+          <div class="add-row">
+            <span class="k">Add a block</span>
+            <span class="btn btn-sm">Text</span>
+            <span class="btn btn-sm">Panel</span>
+            <span class="btn btn-sm">Logs</span>
+            <span class="btn btn-sm">Snapshot</span>
+          </div>
+        </div>
+        <div class="discussion"><Discussion /></div>
+      </div>
+    </div>
+  </div>
+</Window>
+
+<style>
+  .app {
+    display: flex;
+    min-height: 600px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    min-height: 46px;
+    box-sizing: border-box;
+    padding: 6px 12px 6px 20px;
+  }
+
+  .crumbs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .current {
+    font-weight: 500;
+  }
+
+  .top-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn {
+    min-height: 28px;
+    padding: 0 10px;
+    gap: 6px;
+    font-size: 12.5px;
+  }
+
+  .btn svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .body {
+    display: flex;
+    flex: 1;
+    gap: 20px;
+    align-items: stretch;
+    padding: 8px 12px 16px 24px;
+  }
+
+  .page {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+  }
+
+  .discussion {
+    display: flex;
+    flex-direction: column;
+    width: 340px;
+    flex: none;
+  }
+
+  .discussion :global(.pane) {
+    flex: 1;
+  }
+
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .title {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 28px;
+    letter-spacing: -0.01em;
+  }
+
+  .meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    font-size: 12.5px;
+  }
+
+  .state {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+  }
+
+  .dot {
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ok);
+  }
+
+  .folder {
+    color: var(--fg);
+  }
+
+  .add-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 12px;
+  }
+
+  @media (max-width: 900px) {
+    .app {
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .app :global(.app-sidebar) {
+      display: none;
+    }
+
+    .top {
+      padding: 8px 16px;
+    }
+
+    .body {
+      flex-direction: column;
+      gap: 16px;
+      padding: 8px 16px 16px;
+    }
+
+    .discussion {
+      width: auto;
+    }
+  }
+</style>

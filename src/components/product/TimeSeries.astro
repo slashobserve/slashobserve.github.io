@@ -14,9 +14,14 @@ interface Props {
 const { viewBox, height, yTicks, xTicks, series } = Astro.props
 ---
 
-<div class="ts" aria-hidden="true">
+<div class="ts" aria-hidden="true" data-in-view>
   <div class="ts-y">{yTicks.map((tick) => <span>{tick}</span>)}</div>
-  <Sparklines viewBox={viewBox} height={height} series={series.map(({ d, tone }) => ({ d, tone }))} />
+  <div class="ts-plot" style={`height:${height}`}>
+    <div class="ts-grid">{yTicks.map(() => <i />)}</div>
+    <div class="ts-series" data-reveal>
+      <Sparklines viewBox={viewBox} height="100%" series={series.map(({ d, tone }) => ({ d, tone }))} />
+    </div>
+  </div>
   <span></span>
   <div class="ts-x">{xTicks.map((tick) => <span>{tick}</span>)}</div>
   <div class="ts-legend">
@@ -39,6 +44,29 @@ const { viewBox, height, yTicks, xTicks, series } = Astro.props
     padding: 0 11px 9px;
     font-size: 10.5px;
     color: var(--mfg);
+  }
+
+  .ts-plot {
+    position: relative;
+    min-width: 0;
+  }
+
+  .ts-grid {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .ts-grid i {
+    height: 1px;
+    background: var(--grid);
+  }
+
+  .ts-series {
+    position: relative;
+    height: 100%;
   }
 
   .ts-y {
@@ -75,3 +103,9 @@ const { viewBox, height, yTicks, xTicks, series } = Astro.props
     background: var(--tone);
   }
 </style>
+
+<script>
+  import { watchInView } from "../../lib/client/in-view"
+
+  watchInView()
+</script>

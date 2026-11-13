@@ -1,0 +1,81 @@
+---
+import InlineCode from "./InlineCode.astro"
+import PanelBlock from "./PanelBlock.astro"
+import TextBlock from "./TextBlock.astro"
+import TimeSeries from "./TimeSeries.astro"
+
+const errorRatio = [
+  {
+    name: "/api/checkout",
+    tone: "s1",
+    d: "M0 112 L20 111 L40 113 L60 112 L80 111 L100 113 L120 112 L140 111 L160 112 L180 113 L196 110 L208 86 L220 58 L232 44 L246 42 L262 45 L280 40 L298 43 L316 41 L334 44 L352 40 L370 43 L386 41 L400 42",
+  },
+  {
+    name: "/api/orders/{id}",
+    tone: "s2",
+    d: "M0 105 L24 106 L48 104 L72 106 L96 105 L120 103 L144 106 L168 104 L192 105 L216 107 L240 104 L264 105 L288 103 L312 106 L336 104 L360 105 L400 104",
+  },
+] as const
+
+const latency = [
+  {
+    name: "/api/checkout",
+    tone: "s1",
+    d: "M0 40 L30 38 L60 41 L90 39 L120 40 L150 38 L180 41 L210 39 L240 40 L270 38 L300 41 L330 39 L360 40 L400 39",
+  },
+  {
+    name: "/api/orders/{id}",
+    tone: "s2",
+    d: "M0 56 L30 55 L60 57 L90 55 L120 56 L150 54 L180 57 L210 55 L240 56 L270 54 L300 57 L330 55 L360 56 L400 55",
+  },
+] as const
+---
+
+<div class="blocks" role="group" aria-label="Observation blocks">
+  <TextBlock>
+    The 5xx on /api/checkout carry <InlineCode>payments: context deadline exceeded</InlineCode>, and they start 3 minutes
+    after the rollout.
+  </TextBlock>
+  <PanelBlock
+    title="Server error ratio by route"
+    caption="Prometheus, live"
+    live
+    author="agent"
+    byline="From Observe Agent"
+  >
+    <TimeSeries
+      viewBox="0 0 400 120"
+      height="96px"
+      yTicks={["3%", "2%", "1%", "0%"]}
+      xTicks={["16:10", "16:30", "16:50", "17:00"]}
+      series={[...errorRatio]}
+    />
+  </PanelBlock>
+  <PanelBlock
+    title="Snapshot"
+    caption="Frozen, 2026-11-06 16:30 to 2026-11-06 17:05"
+    author="person"
+    initials="JP"
+    tint={4}
+    byline="Added by Jo Park"
+  >
+    <TimeSeries
+      viewBox="0 0 400 80"
+      height="64px"
+      yTicks={["300 ms", "150 ms", "0 s"]}
+      xTicks={["16:30", "16:50", "17:05"]}
+      series={[...latency]}
+    />
+  </PanelBlock>
+</div>
+
+<style>
+  .blocks {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+</style>

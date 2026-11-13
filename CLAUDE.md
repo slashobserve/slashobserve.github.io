@@ -89,7 +89,7 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 
 ## Testing and gates
 
-- Unit tests with `bun test` for pure logic only: path mapping, link rewriting and front matter checks, docs dates, link checking, sidebar ordering and prev/next, generated reference pages, link resolution, table scroll, code figure, PromQL highlighting, inline code, disclosure, agent text, the build playback and the "Runs on" cycle, the import stats and percentages, the site commit and install command, nav, theme choice, token contrast, docs landing links and the social card registry and docs card mapping.
+- Unit tests with `bun test` for pure logic only: path mapping, link rewriting and front matter checks, docs dates, link checking, sidebar ordering and prev/next, generated reference pages, link resolution, table scroll, code figure, PromQL highlighting, inline code, disclosure, agent text, the build playback, the "Runs on" cycle and the entered-view motion helper, the import stats and percentages, the site commit and install command, nav, theme choice, token contrast, docs landing links and the social card registry and docs card mapping.
 - No e2e or visual tests.
 - Before calling work done, run `bun run build`, `bun run check`, `bun run check:links` and `bun run test`.
 

@@ -37,6 +37,8 @@ export const LOG_LINK_RANGE = "2026-11-06 13:02:09 to 2026-11-06 15:02:09"
 export function hasChildren(index: number): boolean {
   return (SPANS[index + 1]?.depth ?? -1) > SPANS[index].depth
 }
+export const SLOWEST_ON_CRITICAL_PATH = { service: "payments", duration: "1.52 s" }
+
 export const TICKS = ["0 ms", "577.5 ms", "1.16 s", "1.73 s", "2.31 s"]
 
 export const SELECTED_SPAN = {

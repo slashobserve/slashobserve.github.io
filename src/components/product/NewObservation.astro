@@ -1,0 +1,123 @@
+---
+const close = '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'
+const chevron = '<path d="m6 9 6 6 6-6"/>'
+---
+
+<section class="dock" aria-label="New observation">
+  <header class="dock-head">
+    <h3>New observation</h3>
+    <span class="icon-btn" aria-hidden="true"><svg viewBox="0 0 24 24" set:html={close} /></span>
+  </header>
+  <div class="dock-body">
+    <div class="field">
+      <span class="label">Title</span>
+      <span class="input">Checkout errors after the payments deploy</span>
+    </div>
+    <div class="field">
+      <span class="label">Folder</span>
+      <span class="input select">Checkout<svg viewBox="0 0 24 24" aria-hidden="true" set:html={chevron} /></span>
+    </div>
+  </div>
+  <footer class="dock-foot">
+    <span class="btn">Cancel</span>
+    <span class="btn btn-primary">Create</span>
+  </footer>
+</section>
+
+<style>
+  .dock {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 440px;
+    margin-inline: auto;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .dock-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 12px 12px 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .icon-btn {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 28px;
+    height: 28px;
+    color: var(--mfg);
+  }
+
+  svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .dock-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .label {
+    font-weight: 500;
+  }
+
+  .input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    min-height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    background: var(--card);
+  }
+
+  .select svg {
+    color: var(--mfg);
+  }
+
+  .dock-foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px 16px 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn {
+    min-height: 28px;
+    padding: 0 12px;
+    font-size: 12.5px;
+  }
+</style>
