@@ -199,7 +199,7 @@ body {
 	position: relative;
 	border: 1px solid var(--border);
 	border-radius: var(--nb-radius);
-	background-color: var(--bg);
+	background-color: var(--canvas);
 	overflow: hidden;
 }
 
@@ -208,13 +208,11 @@ body {
 	display: flex;
 	align-items: center;
 	height: 2.25rem;
-	padding: 0 3rem 0 1.25rem;
+	padding: 0 6rem 0 0.875rem;
 	box-sizing: border-box;
 	border-bottom: 1px solid var(--border);
-	background: var(--muted);
 	color: var(--mfg);
-	font-family: var(--font-mono);
-	font-size: 0.75rem;
+	font-size: 0.78125rem;
 	line-height: 1;
 }
 
@@ -226,53 +224,46 @@ body {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	width: 1.75rem;
+	gap: 0.375rem;
 	height: 1.75rem;
 	margin: 0;
-	padding: 0;
+	padding: 0 0.375rem;
 	border: 1px solid transparent;
 	border-radius: 0.375rem;
 	background: transparent;
 	color: var(--mfg);
+	font: inherit;
+	font-size: 0.78125rem;
+	font-weight: 500;
+	line-height: 1;
 	cursor: pointer;
-	opacity: 1;
 	transition:
 		color 120ms ease,
 		background-color 120ms ease;
 }
 .nb-code-copy:hover {
 	color: var(--fg);
-	background: color-mix(in oklab, var(--fg) 6%, transparent);
+	background: var(--muted);
 }
 .nb-code-copy svg {
 	width: 0.875rem;
 	height: 0.875rem;
 }
 .nb-code-copy[data-state="copied"] {
-	width: auto;
-	gap: 0.25rem;
-	padding: 0 0.5rem;
 	color: var(--ok);
-}
-.nb-code-copy[data-state="copied"]::after {
-	content: "Copied";
-	font-family: var(--font-sans);
-	font-size: 0.75rem;
-	font-weight: 500;
-	line-height: 1;
 }
 
 pre.astro-code {
 	position: relative;
 	margin: 0;
-	padding: 1rem 1.25rem;
+	padding: 0.875rem 1rem;
 	border: 0;
 	border-radius: 0;
 	background-color: transparent;
 	overflow-x: auto;
 	font-family: var(--font-mono);
 	font-size: 0.8125rem;
-	line-height: 1.375rem;
+	line-height: 1.7;
 	tab-size: 2;
 }
 pre.astro-code > code {
@@ -294,8 +285,8 @@ pre.astro-code code {
 pre.astro-code .line {
 	display: inline-block;
 	width: 100%;
-	padding-inline: 1.25rem;
-	margin-inline: -1.25rem;
+	padding-inline: 1rem;
+	margin-inline: -1rem;
 	box-sizing: content-box;
 }
 
