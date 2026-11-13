@@ -1,0 +1,52 @@
+---
+const stores = [
+  { store: "Prometheus", language: "PromQL" },
+  { store: "ClickHouse", language: "SQL" },
+  { store: "Loki", language: "LogQL" },
+  { store: "Tempo", language: "TraceQL" },
+  { store: "Elasticsearch", language: "KQL" },
+  { store: "OpenSearch", language: "KQL" },
+]
+---
+
+<section class="strip">
+  <div class="wrap">
+    <ul class="lined lined-6" aria-label="Stores">
+      {
+        stores.map(({ store, language }) => (
+          <li>
+            <span class="store">{store}</span>
+            <span class="mono k language">{language}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .strip {
+    padding-top: 40px;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .store {
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .language {
+    font-size: 12.5px;
+  }
+</style>

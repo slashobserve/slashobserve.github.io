@@ -1,0 +1,145 @@
+---
+import Mark from "../product/Mark.astro"
+import Section from "../site/Section.astro"
+import SectionHead from "../site/SectionHead.astro"
+
+const check = '<path d="m5 12 5 5 9-10"/>'
+const chevron = '<path d="m6 9 6 6 6-6"/>'
+
+const steps = [
+  { phase: "Checking queries", message: "Checked a query on prom: 0 errors" },
+  { phase: "Running queries", message: "Ran a query on prom: 4 series" },
+  { phase: "Saving", message: "Saved version 7 (3 rows, 13 panels)" },
+]
+---
+
+<Section ruled={false}>
+  <SectionHead
+    title="People and agents work under the same rules."
+    lead="Observe Agent, Claude Code and other MCP clients show up by name, and what they change is on the record."
+  />
+  <div class="lined lined-3">
+    <div class="rule">
+      <div class="art" aria-hidden="true">
+        <span class="row"><Mark kind="person" initials="AD" tint={1} size={20} /><b>admin</b></span>
+        <span class="row"><Mark kind="agent" size={20} /><b>Observe Agent for admin</b></span>
+        <span class="row"><Mark kind="connected" initials="CC" size={20} /><b>admin (via Claude Code)</b></span>
+      </div>
+      <h3 class="h4">Everything has an author.</h3>
+      <p class="p">
+        Every change to a dashboard or an observation is recorded with who made it. People are tinted marks, Observe
+        Agent is the filled one and outside agents are outlined. A change made through an agent names both sides.
+      </p>
+    </div>
+    <div class="rule">
+      <ol class="art steps" aria-hidden="true">
+        {
+          steps.map(({ phase, message }) => (
+            <li class="row">
+              <svg class="ok" viewBox="0 0 24 24" set:html={check} />
+              <span>{phase} <span class="k">{message}</span></span>
+            </li>
+          ))
+        }
+      </ol>
+      <h3 class="h4">Every new or changed query runs before it is saved.</h3>
+      <p class="p">
+        The server runs each query a save adds or changes before it stores a version, whether the agent, the web app, the
+        CLI or an MCP client saves. A panel whose query fails or returns no data is rejected by name, and the agent fixes
+        only those.
+      </p>
+    </div>
+    <div class="rule">
+      <div class="art" aria-hidden="true">
+        <span class="row">
+          <Mark kind="connected" initials="OP" size={20} />
+          <b>OpenCode</b>
+          <span class="btn btn-sm mode">Propose <svg viewBox="0 0 24 24" set:html={chevron} /></span>
+        </span>
+        <span class="row"><span class="btn btn-primary btn-sm">Merge</span><span class="btn btn-sm">Discard</span></span>
+      </div>
+      <h3 class="h4">Agents can propose. People decide.</h3>
+      <p class="p">
+        Each connected agent saves directly or proposes. A proposal lists what it changes and waits until a person who
+        can edit merges or discards it.
+      </p>
+    </div>
+  </div>
+</Section>
+
+<style>
+  .rule {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .art {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    height: 112px;
+    margin: 0;
+    padding: 0;
+    font-size: 13px;
+    list-style: none;
+  }
+
+  .row {
+    min-width: 0;
+  }
+
+  .row b {
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .ok {
+    flex: none;
+    width: 13px;
+    height: 13px;
+    fill: none;
+    stroke: var(--ok);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .mode {
+    min-height: 28px;
+    padding: 0 10px;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 400;
+  }
+
+  .mode svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .art .btn {
+    min-height: 28px;
+    padding: 0 10px;
+    font-size: 12.5px;
+  }
+
+  .h4 {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+  }
+
+  .p {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+</style>

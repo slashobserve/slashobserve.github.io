@@ -1,0 +1,30 @@
+---
+import { MIGRATE_PATH } from "../../lib/site-nav"
+import RepairQueue from "../product/RepairQueue.astro"
+import Section from "../site/Section.astro"
+import Split from "../site/Split.astro"
+---
+
+<Section>
+  <Split>
+    <div slot="start" class="statement">
+      <h2 class="h2">Bring what you built.</h2>
+      <p class="lead">
+        Grafana dashboards come across with their folders, variables and links, and every old link keeps resolving.
+        Elasticsearch and OpenSearch indices connect as they are, and the KQL you typed in Discover runs here. Panels the
+        importer cannot match go to the repair queue, where the agent fixes a failing query when you ask.
+      </p>
+      <a href={MIGRATE_PATH} class="arrow">Migrate →</a>
+    </div>
+    <RepairQueue slot="end" />
+  </Split>
+</Section>
+
+<style>
+  .statement {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+</style>

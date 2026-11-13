@@ -1,19 +1,13 @@
 ---
-import FactStrip from "../components/home/FactStrip.astro"
+import BringWhatYouBuilt from "../components/home/BringWhatYouBuilt.astro"
 import HomeHero from "../components/home/HomeHero.astro"
-import BuildPlayback from "../components/product/BuildPlayback.astro"
-import CheckoutPanels from "../components/product/CheckoutPanels.astro"
-import RepairQueue from "../components/product/RepairQueue.astro"
-import LogsTail from "../components/product/LogsTail.astro"
-import TraceSummary from "../components/product/TraceSummary.astro"
+import SameRules from "../components/home/SameRules.astro"
+import StoresStrip from "../components/home/StoresStrip.astro"
+import Tour from "../components/home/Tour.astro"
 import RunsOnBand from "../components/site/RunsOnBand.astro"
-import Section from "../components/site/Section.astro"
-import SectionHead from "../components/site/SectionHead.astro"
-import Split from "../components/site/Split.astro"
 import SurfacesSection from "../components/site/SurfacesSection.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
 import { getDocLinks } from "../lib/get-doc-links"
-import { MIGRATE_PATH, SIGNALS_PATH } from "../lib/site-nav"
 
 const links = await getDocLinks()
 ---
@@ -22,47 +16,11 @@ const links = await getDocLinks()
   title="SlashObserve: observability workspace for humans and agents"
   description="Metrics, logs and traces across Prometheus, ClickHouse, Loki, Tempo, Elasticsearch and OpenSearch, with dashboards, a logs page, a trace view and an agent that queries all of them. Ask for a dashboard in a sentence and get one that works. Open source and self-hosted."
 >
-  <HomeHero />
-  <BuildPlayback space="home" />
-  <Section>
-    <Split>
-      <div slot="start" class="statement">
-        <h2 class="h2">Bring what you built.</h2>
-        <p class="lead">
-          Grafana dashboards come across with their folders, variables and links, and every old link keeps resolving.
-          Elasticsearch and OpenSearch indices connect as they are, and the KQL you typed in Discover runs here. Panels
-          the importer cannot match go to the repair queue, where the agent fixes a failing query when you ask.
-        </p>
-        <a href={MIGRATE_PATH} class="arrow-link">Migrate →</a>
-      </div>
-      <RepairQueue slot="end" />
-    </Split>
-  </Section>
-  <Section>
-    <SectionHead
-      title="Metrics, logs and traces, on the stores you already run."
-      lead="Prometheus, ClickHouse, Loki, Tempo, Elasticsearch and OpenSearch. One logs page and one trace view read all of them, and a log line opens its trace."
-    />
-    <div class="cols3"><CheckoutPanels /><LogsTail /><TraceSummary /></div>
-    <p class="more"><a href={SIGNALS_PATH} class="arrow-link">Signals →</a></p>
-  </Section>
+  <HomeHero quickStart={links.quickStart} />
+  <StoresStrip />
+  <SameRules />
+  <Tour />
+  <BringWhatYouBuilt />
   <SurfacesSection lead="The web app, the observe CLI, and MCP for Claude Code and other MCP clients. Same save checks everywhere." />
-  <FactStrip />
   <RunsOnBand quickStart={links.quickStart} />
 </MarketingLayout>
-
-<style>
-  .statement {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .arrow-link {
-    text-decoration: none;
-  }
-
-  .more {
-    margin: 24px 0 0;
-  }
-</style>

@@ -20,7 +20,7 @@ Docs content is written in the core repo `slashobserve/slashobserve` under `docs
 
 - `src/pages/`: home, /observations, /dashboards, /agents, /migrate, /signals, 404, the /docs/ landing page (/build and /features redirect to /dashboards/ and /grafana to /migrate/ through `redirects` in `astro.config.ts`), `llms.txt` (the docs index, then one line for each product page in the nav, titled from its social card), `llms-full.txt` and `robots.txt`, `og/[card].png.ts` for marketing social cards and `og/docs/[...slug].png.ts` for one card per docs page.
 - `src/components/site/`: shared header, footer, wordmark, theme toggle, page opening, section, section head, split, stage (the bordered box product drawings sit in), band, the "Runs on" band, the surfaces section and the docs search, plus the theme script, the GitHub icon and the site commit line the docs footer shares.
-- `src/components/home/`: home page sections.
+- `src/components/home/`: the home page sections (hero with the observation drawing, stores strip, shared rules, the tour with its sticky rail, bring what you built) and the install command box with its Copy button.
 - `src/components/observations/`, `src/components/agents/`, `src/components/migrate/`, `src/components/signals/` and `src/components/docs-landing/`: those pages' sections; each split's drawing sits on a stage inside a `data-in-view="rise"` wrapper, and the page script calls `watchInView()`.
 - `src/components/product/`: the drawn product screens, one component per window, named for what it shows (screenshots of the seeded demo replace them later), plus the `Window`, `Mark` (the round person, agent and connected-agent author mark), `Panel`, `TimeSeries`, `Bars`, `Sparklines` and `SameLink` pieces, the shared `screen-ids.ts` and `trace.ts` data; `BuildPlayback.astro` mounts the `BuildStage.tsx` island, styled by `build-stage.css`.
 - `src/components/docs/` and `src/components/ui/`: the docs shell, sidebar, TOC, search and pager.
@@ -89,7 +89,7 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 
 ## Testing and gates
 
-- Unit tests with `bun test` for pure logic only: path mapping, link rewriting and front matter checks, docs dates, link checking, sidebar ordering and prev/next, generated reference pages, link resolution, table scroll, code figure, PromQL highlighting, inline code, disclosure, agent text, the build playback, the "Runs on" cycle and the entered-view motion helper, the import stats and percentages, the site commit and install command, nav, theme choice, token contrast, docs landing links and the social card registry and docs card mapping.
+- Unit tests with `bun test` for pure logic only: path mapping, link rewriting and front matter checks, docs dates, link checking, sidebar ordering and prev/next, generated reference pages, link resolution, table scroll, code figure, PromQL highlighting, inline code, disclosure, agent text, the build playback, the "Runs on" cycle, the entered-view motion helper and the tour (rail items, stop count title, active stop for a scroll position), the import stats and percentages, the site commit and install command, nav, theme choice, token contrast, docs landing links and the social card registry and docs card mapping.
 - No e2e or visual tests.
 - Before calling work done, run `bun run build`, `bun run check`, `bun run check:links` and `bun run test`.
 
