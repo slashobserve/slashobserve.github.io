@@ -97,4 +97,4 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 ## Product claims
 
 - Every sentence that says what the product does cites a core file that makes it true: CLI verbs and flags from `internal/cli`, agent step strings from `internal/agent/tools`, importer rules from `pkg/grafana`, labels in drawn screens from the real web strings.
-- The site describes the core release `core-ref.txt` pins: every product claim is true at that tag (read it with `git -C <core> show <ref>:<path>`); a feature that exists only on a core branch waits until the pin moves, however the canvas words it.
+- The site describes the core ref `core-ref.txt` pins, a release tag or, until the next release is tagged, a core `main` commit: every product claim is true at that ref (read it with `git -C <core> show <ref>:<path>`); a feature that exists only on a core branch waits until the pin moves, however the canvas words it.
