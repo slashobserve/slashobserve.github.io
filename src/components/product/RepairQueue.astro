@@ -1,5 +1,4 @@
 ---
-import SameLink from "./SameLink.astro"
 import Window from "./Window.astro"
 import { HOST } from "./screen-ids"
 
@@ -16,7 +15,7 @@ interface QueuedDashboard {
   folder: string
   unverified: string
   placeholders: number
-  repair: { label: string; tone: Tone; finished?: string } | null
+  repair: { label: string; tone: Tone; finished?: string; live?: boolean } | null
   canRepair: boolean
 }
 
@@ -26,7 +25,7 @@ const rows: QueuedDashboard[] = [
     folder: "Platform / Kubernetes",
     unverified: "3 panels",
     placeholders: 0,
-    repair: { label: "Repairing", tone: "running" },
+    repair: { label: "Repairing", tone: "running", live: true },
     canRepair: false,
   },
   {
@@ -64,72 +63,62 @@ interface Props {
 const { onStage = false } = Astro.props
 ---
 
-<div class="repair-stack">
-  <Window url={onStage ? undefined : `${HOST}/dashboards?kind=imported`} label="The imported dashboards that are not verified">
-    <div class="row filters">
-      <span class="field k">Filter by title</span>
-      <span class="select">Folder: any<span class="k" aria-hidden="true">▾</span></span>
-      <span class="select">Problem: Imported, not verified<span class="k" aria-hidden="true">▾</span></span>
-    </div>
-    <div class="row head">
-      <span class="k description">
-        Imported dashboards whose panels or variables failed their queries, or hold placeholders. A dashboard leaves this
-        list once nothing in it fails.
-      </span>
-      <span class="btn btn-primary btn-sm">Repair all</span>
-    </div>
-    <div class="scroll">
-      <table class="tbl queue">
-        <thead>
-          <tr>
-            <th>Dashboard</th><th>Folder</th><th>Unverified</th><th>Placeholders</th><th>Imported</th><th>Repair</th><th
-              ><span class="sr-only">Actions</span></th
-            >
-          </tr>
-        </thead>
-        <tbody>
-          {
-            rows.map(({ name, folder, unverified, placeholders, repair, canRepair }) => (
-              <tr>
-                <td class="name">{name}</td>
-                <td>{folder}</td>
-                <td>{unverified}</td>
-                <td>{placeholders}</td>
-                <td class="nowrap">2 h ago</td>
-                <td class="state">
-                  {repair ? (
-                    <span class="status">
-                      <span class="row">
-                        <span class:list={["dot", TONE_CLASS[repair.tone]]} />
-                        {repair.label}
-                      </span>
-                      {repair.finished && <span class="k when">{repair.finished}</span>}
+<Window url={onStage ? undefined : `${HOST}/dashboards?kind=imported`} label="The imported dashboards that are not verified">
+  <div class="row filters">
+    <span class="field k">Filter by title</span>
+    <span class="select">Folder: any<span class="k" aria-hidden="true">▾</span></span>
+    <span class="select">Problem: Imported, not verified<span class="k" aria-hidden="true">▾</span></span>
+  </div>
+  <div class="row head">
+    <span class="k description">
+      Imported dashboards whose panels or variables failed their queries, or hold placeholders. A dashboard leaves this
+      list once nothing in it fails.
+    </span>
+    <span class="btn btn-primary btn-sm">Repair all</span>
+  </div>
+  <div class="scroll">
+    <table class="tbl queue">
+      <thead>
+        <tr>
+          <th>Dashboard</th><th>Folder</th><th>Unverified</th><th>Placeholders</th><th>Imported</th><th>Repair</th><th
+            ><span class="sr-only">Actions</span></th
+          >
+        </tr>
+      </thead>
+      <tbody>
+        {
+          rows.map(({ name, folder, unverified, placeholders, repair, canRepair }) => (
+            <tr>
+              <td class="name">{name}</td>
+              <td>{folder}</td>
+              <td>{unverified}</td>
+              <td>{placeholders}</td>
+              <td class="nowrap">2 h ago</td>
+              <td class="state">
+                {repair ? (
+                  <span class="status">
+                    <span class="row">
+                      <span class:list={["dot", TONE_CLASS[repair.tone], { pulse: repair.live }]} />
+                      {repair.label}
                     </span>
-                  ) : (
-                    <span class="k nowrap">Not requested</span>
-                  )}
-                </td>
-                <td>
-                  <span class:list={["btn btn-sm repair", { off: !canRepair }]}>Repair with the agent</span>
-                </td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
-    </div>
-  </Window>
-  <SameLink />
-</div>
+                    {repair.finished && <span class="k when">{repair.finished}</span>}
+                  </span>
+                ) : (
+                  <span class="k nowrap">Not requested</span>
+                )}
+              </td>
+              <td>
+                <span class:list={["btn btn-sm repair", { off: !canRepair }]}>Repair with the agent</span>
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</Window>
 
 <style>
-  .repair-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    min-width: 0;
-  }
-
   .filters {
     flex-wrap: wrap;
     gap: 6px;
