@@ -67,7 +67,7 @@
 
 	--nb-shadow-sm: none;
 	--nb-shadow: none;
-	--nb-shadow-lg: var(--shadow-elev);
+	--nb-shadow-lg: none;
 
 	--prose-fg: color-mix(in oklab, var(--fg) 86%, var(--bg));
 }

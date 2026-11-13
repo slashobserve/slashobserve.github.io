@@ -2,14 +2,10 @@ import type { CardColors } from "./colors"
 
 type Props = { section: string; title: string; colors: CardColors }
 
-const fill = { position: "absolute", top: 0, left: 0, right: 0, bottom: 0 } as const
-
 export function SocialCardImage({ section, title, colors }: Props) {
-  const dots = `radial-gradient(circle, ${colors.gridline} 6%, transparent 9%)`
   return (
     <div
       style={{
-        position: "relative",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -21,27 +17,11 @@ export function SocialCardImage({ section, title, colors }: Props) {
         color: colors.fg,
         fontFamily: "Geist",
         border: `1px solid ${colors.border}`,
-        overflow: "hidden",
       }}
     >
-      <div
-        style={{
-          ...fill,
-          display: "flex",
-          backgroundImage: `radial-gradient(55% 75% at 85% 0%, ${colors.halo}, transparent 70%)`,
-        }}
-      />
-      <div
-        style={{
-          ...fill,
-          display: "flex",
-          backgroundImage: dots,
-          backgroundSize: "24px 24px",
-          maskImage: "radial-gradient(70% 90% at 85% 0%, black, transparent 80%)",        }}
-      />
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ display: "flex", fontSize: 44, fontWeight: 600, letterSpacing: "-0.035em" }}>
-          <span style={{ color: colors.fg }}>/</span>
+          <span style={{ color: colors.brand }}>/</span>
           <span>observe</span>
         </div>
         <div

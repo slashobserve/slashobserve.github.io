@@ -6,8 +6,6 @@ export type CardColors = {
   mfg: string
   brand: string
   border: string
-  halo: string
-  gridline: string
 }
 
 const tokenNames: Record<keyof CardColors, string> = {
@@ -16,8 +14,6 @@ const tokenNames: Record<keyof CardColors, string> = {
   mfg: "--mfg",
   brand: "--brand",
   border: "--border",
-  halo: "--halo",
-  gridline: "--gridline",
 }
 
 export function cardColors(light: Tokens): CardColors {
