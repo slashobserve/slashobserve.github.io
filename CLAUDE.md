@@ -64,8 +64,9 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 - The wordmark slash takes the accent.
 - Each colour has one token name: `--card`, `--muted` and `--accent-container` (selected rows, selection) have no aliases.
 - No shadows anywhere on the site: borders do the separating.
+- No bordered box inside another bordered box, on the marketing pages and in the drawings: keep the outer frame and make the inner one a borderless `--card`, `--muted` or `--canvas` fill or a 1px divider, or drop the outer box when it only holds one inner box; small controls (buttons, chips, inputs, selects, tags, marks) keep their borders.
 - Stages (`site/Stage.astro`: `--chrome`, bordered, 14px radius) appear only where the boards draw one: the home tour stops and "Bring what you built", the /observations splits and the /agents page screen, connect, proposal and bylines drawings.
-  Content sits directly on a stage as loose rows and bordered cards, never inside a `Window` frame; a small terminal window beside the cards is allowed.
+  Content sits directly on a stage as loose rows and borderless `--card` fills, never inside a `Window` frame; a small terminal window beside the cards is allowed.
   Everywhere else (the home hero, the surfaces section, /dashboards, /signals, /migrate, the /docs/ landing, 404) a `Window` stands alone with no stage, and a drawing never shows more frames than its board does.
 - People and agents are drawn with the one round mark (`product/Mark.astro`); person tints (`--p1` to `--p4`) appear only in marks.
 - Blue appears only as chart series colours (`--s1`) in product depictions; status colours and code highlighting keep their hues.
