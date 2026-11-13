@@ -54,9 +54,9 @@ const rows: { feature: string; status: Status; note: NotePart[] }[] = [
     ],
   },
   {
-    feature: "Gradients, shadows, panel backgrounds",
+    feature: "Gradient gauges and cells",
     status: "Changes",
-    note: ["Drawn flat. Colour stays on data and status; the chrome is monochrome by design."],
+    note: ["A gradient bar gauge imports as the basic bar. Gradient table backgrounds and gauges, and the sparkline gradient mode, are drawn flat."],
   },
   {
     feature: 'Stat colour mode "value"',
@@ -83,7 +83,7 @@ const rows: { feature: string; status: Status; note: NotePart[] }[] = [
   {
     feature: "Alert rules, contact points, silences",
     status: "Waits",
-    note: ["Not imported in this release. Keep Alertmanager or Grafana alerting running beside SlashObserve."],
+    note: ["Alert rules are not part of SlashObserve, so they are not imported. Keep Alertmanager or Grafana alerting running beside it."],
   },
   {
     feature: "Other datasources",

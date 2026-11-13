@@ -2,6 +2,7 @@
 import GrafanaSettings from "../product/GrafanaSettings.astro"
 import RepairQueue from "../product/RepairQueue.astro"
 import Section from "../site/Section.astro"
+import Stage from "../site/Stage.astro"
 
 const stages = ["Connect", "Import", "Repair", "Keep the links"]
 ---
@@ -22,9 +23,9 @@ const stages = ["Connect", "Import", "Repair", "Keep the links"]
       <div>
         <h2 class="h3">Connect</h2>
         <p class="p">
-          Settings › Grafana takes a Grafana URL and a service account token with the Viewer role on the folders to
-          import. The test counts top-level folders and dashboards; the import form shows each Grafana datasource beside
-          its match.
+          Admins open Settings and choose Grafana connection, then give it a Grafana URL and a service account token with
+          the Viewer role on the folders to import. The test counts top-level folders and dashboards; the import form
+          shows each Grafana datasource beside its match.
         </p>
       </div>
       <div>
@@ -53,9 +54,13 @@ const stages = ["Connect", "Import", "Repair", "Keep the links"]
         </p>
       </div>
     </div>
-    <div class="step-windows">
-      <GrafanaSettings />
-      <RepairQueue />
+    <div class="step-stage" data-in-view="rise">
+      <Stage>
+        <div class="step-windows">
+          <GrafanaSettings />
+          <RepairQueue />
+        </div>
+      </Stage>
     </div>
   </div>
 </Section>
@@ -81,6 +86,10 @@ const stages = ["Connect", "Import", "Repair", "Keep the links"]
 
   .step-copy .p {
     margin-top: 6px;
+  }
+
+  .step-stage {
+    min-width: 0;
   }
 
   .step-windows {

@@ -4,19 +4,28 @@ import { HOST } from "./screen-ids"
 
 const CONNECTION = "prod"
 
+const sections = ["Agent", "This server", "Sign-in", "Outbound access", "Connected agents", "Grafana connection", "Webhooks", "Appearance"]
+const SELECTED = "Grafana connection"
+
 const datasources = [
   { name: "Prometheus main", type: "prometheus", match: "prom (Prometheus)" },
   { name: "ClickHouse events", type: "grafana-clickhouse-datasource", match: "ch (ClickHouse)" },
 ]
 ---
 
-<Window url={`${HOST}/settings/grafana`} label="Grafana settings with a connection and the import form">
+<Window url={`${HOST}/settings#grafana`} label="Grafana settings with a connection and the import form">
   <div class="settings">
     <div class="page-head">
-      <span class="title">Grafana</span>
+      <span class="title">Settings</span>
+      <span class="k">How this server is set up. Most values come from its environment.</span>
+    </div>
+    <div class="row tabs scroll">
+      {sections.map((section) => <span class:list={["tab", { on: section === SELECTED }]}>{section}</span>)}
+    </div>
+    <div class="page-head">
+      <span class="label">{SELECTED}</span>
       <span class="k">Connect a Grafana server and import its dashboards with their folders.</span>
     </div>
-    <div class="row tabs"><span>General</span><span class="on">Grafana</span></div>
     <div class="card scroll">
       <table class="tbl connections">
         <thead>
@@ -114,18 +123,19 @@ const datasources = [
 
   .tabs {
     gap: 4px;
-    border-bottom: 1px solid var(--border);
   }
 
-  .tabs span {
-    padding: 4px 8px 3px;
-    border-bottom: 2px solid transparent;
+  .tab {
+    flex: none;
+    padding: 4px 10px;
+    border-radius: 6px;
     color: var(--mfg);
+    white-space: nowrap;
   }
 
-  .tabs .on {
+  .tab.on {
+    background: var(--muted);
     color: var(--fg);
-    border-bottom-color: var(--fg);
   }
 
   .card {
