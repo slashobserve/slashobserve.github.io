@@ -1,0 +1,140 @@
+---
+import Window from "./Window.astro"
+import { HOST } from "./screen-ids"
+
+interface Datasource {
+  name: string
+  type: string
+  tone: "ok" | "crit"
+  status: string
+  usedBy: string
+  explore: boolean
+}
+
+const datasources: Datasource[] = [
+  { name: "prom", type: "Prometheus", tone: "ok", status: "Healthy", usedBy: "14 dashboards", explore: false },
+  { name: "prod-es", type: "Elasticsearch", tone: "ok", status: "Healthy", usedBy: "No dashboards", explore: true },
+  { name: "prod-os", type: "OpenSearch", tone: "ok", status: "Healthy", usedBy: "No dashboards", explore: true },
+  {
+    name: "audit-os",
+    type: "OpenSearch",
+    tone: "crit",
+    status: "Unavailable: The index pattern matches no index",
+    usedBy: "No dashboards",
+    explore: true,
+  },
+]
+---
+
+<Window url={`${HOST}/datasources`} label="The datasources page with Elasticsearch and OpenSearch datasources">
+  <div class="datasources">
+    <div class="row head">
+      <div class="intro">
+        <span class="title">Datasources</span>
+        <span class="k">Defined in the datasources file on the server. Edit that file and restart to add or change one.</span>
+      </div>
+      <span class="btn btn-sm">How to add a datasource</span>
+    </div>
+    <div class="scroll">
+      <table class="tbl list">
+        <thead>
+          <tr>
+            <th>Name</th><th>Type</th><th>Status</th><th>Used by</th><th class="checked">Checked</th><th
+              ><span class="sr-only">Actions</span></th
+            >
+          </tr>
+        </thead>
+        <tbody>
+          {
+            datasources.map(({ name, type, tone, status, usedBy, explore }) => (
+              <tr>
+                <td class="mono">{name}</td>
+                <td>{type}</td>
+                <td>
+                  <span class="row status">
+                    <span class={`dot tone-${tone}`} />
+                    {status}
+                  </span>
+                </td>
+                <td class="k">{usedBy}</td>
+                <td class="k checked">2 min ago</td>
+                <td>{explore && <span class="btn btn-sm">Explore logs</span>}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <span class="k small">Addresses, users and secrets stay on the server and never reach the browser.</span>
+  </div>
+</Window>
+
+<style>
+  .datasources {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .head {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px 12px;
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .title {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .small {
+    font-size: 11px;
+  }
+
+  .btn {
+    min-height: 26px;
+    padding: 0 9px;
+    font-size: 11.5px;
+    white-space: nowrap;
+  }
+
+  .list {
+    position: relative;
+    min-width: 560px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+
+  .list th,
+  .list td {
+    padding: 6px 8px;
+    font-size: 11.5px;
+    vertical-align: middle;
+  }
+
+  .status {
+    align-items: baseline;
+    gap: 5px;
+  }
+
+  .status .dot {
+    flex: none;
+    transform: translateY(-1px);
+  }
+
+  .checked {
+    text-align: right;
+    white-space: nowrap;
+  }
+</style>

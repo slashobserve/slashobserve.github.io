@@ -1,0 +1,87 @@
+---
+import { AGENTS_PATH, DASHBOARDS_PATH, OBSERVATIONS_PATH, SIGNALS_PATH } from "../../lib/site-nav"
+import { tourTitle, type TourStopContent } from "../../lib/tour"
+import AgentsScreen from "../product/AgentsScreen.astro"
+import DashboardActivity from "../product/DashboardActivity.astro"
+import InboxScreen from "../product/InboxScreen.astro"
+import LogsSource from "../product/LogsSource.astro"
+import MessageToBlock from "../product/MessageToBlock.astro"
+import PublishRca from "../product/PublishRca.astro"
+import TraceCard from "../product/TraceCard.astro"
+import Stage from "../site/Stage.astro"
+import Tour from "../site/Tour.astro"
+
+const stops: TourStopContent[] = [
+  {
+    id: "inbox",
+    place: "Inbox",
+    title: "Start from what needs you.",
+    text: "The Inbox keeps what asks something of you in one list: a proposal to merge, a block to keep, a mention, a reply, a failed run or a repair the agent saved. Each item shows why it is there, and the unread count follows you across browsers. It is the page the app opens on.",
+    links: [],
+  },
+  {
+    id: "observations",
+    place: "Observations",
+    title: "An investigation is a page, not a chat log.",
+    text: "Text, panels, logs and snapshots are blocks on the page, and the discussion beside it holds messages until someone adds one to the page. Publish as RCA freezes the page into a numbered revision, and a person can share that revision read-only with a public link.",
+    links: [{ href: OBSERVATIONS_PATH, label: "Observations" }],
+  },
+  {
+    id: "dashboards",
+    place: "Dashboards",
+    title: "Ask for a dashboard. Get one that works.",
+    text: "The agent takes an inventory of the metric families in scope, runs each panel it adds or changes before the save, and ends with a version and a link. Comments, agent requests and saved versions share one Activity pane on the dashboard.",
+    links: [{ href: DASHBOARDS_PATH, label: "Dashboards" }],
+  },
+  {
+    id: "logs-and-traces",
+    place: "Logs and traces",
+    title: "Search in the language each store speaks.",
+    text: "Pick a datasource on the logs page and search it in its own language: LogQL on Loki, SQL on ClickHouse, KQL on Elasticsearch and OpenSearch. Traces on Tempo take TraceQL. A log line that carries a trace id opens that trace.",
+    links: [{ href: SIGNALS_PATH, label: "Signals" }],
+  },
+  {
+    id: "agents",
+    place: "Agents",
+    title: "Your agents work here too.",
+    text: "Observe Agent is built in and runs on the model you configure. Claude Code and other MCP clients connect as named agents, each set to save directly or to propose.",
+    links: [{ href: AGENTS_PATH, label: "Agents" }],
+  },
+]
+---
+
+<Tour title={tourTitle(stops.length)} lead="Each stop is a place in the app's sidebar, drawn from the demo data." railLabel="In the app" stops={stops}>
+  <Stage slot="inbox"><InboxScreen /></Stage>
+  <Stage slot="observations">
+    <div class="pair pair-top">
+      <MessageToBlock />
+      <PublishRca />
+    </div>
+  </Stage>
+  <Stage slot="dashboards"><DashboardActivity /></Stage>
+  <Stage slot="logs-and-traces">
+    <div class="pair">
+      <LogsSource />
+      <TraceCard />
+    </div>
+  </Stage>
+  <Stage slot="agents"><AgentsScreen /></Stage>
+</Tour>
+
+<style>
+  .pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .pair-top {
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .pair {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

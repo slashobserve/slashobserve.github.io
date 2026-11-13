@@ -1,14 +1,9 @@
 ---
 import ImportCoverageTable from "../components/migrate/ImportCoverageTable.astro"
 import ImportStats from "../components/migrate/ImportStats.astro"
-import ImportSteps from "../components/migrate/ImportSteps.astro"
-import KibanaSection from "../components/migrate/KibanaSection.astro"
-import ImportScript from "../components/product/ImportScript.astro"
+import MoveTour from "../components/migrate/MoveTour.astro"
 import Band from "../components/site/Band.astro"
 import PageOpening from "../components/site/PageOpening.astro"
-import Section from "../components/site/Section.astro"
-import SectionHead from "../components/site/SectionHead.astro"
-import Split from "../components/site/Split.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
 import { getDocLinks } from "../lib/get-doc-links"
 import { cleanImportPercent, readImportCorpus } from "../lib/import-corpus"
@@ -50,27 +45,9 @@ const stats = [
       )
     }
   </PageOpening>
-  <Section>
-    <SectionHead
-      title="From Grafana: every dashboard, every query checked."
-      lead="Connect a Grafana with a read-only token. Every dashboard comes across with its folder, tags, variables and links; unmatched panels are listed, not hidden; every imported query runs, and the ones that fail go to a repair queue. The old links keep resolving."
-    />
-  </Section>
   <ImportStats stats={stats} />
-  <ImportSteps />
+  <MoveTour links={links} />
   <ImportCoverageTable />
-  <Section>
-    <Split>
-      <div class="script-copy" slot="start">
-        <h2 class="h2">The same import, scripted.</h2>
-        <p class="lead">
-          Everything the Settings page does is a verb, so a migration can run from CI or a runbook and be repeated.
-        </p>
-      </div>
-      <div slot="end" data-in-view="rise"><ImportScript /></div>
-    </Split>
-  </Section>
-  <KibanaSection links={links} />
   <Band>
     <h2 class="h2 band-title">Bring the dashboards this afternoon. Keep the queries you know.</h2>
     <p class="p">Point it at a Grafana you can read, or at the index pattern your Discover tab uses. Nothing is written back.</p>
@@ -96,12 +73,6 @@ const stats = [
   .actions {
     gap: 10px;
     flex-wrap: wrap;
-  }
-
-  .script-copy {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
   }
 
   .band-title {

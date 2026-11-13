@@ -1,0 +1,105 @@
+---
+import Window from "./Window.astro"
+import { HOST } from "./screen-ids"
+
+const QUERY = "service.name:checkout and log.level:error"
+const MODES = ["Builder", "KQL", "Ask"]
+const SELECTED_MODE = "KQL"
+---
+
+<Window url={`${HOST}/logs?ds=prod-es`} label="A Discover link pasted into the logs page of an Elasticsearch datasource">
+  <div class="paste">
+    <span class="title">Logs</span>
+    <div class="row source">
+      <span class="label">Datasource</span>
+      <span class="select">prod-es Elasticsearch logs-* @timestamp<span class="k" aria-hidden="true">▾</span></span>
+    </div>
+    <span class="seg" aria-hidden="true">
+      {MODES.map((mode) => <span class:list={{ on: mode === SELECTED_MODE }}>{mode}</span>)}
+    </span>
+    <div class="mono code"><span class="k">1</span><span data-reveal>{QUERY}</span></div>
+    <p class="k small note">
+      Filled from a Discover link: query, time range, 2 columns. 1 filter from the URL was not applied.{" "}
+      <span class="dismiss">Dismiss</span>
+    </p>
+    <span class="btn btn-primary btn-sm run">Run query</span>
+  </div>
+</Window>
+
+<style>
+  .paste {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    font-size: 12px;
+  }
+
+  .title {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .source {
+    flex-wrap: wrap;
+  }
+
+  .select {
+    display: inline-flex;
+    gap: 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 9px;
+    background: var(--card);
+    white-space: nowrap;
+  }
+
+  .seg {
+    display: inline-flex;
+    align-self: flex-start;
+    padding: 2px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--muted);
+  }
+
+  .seg span {
+    padding: 2px 10px;
+    border-radius: 4px;
+    color: var(--mfg);
+  }
+
+  .seg .on {
+    background: var(--card);
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  .code {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 10px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card);
+    font-size: 11.5px;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  .note {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  .dismiss {
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  .run {
+    align-self: flex-start;
+  }
+</style>

@@ -1,0 +1,117 @@
+---
+import Window from "./Window.astro"
+import { GRAFANA_DASHBOARD_COUNT, HOST } from "./screen-ids"
+
+const NEED_REPAIR = [
+  { title: "Kubernetes / Pods", unverified: 3, placeholders: 0 },
+  { title: "Node exporter full", unverified: 5, placeholders: 0 },
+  { title: "Ingest pipeline", unverified: 2, placeholders: 3 },
+  { title: "Graphite legacy", unverified: 0, placeholders: 4 },
+]
+const FAILED = 0
+const SKIPPED = 0
+const IMPORTED = GRAFANA_DASHBOARD_COUNT - NEED_REPAIR.length - FAILED - SKIPPED
+---
+
+<Window url={`${HOST}/settings#grafana`} label="The progress of a finished Grafana import">
+  <div class="progress">
+    <div class="card">
+      <div class="card-head">
+        <span class="label">Import progress</span>
+        <span class="k small">Each connection keeps its last 20 imports.</span>
+      </div>
+      <div class="status">
+        <span class="row"><span class="dot tone-ok"></span>Finished</span>
+        <span>{GRAFANA_DASHBOARD_COUNT} of {GRAFANA_DASHBOARD_COUNT} dashboards</span>
+        <span class="k">{FAILED} failed, {SKIPPED} skipped</span>
+      </div>
+      <div class="group">
+        <span class="heading">Need repair ({NEED_REPAIR.length})</span>
+        <ul class="results">
+          {
+            NEED_REPAIR.map(({ title, unverified, placeholders }) => (
+              <li>
+                <span>{title}</span>
+                <span class="k">
+                  {unverified} unverified, {placeholders} placeholders
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+        <span class="heading">Open the repair queue</span>
+      </div>
+      <div class="group collapsed">
+        <span class="heading">
+          <span class="k" aria-hidden="true">▸</span> Imported ({IMPORTED})
+        </span>
+      </div>
+    </div>
+  </div>
+</Window>
+
+<style>
+  .progress {
+    padding: 14px;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .card-head {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 9px 11px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .small {
+    font-size: 11px;
+  }
+
+  .status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 16px;
+    padding: 9px 11px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 9px 11px;
+  }
+
+  .group + .group {
+    border-top: 1px solid var(--border);
+  }
+
+  .heading {
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  .results {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .results li {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2px 12px;
+  }
+</style>

@@ -42,6 +42,8 @@ describe("resolveDocLinks", () => {
       datasources: "/docs/connect/prometheus/",
       elasticsearch: null,
       opensearch: null,
+      switchFromGrafana: null,
+      logsAndTraces: null,
     })
   })
 
@@ -49,6 +51,12 @@ describe("resolveDocLinks", () => {
     const links = resolveDocLinks(new Set([...corePages, "docs/connect/elasticsearch", "docs/connect/opensearch"]))
     expect(links.elasticsearch).toBe("/docs/connect/elasticsearch/")
     expect(links.opensearch).toBe("/docs/connect/opensearch/")
+  })
+
+  test("links the switch from Grafana and logs and traces pages when core has them", () => {
+    const links = resolveDocLinks(new Set([...corePages, "docs/use/switch-from-grafana", "docs/use/logs-and-traces"]))
+    expect(links.switchFromGrafana).toBe("/docs/use/switch-from-grafana/")
+    expect(links.logsAndTraces).toBe("/docs/use/logs-and-traces/")
   })
 
   test("returns null for a page that is not in core", () => {

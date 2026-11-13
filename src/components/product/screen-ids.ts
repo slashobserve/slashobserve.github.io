@@ -3,3 +3,4 @@ export const DASHBOARD_TITLE = "Checkout health"
 export const DASHBOARD_PATH = `/d/${DASHBOARD_ID}/checkout-health`
 export const TRACE_ID = "7f3a9c1e5b2d4f6a8c0e1d3b5a7f9c2e"
 export const HOST = "observe.example.com"
+export const GRAFANA_DASHBOARD_COUNT = 212

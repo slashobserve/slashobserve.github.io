@@ -3,7 +3,7 @@ import BringWhatYouBuilt from "../components/home/BringWhatYouBuilt.astro"
 import HomeHero from "../components/home/HomeHero.astro"
 import SameRules from "../components/home/SameRules.astro"
 import StoresStrip from "../components/home/StoresStrip.astro"
-import Tour from "../components/home/Tour.astro"
+import HomeTour from "../components/home/HomeTour.astro"
 import RunsOnBand from "../components/site/RunsOnBand.astro"
 import SurfacesSection from "../components/site/SurfacesSection.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
@@ -19,7 +19,7 @@ const links = await getDocLinks()
   <HomeHero quickStart={links.quickStart} />
   <StoresStrip />
   <SameRules />
-  <Tour />
+  <HomeTour />
   <BringWhatYouBuilt />
   <SurfacesSection lead="The web app, the observe CLI, and MCP for Claude Code and other MCP clients. Same save checks everywhere." />
   <RunsOnBand quickStart={links.quickStart} />

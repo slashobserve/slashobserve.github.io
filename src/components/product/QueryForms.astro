@@ -1,0 +1,13 @@
+---
+import Window from "./Window.astro"
+
+const QUERY_FORMS = [
+  "service.name:checkout and log.level:error",
+  "lucene:service.name:checkout AND NOT log.level:info",
+  '{"query": {"match_phrase": {"message": "timeout"}}}',
+]
+---
+
+<Window label="The three query forms on an Elasticsearch or OpenSearch datasource">
+  <div class="term">{QUERY_FORMS.map((line) => <span class="tl">{line}</span>)}</div>
+</Window>
