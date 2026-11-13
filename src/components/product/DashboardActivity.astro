@@ -9,9 +9,15 @@ const routes = [
   { name: "/cart", tone: "s3", d: "M0 62 C40 60 70 56 100 58 S170 66 200 60 S260 54 300 56" },
   { name: "/product/{id}", tone: "s2", d: "M0 36 C40 40 70 30 110 26 S170 22 200 32 S260 40 300 34" },
 ] as const
+
+interface Props {
+  onStage?: boolean
+}
+
+const { onStage = false } = Astro.props
 ---
 
-<Window label="A dashboard with its activity">
+<Window {onStage} label="A dashboard with its activity">
   <div class="dash">
     <div class="top">
       <span class="crumbs">
@@ -297,8 +303,8 @@ const routes = [
     justify-content: space-between;
     gap: 10px;
     padding: 6px 10px;
-    border: 1px solid var(--border);
     border-radius: 8px;
+    background: var(--muted);
   }
 
   .version-name {
@@ -320,9 +326,8 @@ const routes = [
     gap: 14px;
     margin: 8px 16px 16px;
     padding: 10px 10px 8px 12px;
-    border: 1px solid var(--border);
     border-radius: 10px;
-    background: var(--card);
+    background: var(--muted);
   }
 
   .on-row {

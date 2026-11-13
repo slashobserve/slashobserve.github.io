@@ -35,7 +35,7 @@ const levels = [
 ]
 ---
 
-<Window label="The logs page on a ClickHouse datasource">
+<Window onStage label="The logs page on a ClickHouse datasource">
   <div class="logs">
     <div class="head">
       <span class="title">Logs</span>
@@ -198,9 +198,8 @@ const levels = [
     grid-template-columns: auto minmax(0, 1fr);
     gap: 12px;
     padding: 8px 12px;
-    border: 1px solid var(--border);
     border-radius: 8px;
-    background: var(--canvas);
+    background: var(--muted);
     line-height: 1.6;
     overflow-wrap: anywhere;
   }

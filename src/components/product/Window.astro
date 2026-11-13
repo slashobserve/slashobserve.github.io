@@ -4,14 +4,15 @@ interface Props {
   title?: string
   lights?: boolean
   label?: string
+  onStage?: boolean
   class?: string
 }
 
-const { url, title, lights = true, label, class: className } = Astro.props
-const hasBar = url !== undefined || title !== undefined || Astro.slots.has("bar-end")
+const { url, title, lights = true, label, onStage = false, class: className } = Astro.props
+const hasBar = !onStage && (url !== undefined || title !== undefined || Astro.slots.has("bar-end"))
 ---
 
-<div class:list={["win", className]} role={label ? "group" : undefined} aria-label={label}>
+<div class:list={["win", { "on-stage": onStage }, className]} role={label ? "group" : undefined} aria-label={label}>
   {
     hasBar && (
       <div class="winbar">
@@ -35,6 +36,10 @@ const hasBar = url !== undefined || title !== undefined || Astro.slots.has("bar-
 </div>
 
 <style>
+  .win.on-stage {
+    border: 0;
+  }
+
   .win-url {
     flex: 1;
   }
