@@ -9,12 +9,13 @@ interface Props {
   name: string
   time: string
   framed?: boolean
+  seq?: number
 }
 
-const { as: Tag = "div", author, initials, tint, name, time, framed = false } = Astro.props
+const { as: Tag = "div", author, initials, tint, name, time, framed = false, seq } = Astro.props
 ---
 
-<Tag class:list={["msg", framed && "framed"]}>
+<Tag class:list={["msg", framed && "framed"]} data-seq={seq} style={seq === undefined ? undefined : `--seq:${seq}`}>
   <Mark kind={author} initials={initials} tint={tint} size={24} />
   <div class="msg-body">
     <div class="msg-head"><b>{name}</b><span class="k">{time}</span></div>
@@ -75,5 +76,18 @@ const { as: Tag = "div", author, initials, tint, name, time, framed = false } = 
     background: transparent;
     color: var(--mfg);
     font-size: 12.5px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.motion [data-sequence]) .msg[data-seq] {
+      animation: message-in 600ms cubic-bezier(0.2, 0.7, 0.2, 1) calc(400ms + var(--seq) * 1100ms) backwards;
+    }
+  }
+
+  @keyframes message-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
   }
 </style>

@@ -20,14 +20,14 @@ const send = '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>'
     <span class="icon-btn" aria-hidden="true"><svg viewBox="0 0 24 24" set:html={hide} /></span>
   </header>
   <ol class="messages" aria-label="Messages">
-    <Message as="li" author="person" initials="AD" tint={1} name="admin" time="17:02">
+    <Message as="li" seq={0} author="person" initials="AD" tint={1} name="admin" time="17:02">
       <Mention /> can we confirm the errors come from the payments client timeout?
     </Message>
-    <Message as="li" author="agent" name="Observe Agent for admin" time="17:03">
+    <Message as="li" seq={1} author="agent" name="Observe Agent for admin" time="17:03">
       Yes. 94% of the 5xx on /api/checkout carry <InlineCode>payments: context deadline exceeded</InlineCode>, and they
       start 3 minutes after the rollout.
     </Message>
-    <Message as="li" author="person" initials="JP" tint={4} name="Jo Park" time="17:06">
+    <Message as="li" seq={2} author="person" initials="JP" tint={4} name="Jo Park" time="17:06">
       That matches the new 2s client timeout in the payments chart. Adding the snapshot to the page.
     </Message>
   </ol>
