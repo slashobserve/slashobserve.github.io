@@ -1,0 +1,37 @@
+---
+import Section from "../site/Section.astro"
+import Split from "../site/Split.astro"
+import Stage from "../site/Stage.astro"
+import PublishRca from "../product/PublishRca.astro"
+---
+
+<Section>
+  <Split rev>
+    <div slot="start" data-in-view="rise">
+      <Stage><PublishRca /></Stage>
+    </div>
+    <div slot="end" class="copy">
+      <h2 class="h2">Publish it as the RCA.</h2>
+      <p class="lead">
+        Publish as RCA freezes every live panel and saves a numbered revision. Earlier revisions do not change.
+      </p>
+      <p class="lead">
+        A person with Manage on the folder can make a public link to one revision. Anyone with the link reads that frozen revision
+        without signing in, and it never shows a query. Revoke the link and it stops at once. Making a link is a person's decision: no
+        agent tool creates one.
+      </p>
+    </div>
+  </Split>
+</Section>
+
+<style>
+  .copy {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .copy .lead {
+    font-size: 17px;
+  }
+</style>

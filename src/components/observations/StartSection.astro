@@ -1,0 +1,38 @@
+---
+import Section from "../site/Section.astro"
+import Split from "../site/Split.astro"
+import Stage from "../site/Stage.astro"
+import NewObservation from "../product/NewObservation.astro"
+---
+
+<Section ruled={false}>
+  <Split>
+    <div slot="start" class="copy">
+      <h2 class="h2">Start with a title, or with a question.</h2>
+      <p class="lead">
+        New observation takes a title and a folder, and Create opens the page. In the terminal,
+        <span class="mono">observe o new</span> takes the same and, with <span class="mono">--text</span> or
+        <span class="mono">--text-file</span>, adds your first note as a text block.
+      </p>
+      <p class="lead">
+        Or ask the agent a question. Every investigation opens an observation, shows its run on the page while it works, and writes its
+        conclusion and evidence there as blocks. That needs a model on the server.
+      </p>
+    </div>
+    <div slot="end" data-in-view="rise">
+      <Stage><NewObservation /></Stage>
+    </div>
+  </Split>
+</Section>
+
+<style>
+  .copy {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .copy .lead {
+    font-size: 17px;
+  }
+</style>

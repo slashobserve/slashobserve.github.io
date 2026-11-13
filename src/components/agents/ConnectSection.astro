@@ -1,0 +1,41 @@
+---
+import Section from "../site/Section.astro"
+import Split from "../site/Split.astro"
+import Stage from "../site/Stage.astro"
+import ConnectAgent from "../product/ConnectAgent.astro"
+import McpConfig from "../product/McpConfig.astro"
+---
+
+<Section>
+  <Split rev>
+    <div slot="start" class="drawings" data-in-view="rise">
+      <Stage><ConnectAgent /></Stage>
+      <McpConfig />
+    </div>
+    <div slot="end" class="copy">
+      <h2 class="h2">Connect Claude Code or any MCP client.</h2>
+      <p class="lead">
+        Connect an agent shows one command, <span class="mono">claude mcp add --transport http slashobserve &lt;mcp url&gt;</span>, and
+        waits while you approve the connection in the browser window it opens. Other clients add the same address, and you approve
+        each one once in your browser.
+      </p>
+      <p class="lead">
+        A connected agent acts with your role and your folder access, and the queries of the panels it adds or changes run before
+        a save is stored. A bot with no person to approve it uses a service-account key, set in <span class="mono">.mcp.json</span>.
+      </p>
+    </div>
+  </Split>
+</Section>
+
+<style>
+  .copy,
+  .drawings {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .copy .lead {
+    font-size: 17px;
+  }
+</style>

@@ -1,0 +1,48 @@
+---
+import Section from "../site/Section.astro"
+import Split from "../site/Split.astro"
+import Stage from "../site/Stage.astro"
+import TerminalVerbs from "./TerminalVerbs.astro"
+
+interface Props {
+  cliObservations: string | null
+}
+
+const { cliObservations } = Astro.props
+---
+
+<Section>
+  <Split>
+    <div slot="start" class="copy">
+      <h2 class="h2">The same verbs in the terminal.</h2>
+      <p class="lead">
+        <span class="mono">observe o</span> starts, reads, extends, resolves and publishes observations, and keeps or discards the
+        blocks someone suggested. <span class="mono">observe proposals</span> lists, shows, merges and discards proposals. It is the
+        same work the MCP tools do, so a person or a script can do what an agent does.
+      </p>
+      {
+        cliObservations && (
+          <a class="arrow" href={cliObservations}>
+            The CLI reference →
+          </a>
+        )
+      }
+    </div>
+    <div slot="end" data-in-view="rise">
+      <Stage><TerminalVerbs /></Stage>
+    </div>
+  </Split>
+</Section>
+
+<style>
+  .copy {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .copy .lead {
+    font-size: 17px;
+  }
+</style>

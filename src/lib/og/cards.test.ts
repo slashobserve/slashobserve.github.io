@@ -1,10 +1,14 @@
 import { describe, expect, test } from "bun:test"
+import { PRODUCT_LINKS } from "../site-nav"
 import { SOCIAL_CARDS, cardFor, cardImagePath } from "./cards"
 
 describe("cardFor", () => {
   test.each([
     ["/", "home"],
+    ["/observations/", "observations"],
     ["/dashboards/", "dashboards"],
+    ["/agents/", "agents"],
+    ["/agents", "agents"],
     ["/migrate/", "migrate"],
     ["/migrate", "migrate"],
     ["/signals/", "signals"],
@@ -38,6 +42,10 @@ describe("SOCIAL_CARDS", () => {
       expect(path.startsWith("/")).toBe(true)
       expect(path.endsWith("/")).toBe(true)
     }
+  })
+
+  test("every product page in the nav has a card", () => {
+    for (const { href } of PRODUCT_LINKS) expect(cardFor(href)).not.toBeNull()
   })
 
   test("titles fit three lines at 76px", () => {

@@ -1,0 +1,77 @@
+---
+import AuthorSection from "../components/agents/AuthorSection.astro"
+import ConnectSection from "../components/agents/ConnectSection.astro"
+import ObserveAgentSection from "../components/agents/ObserveAgentSection.astro"
+import ProposeSection from "../components/agents/ProposeSection.astro"
+import TerminalSection from "../components/agents/TerminalSection.astro"
+import AgentsScreen from "../components/product/AgentsScreen.astro"
+import PageOpening from "../components/site/PageOpening.astro"
+import RunsOnBand from "../components/site/RunsOnBand.astro"
+import Stage from "../components/site/Stage.astro"
+import MarketingLayout from "../layouts/MarketingLayout.astro"
+import { getDocLinks } from "../lib/get-doc-links"
+
+const links = await getDocLinks()
+---
+
+<MarketingLayout
+  title="Agents | SlashObserve"
+  description="Observe Agent, the MCP clients you connect and the service accounts that take runs, on one page. Each connected agent writes directly or proposes, and every write names its author."
+>
+  <PageOpening title="Agents are members of the workspace.">
+    <p class="lead">
+      Observe Agent is built in. Claude Code and other MCP clients connect as agents you approve, and service accounts can take
+      runs. The Agents page lists all three, and a comment that mentions one hands it work.
+    </p>
+    {
+      (links.connectAgent || links.agents) && (
+        <div class="row actions">
+          {links.connectAgent && (
+            <a class="btn btn-primary" href={links.connectAgent}>
+              Connect an agent
+            </a>
+          )}
+          {links.agents && (
+            <a class="arrow" href={links.agents}>
+              How agents work →
+            </a>
+          )}
+        </div>
+      )
+    }
+  </PageOpening>
+  <section class="wrap screen">
+    <div data-in-view="rise">
+      <Stage><AgentsScreen /></Stage>
+    </div>
+  </section>
+  <ObserveAgentSection />
+  <ConnectSection />
+  <ProposeSection proposals={links.proposals} inbox={links.inbox} />
+  <AuthorSection />
+  <TerminalSection cliObservations={links.cliObservations} />
+  <RunsOnBand quickStart={links.quickStart} />
+</MarketingLayout>
+
+<style>
+  .actions {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .screen {
+    padding-bottom: 84px;
+  }
+
+  @media (max-width: 900px) {
+    .screen {
+      padding-bottom: 56px;
+    }
+  }
+</style>
+
+<script>
+  import { watchInView } from "../lib/client/in-view"
+
+  watchInView()
+</script>
