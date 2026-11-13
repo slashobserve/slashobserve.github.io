@@ -1,0 +1,99 @@
+---
+import Mark from "./Mark.astro"
+
+type Author = { kind: "agent" } | { kind: "connected"; initials: string }
+
+interface Line {
+  author: Author
+  who: string
+  note: string
+  at?: string
+  live?: boolean
+}
+
+const lines: Line[] = [
+  { author: { kind: "agent" }, who: "Observe Agent for admin", note: "saved", at: "12 h ago" },
+  { author: { kind: "connected", initials: "CC" }, who: "admin (via Claude Code)", note: "saved", at: "5 min ago" },
+  { author: { kind: "agent" }, who: "Agent", note: "is working on it", at: "Just now", live: true },
+  { author: { kind: "connected", initials: "CB" }, who: "ci-bot", note: "Listening" },
+]
+---
+
+<ul class="bylines" aria-label="Authors">
+  {
+    lines.map(({ author, who, note, at, live }) => (
+      <li class="row line">
+        {author.kind === "agent" ? (
+          <Mark kind="agent" size={24} />
+        ) : (
+          <Mark kind="connected" initials={author.initials} size={24} />
+        )}
+        <span class="text">
+          <span class="who">{who}</span> <span class="k">{note}</span>
+          {live && <span class="dot tone-ok live" />}
+        </span>
+        {at && <span class="k at">{at}</span>}
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .bylines {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
+    font-size: 13px;
+    line-height: 1.45;
+    min-width: 0;
+  }
+
+  .line {
+    gap: 10px;
+    padding: 10px 14px;
+  }
+
+  .line + .line {
+    border-top: 1px solid var(--border);
+  }
+
+  .text {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .who {
+    font-weight: 500;
+  }
+
+  .live {
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  .at {
+    flex: none;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .live {
+      animation: working-pulse 2.4s ease-in-out infinite;
+    }
+  }
+
+  @keyframes working-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.3;
+    }
+  }
+</style>
