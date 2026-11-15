@@ -38,15 +38,16 @@ const levels = [
 <Window onStage label="The logs page on a ClickHouse datasource">
   <div class="logs">
     <div class="head">
-      <span class="title">Logs</span>
-      <span class="k description"
-        >Search one datasource in its own query language, narrow by field, then jump to the trace.</span
-      >
+      <span class="crumbs">
+        <span class="k">Logs</span>
+        <span class="k" aria-hidden="true">/</span>
+        <span class="title">prod-ch</span>
+        <span class="lang">SQL</span>
+      </span>
     </div>
     <div class="toolbar">
       <span class="seg" aria-hidden="true"><span class="on">SQL</span><span>Ask</span></span>
       <span class="controls">
-        <span class="pick">prod-ch ClickHouse <span class="k" aria-hidden="true">▾</span></span>
         <span class="pick">Last 1 hour <span class="k" aria-hidden="true">▾</span></span>
       </span>
     </div>
@@ -119,19 +120,22 @@ const levels = [
     margin: 0 14px;
   }
 
-  .head {
+  .crumbs {
     display: flex;
-    flex-direction: column;
-    gap: 2px;
+    align-items: center;
+    gap: 8px;
   }
 
   .title {
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 500;
   }
 
-  .description {
-    line-height: 1.4;
+  .lang {
+    border-radius: 6px;
+    padding: 1px 6px;
+    background: var(--muted);
+    color: var(--mfg);
   }
 
   .toolbar {

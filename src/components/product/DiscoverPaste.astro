@@ -7,13 +7,14 @@ const MODES = ["Builder", "KQL", "Ask"]
 const SELECTED_MODE = "KQL"
 ---
 
-<Window url={`${HOST}/logs?ds=prod-es`} label="A Discover link pasted into the logs page of an Elasticsearch datasource">
+<Window url={`${HOST}/logs/prod-es`} label="A Discover link pasted into the logs page of an Elasticsearch datasource">
   <div class="paste">
-    <span class="title">Logs</span>
-    <div class="row source">
-      <span class="label">Datasource</span>
-      <span class="select">prod-es Elasticsearch logs-* @timestamp<span class="k" aria-hidden="true">▾</span></span>
-    </div>
+    <span class="row crumbs">
+      <span class="k">Logs</span>
+      <span class="k" aria-hidden="true">/</span>
+      <span class="title">prod-es</span>
+      <span class="lang">KQL</span>
+    </span>
     <span class="seg" aria-hidden="true">
       {MODES.map((mode) => <span class:list={{ on: mode === SELECTED_MODE }}>{mode}</span>)}
     </span>
@@ -35,23 +36,20 @@ const SELECTED_MODE = "KQL"
     font-size: 12px;
   }
 
+  .crumbs {
+    gap: 8px;
+  }
+
   .title {
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 500;
   }
 
-  .source {
-    flex-wrap: wrap;
-  }
-
-  .select {
-    display: inline-flex;
-    gap: 14px;
-    border: 1px solid var(--border);
+  .lang {
     border-radius: 6px;
-    padding: 4px 9px;
-    background: var(--card);
-    white-space: nowrap;
+    padding: 1px 6px;
+    background: var(--muted);
+    color: var(--mfg);
   }
 
   .seg {
