@@ -12,13 +12,19 @@ const ERROR_COUNT = SPANS.filter((span) => span.error).length
   <div class="page">
     <div class="head">
       <div class="head-text">
-        <span class="title">{ROOT.service} {ROOT.operation}</span>
+        <span class="row crumbs">
+          <span class="k">Traces</span>
+          <span class="k" aria-hidden="true">/</span>
+          <span class="k">tempo</span>
+          <span class="k" aria-hidden="true">/</span>
+          <span class="title">{ROOT.service} {ROOT.operation}</span>
+        </span>
         <span class="k trace-id">Duration {ROOT.duration} · Spans {SPANS.length} · Services {SERVICE_COUNT} · Errors {ERROR_COUNT}</span>
       </div>
       <span class="row head-actions">
         <span class="btn btn-sm hide-xs">{LOG_LINK_RANGE}</span>
+        <span class="btn btn-sm hide-xs">Logs for this trace</span>
         <span class="btn btn-sm">Copy link</span>
-        <span class="btn btn-sm hide-xs">Search traces</span>
       </span>
     </div>
     <div class="card">
@@ -112,9 +118,13 @@ const ERROR_COUNT = SPANS.filter((span) => span.error).length
     min-width: 0;
   }
 
+  .crumbs {
+    gap: 8px;
+  }
+
   .title {
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 500;
   }
 
   .trace-id {

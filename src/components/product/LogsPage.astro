@@ -42,20 +42,20 @@ const details = [
 ]
 ---
 
-<Window url={`${HOST}/logs?ds=prod-es&q=${QUERY}`} label="The logs page on an Elasticsearch datasource">
+<Window url={`${HOST}/logs/prod-es?q=${QUERY}`} label="The logs page on an Elasticsearch datasource">
   <div class="logs">
     <div class="row head">
-      <span class="title">Logs</span>
+      <span class="row crumbs">
+        <span class="k">Logs</span>
+        <span class="k" aria-hidden="true">/</span>
+        <span class="title">prod-es</span>
+        <span class="lang">KQL</span>
+      </span>
       <span class="row head-actions">
         <span class="btn btn-sm">Last 15 minutes</span>
         <span class="btn btn-sm">Live tail</span>
         <span class="btn btn-sm hide-xs">Add to dashboard</span>
       </span>
-    </div>
-    <div class="row source">
-      <span class="label">Datasource</span>
-      <span class="select">prod-es Elasticsearch logs-* @timestamp<span class="k" aria-hidden="true">▾</span></span>
-      <span class="btn btn-sm">Fields</span>
     </div>
     <div class="mono code"><span class="k">1</span><span>{QUERY}</span></div>
     <span class="btn btn-primary btn-sm run">Run query</span>
@@ -118,8 +118,8 @@ const details = [
   }
 
   .title {
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 500;
   }
 
   .head-actions {
@@ -131,8 +131,15 @@ const details = [
     font-size: 12px;
   }
 
-  .source {
-    flex-wrap: wrap;
+  .crumbs {
+    gap: 8px;
+  }
+
+  .lang {
+    border-radius: 6px;
+    padding: 1px 6px;
+    background: var(--muted);
+    color: var(--mfg);
   }
 
   .select {

@@ -4,8 +4,14 @@ import { GRAFANA_DASHBOARD_COUNT, HOST } from "./screen-ids"
 
 const CONNECTION = "prod"
 
-const sections = ["Agent", "This server", "Sign-in", "Outbound access", "Connected agents", "Grafana connection", "Webhooks", "Appearance"]
+const groups = [
+  { label: "You", sections: ["Appearance", "Connected agents"] },
+  { label: "Workspace", sections: ["Server", "Sign-in", "Outbound access", "Agent access"] },
+  { label: "Integrations", sections: ["Grafana connection", "Webhooks"] },
+]
 const SELECTED = "Grafana connection"
+const SELECTED_GROUP = "Integrations"
+const CONNECTIONS_HINT = "A Grafana URL and a service account token with the Viewer role on the folders to import."
 
 const datasources = [
   { name: "Prometheus main", type: "prometheus", match: "prom (Prometheus)" },
@@ -15,87 +21,103 @@ const datasources = [
 
 <Window url={`${HOST}/settings#grafana`} label="Grafana settings with a connection and the import form">
   <div class="settings">
-    <div class="page-head">
-      <span class="title">Settings</span>
-      <span class="k">How this server is set up. Most values come from its environment.</span>
-    </div>
-    <div class="row tabs scroll">
-      {sections.map((section) => <span class:list={["tab", { on: section === SELECTED }]}>{section}</span>)}
-    </div>
-    <div class="page-head">
-      <span class="label">{SELECTED}</span>
-      <span class="k">Connect a Grafana server and import its dashboards with their folders.</span>
-    </div>
-    <div class="card scroll">
-      <table class="tbl connections">
-        <thead>
-          <tr><th>Name</th><th>URL</th><th>Last test</th><th>Last import</th><th><span class="sr-only">Actions</span></th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="label">{CONNECTION}</td>
-            <td class="mono url-cell">https://grafana.internal</td>
-            <td>
-              <span class="row status"><span class="dot tone-ok"></span>Connected: 14 top-level folders, {GRAFANA_DASHBOARD_COUNT} dashboards.</span>
-              <span class="k small">2 min ago</span>
-            </td>
-            <td class="k">Never</td>
-            <td>
-              <span class="actions">
-                <span class="btn btn-sm">Test</span>
-                <span class="btn btn-sm">Import</span>
-                <span class="btn btn-sm">Delete</span>
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="card">
-      <div class="card-head">
-        <span class="label">Import from {CONNECTION}</span>
-        <span class="k small">Choose what to bring over and check the datasource matches.</span>
-      </div>
-      <div class="block">
-        <span class="label">Folders</span>
-        <span class="row choice"><span class="radio on" aria-hidden="true"></span>All folders ({GRAFANA_DASHBOARD_COUNT} dashboards)</span>
-        <span class="row choice"><span class="radio" aria-hidden="true"></span>Choose folders</span>
-      </div>
-      <div class="block">
-        <span class="label">Datasources</span>
-        <div class="scroll">
-          <table class="tbl sources">
-            <thead>
-              <tr><th>In Grafana</th><th>Type</th><th>Use in SlashObserve</th></tr>
-            </thead>
-            <tbody>
-              {
-                datasources.map(({ name, type, match }) => (
-                  <tr>
-                    <td>{name}</td>
-                    <td class="mono type">{type}</td>
-                    <td>
-                      <span class="select">
-                        {match}
-                        <span class="k" aria-hidden="true">▾</span>
-                      </span>
-                    </td>
-                  </tr>
-                ))
-              }
-            </tbody>
-          </table>
+    <span class="title">Settings</span>
+    <div class="layout">
+      <nav class="sections" aria-label="Settings sections">
+        {
+          groups.map(({ label, sections }) => (
+            <>
+              <span class="group k">{label}</span>
+              {sections.map((section) => (
+                <span class="item" aria-current={section === SELECTED ? "page" : undefined}>{section}</span>
+              ))}
+            </>
+          ))
+        }
+      </nav>
+      <div class="content">
+        <span class="select section-select"><span class="k">{SELECTED_GROUP}</span>{SELECTED}<span class="k" aria-hidden="true">▾</span></span>
+        <div class="part-head">
+          <div class="page-head">
+            <span class="label">{SELECTED}</span>
+            <span class="k">Connect a Grafana server and import its dashboards with their folders.</span>
+          </div>
+          <span class="btn btn-primary btn-sm">Add connection</span>
         </div>
-        <span class="k small">3 datasources have types SlashObserve does not query; their panels import as placeholders.</span>
+        <div class="card">
+          <div class="card-head">
+            <span class="label">Connections</span>
+            <span class="k small">{CONNECTIONS_HINT}</span>
+          </div>
+          <div class="scroll">
+            <table class="tbl connections">
+              <thead>
+                <tr><th>Name</th><th>URL</th><th>Last test</th><th>Last import</th><th><span class="sr-only">Actions</span></th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="label">{CONNECTION}</td>
+                  <td class="mono url-cell">https://grafana.internal</td>
+                  <td>
+                    <span class="row status"><span class="dot tone-ok"></span>Connected: 14 top-level folders, {GRAFANA_DASHBOARD_COUNT} dashboards.</span>
+                    <span class="k small">2 min ago</span>
+                  </td>
+                  <td class="k">Never</td>
+                  <td>
+                    <span class="actions">
+                      <span class="btn btn-sm">Test</span>
+                      <span class="btn btn-sm">Import</span>
+                      <span class="btn btn-sm more" aria-label="More for prod">…</span>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <span class="label">Import from {CONNECTION}</span>
+            <span class="k small">Choose what to bring over and check the datasource matches.</span>
+          </div>
+          <div class="block">
+            <span class="label">Folders</span>
+            <span class="row choice"><span class="radio on" aria-hidden="true"></span>All folders ({GRAFANA_DASHBOARD_COUNT} dashboards)</span>
+            <span class="row choice"><span class="radio" aria-hidden="true"></span>Choose folders</span>
+          </div>
+          <div class="block">
+            <span class="label">Datasources</span>
+            <div class="scroll">
+              <table class="tbl sources">
+                <thead>
+                  <tr><th>In Grafana</th><th>Type</th><th>Use in SlashObserve</th></tr>
+                </thead>
+                <tbody>
+                  {
+                    datasources.map(({ name, type, match }) => (
+                      <tr>
+                        <td>{name}</td>
+                        <td class="mono type">{type}</td>
+                        <td>
+                          <span class="select">
+                            {match}
+                            <span class="k" aria-hidden="true">▾</span>
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  }
+                </tbody>
+              </table>
+            </div>
+            <span class="k small">3 datasources have types SlashObserve does not query; their panels import as placeholders.</span>
+          </div>
+          <div class="row foot">
+            <span class="btn btn-primary btn-sm">Start import</span>
+            <span class="btn btn-sm">Cancel</span>
+          </div>
+        </div>
       </div>
-      <div class="row foot">
-        <span class="btn btn-primary btn-sm">Start import</span>
-        <span class="btn btn-sm">Cancel</span>
-      </div>
-    </div>
-    <div class="card card-head">
-      <span class="label">Add a connection</span>
-      <span class="k small">A Grafana URL and a service account token with the Viewer role on the folders to import.</span>
     </div>
   </div>
 </Window>
@@ -121,21 +143,61 @@ const datasources = [
     font-weight: 600;
   }
 
-  .tabs {
-    gap: 4px;
+  .layout {
+    display: grid;
+    grid-template-columns: 148px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
   }
 
-  .tab {
-    flex: none;
+  .sections {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .group {
+    padding: 8px 10px 2px;
+    font-size: 11px;
+  }
+
+  .group:first-child {
+    padding-top: 0;
+  }
+
+  .item {
     padding: 4px 10px;
     border-radius: 6px;
     color: var(--mfg);
-    white-space: nowrap;
   }
 
-  .tab.on {
+  .item[aria-current="page"] {
     background: var(--muted);
     color: var(--fg);
+    font-weight: 500;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .select.section-select {
+    display: none;
+  }
+
+  .part-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px 12px;
+  }
+
+  .part-head .page-head {
+    flex: 1 1 200px;
   }
 
   .card {
@@ -262,6 +324,26 @@ const datasources = [
   .foot {
     gap: 8px;
     padding: 9px 11px;
+  }
+
+  .more {
+    padding: 0 8px;
+  }
+
+  @media (max-width: 700px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .sections {
+      display: none;
+    }
+
+    .select.section-select {
+      display: inline-flex;
+      align-self: flex-start;
+      gap: 8px;
+    }
   }
 
   @media (max-width: 480px) {
