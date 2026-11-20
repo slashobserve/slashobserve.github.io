@@ -1,23 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { activeStop, railItems, tourTitle } from "./tour"
-
-describe("railItems", () => {
-  test("lists the built stops in order with a link to each", () => {
-    expect(
-      railItems([
-        { id: "inbox", place: "Inbox" },
-        { id: "logs-and-traces", place: "Logs and traces" },
-      ]),
-    ).toEqual([
-      { id: "inbox", label: "Inbox", href: "#inbox" },
-      { id: "logs-and-traces", label: "Logs and traces", href: "#logs-and-traces" },
-    ])
-  })
-
-  test("gives no items when nothing is built", () => {
-    expect(railItems([])).toEqual([])
-  })
-})
+import { stopForHash, tabForKey, tabId, tourTitle } from "./tour"
 
 describe("tourTitle", () => {
   test.each([
@@ -31,24 +13,44 @@ describe("tourTitle", () => {
   })
 })
 
-describe("activeStop", () => {
-  const tops = [-900, -300, 250, 900, 1500]
+describe("tabId", () => {
+  test("differs from the id of the stop it opens", () => {
+    expect(tabId("inbox")).toBe("inbox-tab")
+  })
+})
 
+describe("tabForKey", () => {
   test.each([
-    [0, 1],
-    [250, 2],
-    [249, 1],
-    [1000, 3],
-    [5000, 4],
-  ])("with the reading line at %p the stop at index %p is active", (line, index) => {
-    expect(activeStop(tops, line)).toBe(index)
+    ["ArrowRight", 0, 1],
+    ["ArrowRight", 4, 0],
+    ["ArrowLeft", 2, 1],
+    ["ArrowLeft", 0, 4],
+    ["Home", 3, 0],
+    ["End", 1, 4],
+  ])("%p from tab %p of five moves to tab %p", (key, current, next) => {
+    expect(tabForKey(key, current, 5)).toBe(next)
   })
 
-  test("keeps the first stop active while the section is still below the line", () => {
-    expect(activeStop([400, 1000, 1600], 100)).toBe(0)
+  test("leaves every other key to the browser", () => {
+    expect(tabForKey("Enter", 2, 5)).toBeNull()
+    expect(tabForKey("ArrowDown", 2, 5)).toBeNull()
   })
 
-  test("returns the first stop when there are no stops", () => {
-    expect(activeStop([], 100)).toBe(0)
+  test("moves nowhere when there are no tabs", () => {
+    expect(tabForKey("ArrowRight", 0, 0)).toBeNull()
+  })
+})
+
+describe("stopForHash", () => {
+  const ids = ["inbox", "observations", "logs-and-traces"]
+
+  test("finds the stop a hash names", () => {
+    expect(stopForHash("#logs-and-traces", ids)).toBe(2)
+    expect(stopForHash("inbox", ids)).toBe(0)
+  })
+
+  test("finds nothing for an empty hash or a hash of another section", () => {
+    expect(stopForHash("", ids)).toBeNull()
+    expect(stopForHash("#pricing", ids)).toBeNull()
   })
 })

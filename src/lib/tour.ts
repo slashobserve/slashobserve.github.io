@@ -15,27 +15,33 @@ export interface TourStopContent extends TourStop {
   links: readonly TourLink[]
 }
 
-export interface RailItem {
-  id: string
-  label: string
-  href: string
-}
-
 const COUNT_WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"]
-
-export function railItems(stops: readonly TourStop[]): RailItem[] {
-  return stops.map(({ id, place }) => ({ id, label: place, href: `#${id}` }))
-}
 
 export function tourTitle(count: number): string {
   const word = COUNT_WORDS[count] ?? String(count)
   return `One workspace, ${word} ${count === 1 ? "place" : "places"} to stand.`
 }
 
-export function activeStop(tops: readonly number[], line: number): number {
-  let active = 0
-  tops.forEach((top, index) => {
-    if (top <= line) active = index
-  })
-  return active
+export function tabId(stopId: string): string {
+  return `${stopId}-tab`
+}
+
+export function tabForKey(key: string, current: number, count: number): number | null {
+  if (count === 0) return null
+  switch (key) {
+    case "ArrowRight":
+      return (current + 1) % count
+    case "ArrowLeft":
+      return (current - 1 + count) % count
+    case "Home":
+      return 0
+    case "End":
+      return count - 1
+  }
+  return null
+}
+
+export function stopForHash(hash: string, ids: readonly string[]): number | null {
+  const index = ids.indexOf(hash.replace(/^#/, ""))
+  return index === -1 ? null : index
 }
