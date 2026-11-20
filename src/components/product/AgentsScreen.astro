@@ -96,7 +96,10 @@ const accounts = [{ name: "ci-bot", initials: "CB", status: "Listening", runs: 5
   </div>
 
   <div class="block">
-    <h3 class="heading">Service accounts that take runs</h3>
+    <div class="heading-row">
+      <h3 class="heading">Service accounts that take runs</h3>
+      <span class="keys">API keys</span>
+    </div>
     <div class="card">
       <table class="grid">
         <thead>
@@ -228,6 +231,20 @@ const accounts = [{ name: "ci-bot", initials: "CB", status: "Listening", runs: 5
     margin: 0;
     font-size: 14px;
     font-weight: 600;
+  }
+
+  .heading-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0 16px;
+  }
+
+  .keys {
+    font-size: 13px;
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 
   .grid {
