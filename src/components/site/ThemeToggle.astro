@@ -74,6 +74,13 @@ const { bordered = false } = Astro.props
     outline: 2px solid var(--brand);
     outline-offset: 2px;
   }
+
+  @media (max-width: 900px) {
+    .theme-toggle:not(.bordered) {
+      width: 44px;
+      height: 44px;
+    }
+  }
 </style>
 
 <script>

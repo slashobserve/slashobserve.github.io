@@ -5,11 +5,12 @@ interface Props {
 
 const { command } = Astro.props
 const [head, ...piped] = command.split(" | ")
+const fileStart = head.lastIndexOf("/") + 1
 ---
 
 <div class="cmd command" data-command={command}>
   <span class="prompt" aria-hidden="true">$</span>
-  <span class="text" title={command}>{head}{piped.map((segment) => <span class="piped"> | {segment}</span>)}</span>
+  <span class="text" title={command}>{head.slice(0, fileStart)}<wbr />{head.slice(fileStart)}{piped.map((segment) => <span class="piped"> | {segment}</span>)}</span>
   <button type="button" class="copy" hidden>Copy</button>
   <span class="sr-only status" role="status"></span>
 </div>
