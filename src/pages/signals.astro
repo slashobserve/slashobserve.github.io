@@ -30,8 +30,9 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
       <div slot="end" class="copy">
         <h2 class="h2">The trace view.</h2>
         <p class="lead">
-          A waterfall per trace, the slow span selected, its attributes beside it. Tempo or the OpenTelemetry tables
-          in ClickHouse, with TraceQL or SQL behind it.
+          A waterfall per trace, with the critical path outlined, a search inside the trace and the span's attributes,
+          events and links beside it. A span shows the logs that carry its trace id. Tempo or the OpenTelemetry tables in
+          ClickHouse, with TraceQL or SQL behind it.
         </p>
       </div>
     </Split>
@@ -42,12 +43,20 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
         <h2 class="h2">Try a query before you save it.</h2>
         <p class="lead">
           Each logs datasource has its own page, in its own language: LogQL on Loki, SQL on ClickHouse, KQL on
-          Elasticsearch or OpenSearch, with Lucene or the Query DSL when you want them. "Show context", or "Surrounding documents" on
-          Elasticsearch and OpenSearch, brings up the lines around a line, a line with a trace id opens its trace, and "Add to dashboard" saves the query as a logs
-          panel. Trace search finds traces by service, span, duration or TraceQL. With a model on the server, both pages
-          also take a plain question: the logs page writes the query in the datasource's language, and the trace search
-          fills its fields or writes TraceQL. In the panel editor, the preview runs PromQL or SQL on the real datasource
-          before you save.
+          Elasticsearch or OpenSearch, with Lucene or the Query DSL when you want them. "Show context", or "Surrounding
+          documents" on Elasticsearch and OpenSearch, brings up the lines around a line, a line with a trace id opens its
+          trace, and "Add to dashboard" saves the query as a logs panel. Live tail follows new lines as they arrive.
+        </p>
+        <p class="lead">
+          Trace search finds traces by service, span, duration, errors or TraceQL, and on ClickHouse also by SQL. The
+          metrics page runs PromQL on a Prometheus source and shows a time series or a table. The Logs and Traces lists
+          show the services each source has seen in the last hour, and a service name opens that source filtered to it.
+        </p>
+        <p class="lead">
+          With a model on the server, the logs page and the trace search also take a plain question: the logs page writes
+          the query in the datasource's language, and the trace search fills its fields or writes TraceQL. Save a search
+          and anyone who can view its folder opens it again; someone who can edit it updates its query, columns and range.
+          In the panel editor, the preview runs the draft query on the real datasource before you save.
         </p>
       </div>
       <div slot="end" data-in-view="rise"><PanelEditorPreview /></div>
