@@ -11,8 +11,10 @@ interface Props {
 const { quickStart } = Astro.props
 ---
 
-<section>
+<section class="top">
+  <div class="backdrop" aria-hidden="true"></div>
   <div class="wrap hero">
+    <p class="eyebrow">Open source and self-hosted</p>
     <h1 class="h1">
       Observability workspace<br />for{" "}
       <span class="nowrap"
@@ -44,8 +46,38 @@ const { quickStart } = Astro.props
 </section>
 
 <style>
+  .top {
+    position: relative;
+  }
+
+  .backdrop {
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: -1;
+    height: 620px;
+    background-image:
+      radial-gradient(ellipse 60% 70% at 50% 0%, color-mix(in srgb, var(--brand) 13%, transparent), transparent),
+      radial-gradient(circle at 1px 1px, var(--border-strong) 1px, transparent 0);
+    background-size:
+      100% 100%,
+      28px 28px;
+    mask-image: linear-gradient(to bottom, #000 30%, transparent);
+  }
+
   .hero {
+    align-items: center;
+    padding-top: 80px;
     padding-bottom: 0;
+    text-align: center;
+  }
+
+  .hero .lead {
+    max-width: 760px;
+    text-wrap: balance;
+  }
+
+  .hint {
+    text-wrap: balance;
   }
 
   .marks {
@@ -67,6 +99,7 @@ const { quickStart } = Astro.props
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: center;
     gap: 12px;
     max-width: 100%;
   }
@@ -78,10 +111,20 @@ const { quickStart } = Astro.props
   }
 
   .screen {
-    margin-top: 64px;
+    margin-top: 56px;
   }
 
   @media (max-width: 900px) {
+    .backdrop {
+      height: 420px;
+    }
+
+    .hero {
+      align-items: flex-start;
+      padding-top: 48px;
+      text-align: left;
+    }
+
     .cta {
       flex-direction: column;
       align-items: stretch;

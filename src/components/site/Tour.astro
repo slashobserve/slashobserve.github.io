@@ -7,10 +7,11 @@ interface Props {
   title: string
   lead: string
   tabsLabel: string
+  eyebrow?: string
   stops: readonly TourStopContent[]
 }
 
-const { title, lead, tabsLabel, stops } = Astro.props
+const { title, lead, tabsLabel, eyebrow, stops } = Astro.props
 
 const drawings = await Promise.all(
   stops.map(({ id }) => {
@@ -21,7 +22,7 @@ const drawings = await Promise.all(
 ---
 
 <Section>
-  <SectionHead title={title} lead={lead} />
+  <SectionHead title={title} lead={lead} eyebrow={eyebrow} />
   <div class="tour" data-tour>
     <div class="tabs" role="tablist" aria-label={tabsLabel} data-tour-tabs>
       {
@@ -101,6 +102,9 @@ const drawings = await Promise.all(
     font-size: 15px;
     white-space: nowrap;
     cursor: pointer;
+    transition:
+      color 0.15s ease,
+      border-color 0.15s ease;
   }
 
   .tab:hover {
@@ -204,6 +208,27 @@ const drawings = await Promise.all(
 
     .place {
       display: none;
+    }
+
+    .tour[data-ready] .stop-head {
+      animation: stop-in 0.25s ease-out;
+    }
+  }
+
+  @keyframes stop-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tour[data-ready] .stop-head {
+      animation: none;
     }
   }
 
