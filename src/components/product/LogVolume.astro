@@ -1,0 +1,94 @@
+---
+interface Props {
+  total: string
+  levels: { name: string; count: string; tone: "crit" | "warn" | "s1" }[]
+  bars: number[]
+  ticks: string[]
+}
+
+const { total, levels, bars, ticks } = Astro.props
+const tallest = Math.max(...bars)
+---
+
+<div class="volume">
+  <div class="volume-head">
+    <span class="k">{total} lines in the last 1 hour</span>
+    <span class="chips">
+      <span class="chip">All {total}</span>
+      {
+        levels.map(({ name, count, tone }) => (
+          <span class="chip">
+            <i class={`tone-${tone}`} />
+            {name} {count}
+          </span>
+        ))
+      }
+    </span>
+  </div>
+  <div class="bars" aria-hidden="true">
+    {bars.map((bar) => <i style={`height:${Math.round((bar / tallest) * 100)}%`} />)}
+  </div>
+  <div class="ticks k" aria-hidden="true">{ticks.map((tick) => <span>{tick}</span>)}</div>
+</div>
+
+<style>
+  .volume {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .volume-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px 10px;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 1px 7px;
+    border-radius: 6px;
+    background: var(--muted);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .chip i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--tone);
+  }
+
+  .bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 40px;
+    border-bottom: 2px solid var(--crit);
+  }
+
+  .bars i {
+    flex: 1;
+    min-width: 0;
+    background: var(--s1);
+  }
+
+  .ticks {
+    display: flex;
+    justify-content: space-around;
+    font-size: 11px;
+  }
+</style>
