@@ -1,18 +1,17 @@
 ---
-import { railItems, type TourStopContent } from "../../lib/tour"
+import { tabId, type TourStopContent } from "../../lib/tour"
 import Section from "./Section.astro"
 import SectionHead from "./SectionHead.astro"
 
 interface Props {
   title: string
   lead: string
-  railLabel: string
+  tabsLabel: string
   stops: readonly TourStopContent[]
 }
 
-const { title, lead, railLabel, stops } = Astro.props
+const { title, lead, tabsLabel, stops } = Astro.props
 
-const items = railItems(stops)
 const drawings = await Promise.all(
   stops.map(({ id }) => {
     if (!Astro.slots.has(id)) throw new Error(`Tour stop ${id} has no drawing`)
@@ -23,27 +22,33 @@ const drawings = await Promise.all(
 
 <Section>
   <SectionHead title={title} lead={lead} />
-  <div class="tour">
-    <nav class="rail" aria-label={railLabel} data-tour-rail>
-      <span class="rail-label" aria-hidden="true">{railLabel}</span>
+  <div class="tour" data-tour>
+    <div class="tabs" role="tablist" aria-label={tabsLabel} data-tour-tabs>
       {
-        items.map(({ id, label, href }, index) => (
-          <a class="item" href={href} data-tour-item={id} aria-current={index === 0 ? "location" : undefined}>
-            {label}
-          </a>
+        stops.map(({ id, place }, index) => (
+          <button
+            class="tab"
+            type="button"
+            role="tab"
+            id={tabId(id)}
+            aria-controls={id}
+            aria-selected={index === 0 ? "true" : "false"}
+            tabindex={index === 0 ? 0 : -1}
+            data-tour-tab
+          >
+            {place}
+          </button>
         ))
       }
-    </nav>
+    </div>
     <div class="stops">
       {
         stops.map(({ id, place, title, text, note, links }, index) => (
-          <article class="stop" id={id} data-tour-stop>
+          <article class="stop" id={id} aria-labelledby={tabId(id)} data-tour-stop>
             <div class="stop-head">
               <div class="stop-title">
                 <span class="place k">{place}</span>
-                <h3 class="h3" tabindex="-1" data-tour-heading>
-                  {title}
-                </h3>
+                <h3 class="h3">{title}</h3>
               </div>
               <div class="stop-text">
                 <p class="p">{text}</p>
@@ -71,52 +76,44 @@ const drawings = await Promise.all(
 
 <style>
   .tour {
-    display: grid;
-    grid-template-columns: 216px minmax(0, 1fr);
-    gap: 64px;
-    align-items: start;
-  }
-
-  .rail {
-    position: sticky;
-    top: 88px;
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    padding: 10px 8px;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    background: var(--chrome);
-    font-size: 14px;
+    min-width: 0;
+    scroll-margin-top: 88px;
   }
 
-  .rail-label {
-    padding: 6px 8px 8px;
-    color: var(--mfg);
-    font-size: 12px;
+  .tabs {
+    display: none;
   }
 
-  .item {
-    display: flex;
-    align-items: center;
+  .tab {
+    flex: none;
     box-sizing: border-box;
-    height: 34px;
-    padding: 0 8px;
-    border-radius: 6px;
+    height: 44px;
+    margin: 0 0 -1px;
+    padding: 0 16px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    background: none;
     color: var(--mfg);
-    text-decoration: none;
+    font: inherit;
+    font-size: 15px;
     white-space: nowrap;
+    cursor: pointer;
   }
 
-  .item:hover {
+  .tab:hover {
     color: var(--fg);
   }
 
-  .item[aria-current] {
-    background: var(--card);
+  .tab[aria-selected="true"] {
+    border-bottom-color: var(--brand);
     color: var(--fg);
-    font-weight: 500;
+  }
+
+  .tab:focus-visible {
+    outline-offset: -2px;
   }
 
   .stops {
@@ -180,38 +177,44 @@ const drawings = await Promise.all(
     min-width: 0;
   }
 
-  .stop h3:focus {
-    outline: none;
-  }
-
-  @media (max-width: 900px) {
-    .tour {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 28px;
-    }
-
-    .rail {
-      top: 57px;
-      z-index: 5;
-      flex-direction: row;
+  @media (scripting: enabled) {
+    .tabs {
+      display: flex;
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--border);
       overflow-x: auto;
-      padding: 6px;
+      scrollbar-width: none;
     }
 
-    .rail-label {
+    .tabs::-webkit-scrollbar {
       display: none;
     }
 
-    .item {
-      flex: none;
-      height: 44px;
+    .stop,
+    .stop:first-child,
+    .stop:last-child {
+      padding: 0;
+      border-top: 0;
+    }
+
+    .tour:not([data-ready]) .stop:not(:first-child),
+    .stop[hidden] {
+      display: none;
+    }
+
+    .place {
+      display: none;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .tab {
       padding: 0 12px;
     }
 
     .stop {
       gap: 20px;
       padding: 40px 0;
-      scroll-margin-top: 56px;
     }
 
     .stop-head {
@@ -219,63 +222,72 @@ const drawings = await Promise.all(
       gap: 12px;
     }
   }
+
+  @media (scripting: enabled) and (max-width: 900px) {
+    .tabs {
+      margin-bottom: 28px;
+    }
+
+    .stop {
+      padding: 0;
+    }
+  }
 </style>
 
 <script>
   import { watchInView } from "../../lib/client/in-view"
-  import { activeStop } from "../../lib/tour"
+  import { stopForHash, tabForKey } from "../../lib/tour"
 
-  const READING_LINE = 0.4
-  const CURRENT = "location"
-
-  const rail = document.querySelector<HTMLElement>("[data-tour-rail]")
-  const items = [...document.querySelectorAll<HTMLAnchorElement>("[data-tour-item]")]
+  const tour = document.querySelector<HTMLElement>("[data-tour]")
+  const strip = document.querySelector<HTMLElement>("[data-tour-tabs]")
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>("[data-tour-tab]")]
   const stops = [...document.querySelectorAll<HTMLElement>("[data-tour-stop]")]
 
-  if (rail && items.length === stops.length && stops.length > 0) {
-    watchInView()
+  if (tour && strip && tabs.length === stops.length && stops.length > 0) {
+    const ids = stops.map((stop) => stop.id)
 
-    let shown = 0
-    let queued = false
-
-    const show = (index: number) => {
-      if (index === shown) return
-      shown = index
-      items.forEach((item, position) => {
-        if (position === index) item.setAttribute("aria-current", CURRENT)
-        else item.removeAttribute("aria-current")
+    const select = (index: number) => {
+      tabs.forEach((tab, position) => {
+        const selected = position === index
+        tab.setAttribute("aria-selected", selected ? "true" : "false")
+        tab.tabIndex = selected ? 0 : -1
+        stops[position].hidden = !selected
       })
-      const item = items[index]
-      if (rail.scrollWidth > rail.clientWidth) {
-        rail.scrollLeft = item.offsetLeft - (rail.clientWidth - item.offsetWidth) / 2
+      const tab = tabs[index]
+      if (strip.scrollWidth > strip.clientWidth) {
+        strip.scrollLeft = tab.offsetLeft - (strip.clientWidth - tab.offsetWidth) / 2
       }
     }
 
-    const update = () => {
-      queued = false
-      const line = window.innerHeight * READING_LINE
-      show(activeStop(stops.map((stop) => stop.getBoundingClientRect().top), line))
+    const open = (index: number) => {
+      select(index)
+      history.replaceState(null, "", `#${ids[index]}`)
     }
 
-    const schedule = () => {
-      if (queued) return
-      queued = true
-      requestAnimationFrame(update)
+    const followHash = () => {
+      const index = stopForHash(location.hash, ids)
+      if (index === null) return
+      select(index)
+      tour.scrollIntoView({ block: "start" })
     }
 
-    items.forEach((item, index) => {
-      item.addEventListener("click", (event) => {
+    stops.forEach((stop) => stop.setAttribute("role", "tabpanel"))
+    select(0)
+    tour.setAttribute("data-ready", "")
+    watchInView()
+    followHash()
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => open(index))
+      tab.addEventListener("keydown", (event) => {
+        const next = tabForKey(event.key, index, tabs.length)
+        if (next === null) return
         event.preventDefault()
-        const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches
-        stops[index].scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" })
-        stops[index].querySelector<HTMLElement>("[data-tour-heading]")?.focus({ preventScroll: true })
-        history.replaceState(null, "", item.hash)
-        show(index)
+        open(next)
+        tabs[next].focus()
       })
     })
 
-    addEventListener("scroll", schedule, { passive: true })
-    addEventListener("resize", schedule)
-    update()
+    addEventListener("hashchange", followHash)
   }
 </script>
