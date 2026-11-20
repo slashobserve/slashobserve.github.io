@@ -6,59 +6,67 @@ import { DASHBOARD_TITLE, HOST } from "./screen-ids"
 const CHAT_ID = "3b9d01c2-6a4e-4f0b-8d21-9e7c5a1f4b60"
 
 const phases = [
-  { label: "Discovering", tools: "list_metrics", messages: ["Listed 3 metrics on prom"] },
-  { label: "Checking queries", tools: "lint_query", messages: ["Checked a query on prom: 0 errors"] },
-  { label: "Running queries", tools: "query_range", messages: ["Ran a query on prom: 4 series"] },
+  { label: "Discovering", tools: "list_labels, list_metrics", steps: 2 },
+  { label: "Checking queries", tools: "lint_query", steps: 1, message: "Checked a query on prom: 0 errors" },
+  { label: "Running queries", tools: "query_range", steps: 1, message: "Ran a query on prom: 4 series" },
   {
     label: "Saving",
-    tools: "update_panels 3",
-    messages: [
-      "Saved panel 13: Errors by route (row Traffic)",
-      "Moved 1 panel in the build (13 in all)",
-      "Saved version 7 (3 rows, 13 panels)",
-    ],
+    tools: "update_panels",
+    steps: 1,
+    message: "Saved panel 13: Errors by route (row Traffic), then saved version 7 (13 panels in 3 rows)",
   },
 ]
 
-const STEP_COUNT = phases.reduce((total, { messages }) => total + messages.length, 0)
+const STEP_COUNT = phases.reduce((total, { steps }) => total + steps, 0)
 
 const thumbnails = [
-  { title: "p95 latency by route", d: "M0 22 C20 20 30 12 50 14 S80 24 100 18 S130 8 150 12" },
-  { title: "Errors by route", d: "M0 26 C20 25 30 18 50 22 S80 10 100 16 S130 22 150 20" },
-]
+  { title: "Requests per second", span: 1, tone: "s1", d: "M0 14 C15 6 25 6 40 14 S65 22 80 12 S95 6 100 9" },
+  { title: "Error rate", span: 1, tone: "s1", d: "M0 10 C15 18 25 18 40 10 S60 4 75 16 S92 20 100 12" },
+  { title: "p95 latency by route", span: 2, tone: "s2", d: "M0 12 C10 6 20 6 30 12 S50 18 60 12 S75 4 85 16 S95 14 100 10" },
+] as const
+
+const copy = '<rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>'
+const history = '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/>'
+const close = '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'
+const arrow = '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>'
 ---
 
 <Window url={`${HOST}/c/${CHAT_ID}`} label="A follow-up in the chat">
   <div class="chat-body">
-    <div class="bubble">Add errors by route and pin the p95 panel on top.</div>
+    <div class="row chat-head">
+      <span class="label">Observe</span>
+      <span class="row k history"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={history} />History</span>
+    </div>
+    <div class="bubble">Add errors by route to the Traffic row.</div>
     <div class="turn">
       <span class="tile" aria-hidden="true">/</span>
       <div class="turn-body">
-        <span class="k summary"><span aria-hidden="true">▾</span> Ran {STEP_COUNT} steps in 14s</span>
+        <span class="row k summary"><svg class="caret" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 2h8L5 8z" /></svg>Ran {STEP_COUNT} steps in 9s for under $0.01</span>
         <ol class="phases">
           {
-            phases.map(({ label, tools, messages }) => (
+            phases.map(({ label, tools, steps, message }) => (
               <li>
                 <span class="fg-ok" aria-hidden="true">✓</span>
-                <span class="phase">
-                  <span class="phase-line">
-                    <span>{label}</span>
-                    <span class="k">{tools}</span>
-                    {messages.length === 1 && <span class="k">{messages[0]}</span>}
-                  </span>
-                  {messages.length > 1 && messages.map((message) => <span class="k">{message}</span>)}
+                <span class="phase-line">
+                  <span>{label}</span>
+                  <span class="k">{tools}</span>
+                  {message ? <span class="k">{message}</span> : <span class="k more">Show {steps} steps</span>}
                 </span>
               </li>
             ))
           }
         </ol>
+        <span class="row k mono request">
+          Request {CHAT_ID.slice(0, 8)}
+          <svg viewBox="0 0 24 24" aria-hidden="true" set:html={copy} />
+        </span>
         <div class="result">
           <div class="thumbs">
             {
-              thumbnails.map(({ title, d }) => (
-                <div class="thumb">
-                  <span class="thumb-title">{title}</span>
-                  <Sparklines viewBox="0 0 150 30" height="18px" series={[{ d, tone: "s1" }]} />
+              thumbnails.map(({ title, span, tone, d }) => (
+                <div class="thumb" style={`grid-column:span ${span}`}>
+                  <span class="k thumb-title">{title}</span>
+                  <Sparklines viewBox="0 0 100 24" height="18px" series={[{ d, tone }]} />
                 </div>
               ))
             }
@@ -72,17 +80,18 @@ const thumbnails = [
           </div>
           <span class="row k saved"><span class="fg-ok" aria-hidden="true">✓</span>Saved as version 7, just now</span>
         </div>
-        <span class="k request">Request {CHAT_ID.slice(0, 8)}</span>
       </div>
     </div>
     <div class="composer">
-      <span class="chip context">{DASHBOARD_TITLE}</span>
+      <span class="chip context">{DASHBOARD_TITLE}<svg viewBox="0 0 24 24" aria-hidden="true" set:html={close} /></span>
       <span class="k">Ask for another change to {DASHBOARD_TITLE}</span>
+      <span class="k hint hide-sm">Enter sends. Shift+Enter adds a new line. Up arrow recalls an earlier prompt. Type a slash for commands.</span>
       <span class="row composer-foot">
-        <span class="row sources">
+        <span class="row k sources">
           {["ch", "loki", "prom", "tempo"].map((uid) => <span class="row"><span class="dot tone-ok" />{uid}</span>)}
+          <span class="hide-sm">claude-haiku-5-5, medium effort</span>
         </span>
-        <span class="send" aria-hidden="true">↑</span>
+        <span class="send" aria-hidden="true"><svg viewBox="0 0 24 24" set:html={arrow} /></span>
       </span>
     </div>
     <span class="k footnote">Each change is saved as a new version of the dashboard.</span>
@@ -97,6 +106,31 @@ const thumbnails = [
     gap: 10px;
     font-size: 11.5px;
     line-height: 1.4;
+  }
+
+  svg {
+    flex: none;
+    width: 12px;
+    height: 12px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .chat-head {
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .label {
+    font-weight: 600;
+  }
+
+  .history {
+    gap: 5px;
+    font-weight: 500;
   }
 
   .bubble {
@@ -134,7 +168,15 @@ const thumbnails = [
   }
 
   .summary {
+    gap: 5px;
     line-height: 20px;
+  }
+
+  .caret {
+    width: 8px;
+    height: 8px;
+    fill: currentColor;
+    stroke: none;
   }
 
   .phases {
@@ -152,18 +194,21 @@ const thumbnails = [
     gap: 5px;
   }
 
-  .phase {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-    min-width: 0;
-    overflow-wrap: anywhere;
-  }
-
   .phase-line {
     display: flex;
     flex-wrap: wrap;
     gap: 0 6px;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .more {
+    text-decoration: underline;
+  }
+
+  .request {
+    gap: 6px;
+    font-size: 11px;
   }
 
   .result {
@@ -174,7 +219,7 @@ const thumbnails = [
 
   .thumbs {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 6px;
     padding: 6px;
     border-bottom: 1px solid var(--border);
@@ -183,6 +228,7 @@ const thumbnails = [
   .thumb {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: 3px;
     border-radius: 5px;
     background: var(--card);
@@ -223,21 +269,27 @@ const thumbnails = [
     font-size: 11px;
   }
 
-  .request {
-    font-size: 11px;
-  }
-
   .composer {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: 6px;
     border-radius: 10px;
     background: var(--muted);
     padding: 8px 9px;
   }
 
   .context {
+    gap: 4px;
+    font-size: 10.5px;
+  }
+
+  .context svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .hint {
     font-size: 10.5px;
   }
 
@@ -260,12 +312,12 @@ const thumbnails = [
   .send {
     display: grid;
     place-items: center;
-    width: 20px;
-    height: 20px;
-    border-radius: 5px;
+    flex: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
     background: var(--primary);
     color: var(--pfg);
-    font-size: 11px;
   }
 
   .footnote {
