@@ -5,13 +5,14 @@ import Stage from "../site/Stage.astro"
 import NewObservation from "../product/NewObservation.astro"
 ---
 
-<Section ruled={false}>
+<Section>
   <Split>
-    <div slot="start" class="copy">
+    <div slot="start" class="split-copy">
+      <p class="eyebrow">Start</p>
       <h2 class="h2">Start with a title, or with a question.</h2>
       <p class="lead">
-        New observation takes a title and a folder, and Create opens the page. In the terminal,
-        <span class="mono">observe o new</span> takes the same and, with <span class="mono">--text</span> or
+        New observation takes a title and a folder, and Create opens the page. In the terminal,{" "}
+        <span class="mono">observe o new</span> takes the same and, with <span class="mono">--text</span> or{" "}
         <span class="mono">--text-file</span>, adds your first note as a text block.
       </p>
       <p class="lead">
@@ -25,14 +26,3 @@ import NewObservation from "../product/NewObservation.astro"
   </Split>
 </Section>
 
-<style>
-  .copy {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .copy .lead {
-    font-size: 17px;
-  }
-</style>
