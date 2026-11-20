@@ -22,7 +22,7 @@ const stats = [
   title="Migrate to SlashObserve"
   description="Coming from Grafana, Kibana or OpenSearch Dashboards? Grafana dashboards import with their folders, variables and links. Elasticsearch and OpenSearch connect as they are, and the KQL you typed in Discover runs there. Saved objects are not imported."
 >
-  <PageOpening title="Coming from Grafana, Kibana or OpenSearch Dashboards?">
+  <PageOpening eyebrow="Migrate" title="Coming from Grafana, Kibana or OpenSearch Dashboards?">
     <p class="lead">
       Connect the stores you already have and keep the habits you already have. A Grafana comes across one dashboard at a
       time with every query checked. An Elasticsearch or OpenSearch index connects as it is, and the KQL you typed in
@@ -30,7 +30,7 @@ const stats = [
     </p>
     {
       (links.importGuide || links.elasticsearch) && (
-        <div class="row actions">
+        <div class="open-actions">
           {links.importGuide && (
             <a class="btn btn-primary" href={links.importGuide}>
               Read the import guide
@@ -53,11 +53,9 @@ const stats = [
     <p class="p">Point it at a Grafana you can read, or at the index pattern your Discover tab uses. Nothing is written back.</p>
     {
       links.importGuide && (
-        <div class="row actions">
-          <a class="btn btn-band" href={links.importGuide}>
-            Import guide
-          </a>
-        </div>
+        <a class="btn btn-band" href={links.importGuide}>
+          Import guide
+        </a>
       )
     }
   </Band>
@@ -70,11 +68,6 @@ const stats = [
 </script>
 
 <style>
-  .actions {
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
   .band-title {
     max-width: 22ch;
   }

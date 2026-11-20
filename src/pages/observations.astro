@@ -16,14 +16,14 @@ const links = await getDocLinks()
   title="Observations | SlashObserve"
   description="An observation is a page about one question: text, panel and snapshot blocks that people and agents add, a discussion beside them, and an RCA you publish as numbered, frozen revisions."
 >
-  <PageOpening title="An investigation is a page, not a chat log.">
+  <PageOpening eyebrow="Observations" title="An investigation is a page, not a chat log.">
     <p class="lead">
       An observation is a page about one question. People and agents add text, panel and snapshot blocks as they learn, the
       discussion sits beside the page, and a published RCA is a frozen, numbered revision of it.
     </p>
     {
       (links.quickStart || links.observations) && (
-        <div class="row actions">
+        <div class="open-actions">
           {links.quickStart && (
             <a class="btn btn-primary" href={links.quickStart}>
               Read the quick start
@@ -51,11 +51,6 @@ const links = await getDocLinks()
 </MarketingLayout>
 
 <style>
-  .actions {
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
   .screen {
     padding-bottom: 84px;
   }
