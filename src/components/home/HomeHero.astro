@@ -1,6 +1,5 @@
 ---
 import { INSTALL_COMMAND } from "../../lib/site-facts"
-import Mark from "../product/Mark.astro"
 import ObservationScreen from "../product/ObservationScreen.astro"
 import CopyCommand from "../site/CopyCommand.astro"
 
@@ -15,16 +14,7 @@ const { quickStart } = Astro.props
   <div class="backdrop" aria-hidden="true"></div>
   <div class="wrap hero">
     <p class="eyebrow">Open source and self-hosted</p>
-    <h1 class="h1">
-      Observability workspace<br />for{" "}
-      <span class="nowrap"
-        ><span class="marks"><Mark kind="person" initials="AD" tint={1} /><Mark kind="person" initials="JP" tint={4} /></span
-        >humans</span
-      >{" "}and{" "}
-      <span class="nowrap"
-        ><span class="marks"><Mark kind="agent" /><Mark kind="connected" initials="CC" /></span>agents.</span
-      >
-    </h1>
+    <h1 class="h1">Observability workspace<br />for humans and agents.</h1>
     <p class="lead">
       Dashboards, logs, traces and investigations in one place your team shares with its agents. The queries an agent
       adds or changes run before they are saved, every dashboard and observation change has an author, and all of it
@@ -66,7 +56,7 @@ const { quickStart } = Astro.props
 
   .hero {
     align-items: center;
-    padding-top: 80px;
+    padding-top: 56px;
     padding-bottom: 0;
     text-align: center;
   }
@@ -78,21 +68,6 @@ const { quickStart } = Astro.props
 
   .hint {
     text-wrap: balance;
-  }
-
-  .marks {
-    display: inline-flex;
-    margin-right: 0.16em;
-    vertical-align: 0.08em;
-  }
-
-  .marks :global(.mark) {
-    font-size: 0.7em !important;
-    outline: 0.07em solid var(--bg);
-  }
-
-  .marks :global(.mark + .mark) {
-    margin-left: -0.2em;
   }
 
   .cta {
