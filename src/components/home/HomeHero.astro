@@ -33,8 +33,9 @@ const { quickStart } = Astro.props
       <CopyCommand command={INSTALL_COMMAND} />
     </div>
     <p class="hint">
-      Installs the observe CLI on macOS and Linux. The server is one binary beside Postgres; it runs in your network and
-      sends only the agent's tool results to the model you configure.
+      Installs the observe CLI on macOS and Linux. The server is one container beside Postgres, and people sign in through
+      your OpenID Connect provider. The built-in agent sends your prompt and what its tools return to the model you
+      configure.
     </p>
   </div>
   <div class="wrap screen" data-sequence>

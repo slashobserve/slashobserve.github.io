@@ -16,8 +16,10 @@ const { cliObservations } = Astro.props
       <h2 class="h2">The same verbs in the terminal.</h2>
       <p class="lead">
         <span class="mono">observe o</span> starts, reads, extends, resolves and publishes observations, and keeps or discards the
-        blocks someone suggested. <span class="mono">observe proposals</span> lists, shows, merges and discards proposals. It is the
-        same work the MCP tools do, so a person or a script can do what an agent does.
+        blocks someone suggested. <span class="mono">observe proposals</span> lists, shows, merges and discards proposals. The rest of
+        the app is there too: <span class="mono">observe</span> also reads logs, traces and metrics, manages dashboards,
+        folders, saved searches and comments, and imports from Grafana. A person or a script can do most of what an
+        agent does over MCP.
       </p>
       {
         cliObservations && (
