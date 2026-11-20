@@ -13,7 +13,7 @@ const SKIPPED = 0
 const IMPORTED = GRAFANA_DASHBOARD_COUNT - NEED_REPAIR.length - FAILED - SKIPPED
 ---
 
-<Window url={`${HOST}/settings#grafana`} label="The progress of a finished Grafana import">
+<Window url={`${HOST}/settings/grafana`} label="The progress of a finished Grafana import">
   <div class="progress">
     <div class="card">
       <div class="card-head">
@@ -39,11 +39,13 @@ const IMPORTED = GRAFANA_DASHBOARD_COUNT - NEED_REPAIR.length - FAILED - SKIPPED
             ))
           }
         </ul>
+      </div>
+      <div class="group">
         <span class="heading">Open the repair queue</span>
       </div>
       <div class="group collapsed">
         <span class="heading">
-          <span class="k" aria-hidden="true">▸</span> Imported ({IMPORTED})
+          <svg class="k caret" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1v8l6-4z" /></svg>Imported ({IMPORTED})
         </span>
       </div>
     </div>
@@ -111,7 +113,19 @@ const IMPORTED = GRAFANA_DASHBOARD_COUNT - NEED_REPAIR.length - FAILED - SKIPPED
   .results li {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 2px 12px;
+    align-items: baseline;
+    gap: 2px 8px;
+  }
+
+  .collapsed .heading {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .caret {
+    width: 8px;
+    height: 8px;
+    fill: currentColor;
   }
 </style>
