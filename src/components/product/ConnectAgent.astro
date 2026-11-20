@@ -3,7 +3,12 @@ const command = "claude mcp add --transport http slashobserve https://observe.ex
 ---
 
 <section class="connect" aria-label="Connect an agent">
-  <h3 class="title">Connect an agent</h3>
+  <div class="head">
+    <h3 class="title">Connect an agent</h3>
+    <svg class="close" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+      ><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg
+    >
+  </div>
   <div class="body">
     <p class="client">Claude Code</p>
     <div class="snippet">
@@ -33,10 +38,22 @@ const command = "claude mcp add --transport http slashobserve https://observe.ex
     min-width: 0;
   }
 
-  .title {
-    margin: 0;
+  .head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
     padding: 14px 16px 12px;
     border-bottom: 1px solid var(--border);
+  }
+
+  .close {
+    flex: none;
+    color: var(--mfg);
+  }
+
+  .title {
+    margin: 0;
     font-size: 15px;
     font-weight: 600;
   }

@@ -5,13 +5,15 @@ import { GRAFANA_DASHBOARD_COUNT, HOST } from "./screen-ids"
 const CONNECTION = "prod"
 
 const groups = [
-  { label: "You", sections: ["Appearance", "Connected agents"] },
-  { label: "Workspace", sections: ["Server", "Sign-in", "Outbound access", "Agent access"] },
+  { label: "You", sections: ["Appearance", "Home dashboard", "Connected agents"] },
+  { label: "Workspace", sections: ["Server", "Sign-in", "Outbound access", "Agent access", "Audit log"] },
   { label: "Integrations", sections: ["Grafana connection", "Webhooks"] },
 ]
 const SELECTED = "Grafana connection"
 const SELECTED_GROUP = "Integrations"
 const CONNECTIONS_HINT = "A Grafana URL and a service account token with the Viewer role on the folders to import."
+
+const lock = '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>'
 
 const datasources = [
   { name: "Prometheus main", type: "prometheus", match: "prom (Prometheus)" },
@@ -19,7 +21,7 @@ const datasources = [
 ]
 ---
 
-<Window url={`${HOST}/settings#grafana`} label="Grafana settings with a connection and the import form">
+<Window url={`${HOST}/settings/grafana`} label="Grafana settings with a connection and the import form">
   <div class="settings">
     <span class="title">Settings</span>
     <div class="layout">
@@ -74,6 +76,7 @@ const datasources = [
               </tbody>
             </table>
           </div>
+          <span class="row k lock"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={lock} />The token is stored encrypted and is never shown again.</span>
         </div>
         <div class="card">
           <div class="card-head">
@@ -123,6 +126,23 @@ const datasources = [
 </Window>
 
 <style>
+  .lock {
+    gap: 6px;
+    padding: 8px 11px;
+    border-top: 1px solid var(--border);
+  }
+
+  .lock svg {
+    flex: none;
+    width: 12px;
+    height: 12px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
   .settings {
     display: flex;
     flex-direction: column;

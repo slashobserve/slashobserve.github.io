@@ -1,11 +1,22 @@
 ---
+import Mark from "./Mark.astro"
 import Window from "./Window.astro"
 import { DASHBOARD_ID, DASHBOARD_TITLE, HOST } from "./screen-ids"
 
 const LATEST = 7
 
-const versions = [
-  { version: 7, summary: "Add errors by route to the Traffic row and move p95 latency to the top.", author: "Priya", saved: "2 hours ago" },
+const chevron = '<path d="m6 9 6 6 6-6"/>'
+const plus = '<path d="M5 12h14"/><path d="M12 5v14"/>'
+const pen = '<path d="M13 21h8"/><path d="M21.17 6.81a1 1 0 0 0-3.99-3.99L3.84 16.17a2 2 0 0 0-.5.83l-1.32 4.35a.5.5 0 0 0 .62.62l4.35-1.32a2 2 0 0 0 .83-.5z"/>'
+
+const versions: { version: number; summary: string; author: string; agent?: boolean; saved: string }[] = [
+  {
+    version: 7,
+    summary: 'Added "Errors by route"; moved "p95 latency by route".',
+    author: "Observe Agent for Priya",
+    agent: true,
+    saved: "2 hours ago",
+  },
   { version: 6, summary: "Set a threshold of 18 on DB pool in use.", author: "Priya", saved: "yesterday" },
   { version: 5, summary: "Repair the CPU by pod query after container_cpu was renamed.", author: "Tom", saved: "2 days ago" },
   { version: 4, summary: "Add payment errors from Loki to the Overview row.", author: "Tom", saved: "3 days ago" },
@@ -27,14 +38,24 @@ const versions = [
         </thead>
         <tbody>
           {
-            versions.map(({ version, summary, author, saved }) => (
+            versions.map(({ version, summary, author, agent, saved }) => (
               <tr>
                 <td class="version">
                   <span class="label">v{version}</span>
                   {version === LATEST && <span class="badge">Latest</span>}
                 </td>
                 <td class="summary">{summary}</td>
-                <td>{author}</td>
+                <td class="author">
+                  {agent ? (
+                    <span class="agent">
+                      <Mark kind="agent" size={16} />
+                      <span>{author}</span>
+                      <span class="from">From chat</span>
+                    </span>
+                  ) : (
+                    author
+                  )}
+                </td>
                 <td class="k nowrap">{saved}</td>
                 <td>
                   <span class="row actions">
@@ -52,16 +73,20 @@ const versions = [
     <div class="diff">
       <span class="label diff-title">Changes from v6 to v7</span>
       <span class="row pickers">
-        <span class="row"><span class="k">From</span><span class="select">v6<span class="k" aria-hidden="true">▾</span></span></span>
-        <span class="row"><span class="k">To</span><span class="select">v7<span class="k" aria-hidden="true">▾</span></span></span>
+        <span class="row"><span class="k">From</span><span class="select">v6<svg class="k" viewBox="0 0 24 24" aria-hidden="true" set:html={chevron} /></span></span>
+        <span class="row"><span class="k">To</span><span class="select">v7<svg class="k" viewBox="0 0 24 24" aria-hidden="true" set:html={chevron} /></span></span>
       </span>
       <div class="change">
         <span class="label">Panel "Errors by route"</span>
-        <span class="row op"><span aria-hidden="true">+</span>Added</span>
+        <span class="row op"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={plus} /><b>Added</b></span>
       </div>
       <div class="change">
         <span class="label">Panel "p95 latency by route"</span>
-        <span class="row op"><span aria-hidden="true">↕</span>Reordered</span>
+        <span class="row op"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={pen} /><b>Changed</b><span class="k">gridPos.y</span></span>
+        <span class="values">
+          <span class="value before"><b>Before</b><span class="mono">8</span></span>
+          <span class="value after"><b>After</b><span class="mono">0</span></span>
+        </span>
       </div>
     </div>
   </div>
@@ -166,6 +191,7 @@ const versions = [
 
   .select {
     display: inline-flex;
+    align-items: center;
     gap: 24px;
     border: 1px solid var(--border);
     border-radius: 6px;
@@ -175,16 +201,67 @@ const versions = [
 
   .change {
     display: flex;
-    justify-content: space-between;
-    gap: 12px;
+    flex-direction: column;
+    gap: 6px;
     border-radius: 8px;
     background: var(--muted);
-    padding: 7px 10px;
+    padding: 8px 10px;
   }
 
   .op {
     gap: 5px;
-    color: var(--mfg);
+  }
+
+  .op b {
+    font-weight: 500;
+  }
+
+  svg {
     flex: none;
+    width: 11px;
+    height: 11px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .values {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .value {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border-radius: 5px;
+    padding: 5px 8px;
+  }
+
+  .value b {
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .before {
+    background: var(--crit-container);
+  }
+
+  .after {
+    background: var(--ok-container);
+  }
+
+  .author {
+    min-width: 96px;
+  }
+
+  .agent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
   }
 </style>

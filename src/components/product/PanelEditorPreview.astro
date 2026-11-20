@@ -15,6 +15,10 @@ const settings = [
   { label: "Panel type", value: "Time series" },
   { label: "Unit", value: "seconds (s)" },
 ]
+
+const chevron = '<path d="m6 9 6 6 6-6"/>'
+const close = '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'
+const search = '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>'
 ---
 
 <Window url={`${HOST}${DASHBOARD_PATH}?panel=latency_by_route&edit=query`} label="The panel editor">
@@ -27,7 +31,7 @@ const settings = [
       <span class="row head-actions">
         <span class="k hide-xs">Back to activity</span>
         <span class="seg"><span class="on">Editor</span><span>JSON</span></span>
-        <span class="k" aria-hidden="true">×</span>
+        <svg class="k close" viewBox="0 0 24 24" aria-hidden="true" set:html={close} />
       </span>
     </div>
     <div class="preview">
@@ -51,18 +55,18 @@ const settings = [
       <div class="queries">
         <div class="row line">
           <span class="label">Datasource</span>
-          <span class="select">prom (Prometheus)<span class="k" aria-hidden="true">▾</span></span>
-          <span class="btn btn-sm browse hide-xs">Metrics and labels</span>
+          <span class="select">prom (Prometheus)<svg class="k" viewBox="0 0 24 24" aria-hidden="true" set:html={chevron} /></span>
+          <span class="btn btn-sm browse hide-xs"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={search} />Metrics and labels</span>
         </div>
         <div class="row line">
           <span class="label">Query A</span>
-          <span class="select">Panel datasource (prom)<span class="k" aria-hidden="true">▾</span></span>
+          <span class="select">Panel datasource (prom)<svg class="k" viewBox="0 0 24 24" aria-hidden="true" set:html={chevron} /></span>
         </div>
         <div class="mono code">
           <span class="k gutter">1</span>
           <span>{'histogram_quantile(0.95, sum by (le, route) (rate(http_request_duration_seconds_bucket{job="checkout"}[$__rate_interval])))'}</span>
         </div>
-        <span class="row hint valid"><span class="fg-ok" aria-hidden="true">✓</span>Query is valid. Errors show under the line that has them.</span>
+        <span class="row hint valid"><span class="fg-ok" aria-hidden="true">✓</span>Syntax is valid. The preview runs the query. Errors show under the line that has them.</span>
         <span class="row check"><span class="box" aria-hidden="true"></span>Exemplars</span>
         <span class="label">Legend</span>
         <span class="mono input">{"{{route}}"}</span>
@@ -75,9 +79,7 @@ const settings = [
               <span class="label">{label}</span>
               <span class="select">
                 {value}
-                <span class="k" aria-hidden="true">
-                  ▾
-                </span>
+                <svg class="k" viewBox="0 0 24 24" aria-hidden="true" set:html={chevron} />
               </span>
             </div>
           ))
@@ -213,9 +215,26 @@ const settings = [
     gap: 4px;
   }
 
+  svg {
+    flex: none;
+    width: 12px;
+    height: 12px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .close {
+    width: 14px;
+    height: 14px;
+  }
+
   .select,
   .input {
     display: inline-flex;
+    align-items: center;
     justify-content: space-between;
     gap: 14px;
     border: 1px solid var(--border);

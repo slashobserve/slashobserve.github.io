@@ -61,13 +61,33 @@ interface Props {
 }
 
 const { onStage = false } = Astro.props
+
+const chevron = '<path d="m6 9 6 6 6-6"/>'
+const search = '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>'
+const filters = [
+  { label: "Made by: anyone", wide: true },
+  { label: "Datasource: any", wide: true },
+  { label: "Folder: any", wide: false },
+  { label: "Problem: Imported, not verified", wide: false },
+  { label: "Tags: any", wide: true },
+]
 ---
 
 <Window url={`${HOST}/dashboards?kind=imported`} {onStage} label="The imported dashboards that are not verified">
+  <div class="row title-row">
+    <span class="title">Dashboards</span>
+    <span class="row k checked">Last checked 34 min ago<span class="run">Run now</span></span>
+  </div>
   <div class="row filters">
-    <span class="field k">Filter by title</span>
-    <span class="select">Folder: any<span class="k" aria-hidden="true">▾</span></span>
-    <span class="select">Problem: Imported, not verified<span class="k" aria-hidden="true">▾</span></span>
+    <span class="field k"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={search} />Filter by title</span>
+    {
+      filters.map(({ label, wide }) => (
+        <span class:list={["select", { "hide-sm": wide }]}>
+          {label}
+          <svg class="k" viewBox="0 0 24 24" aria-hidden="true" set:html={chevron} />
+        </span>
+      ))
+    }
   </div>
   <div class="row head">
     <span class="k description">
@@ -119,6 +139,39 @@ const { onStage = false } = Astro.props
 </Window>
 
 <style>
+  .title-row {
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    padding: 12px 12px 0;
+  }
+
+  .title {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .checked {
+    gap: 10px;
+    font-size: 11px;
+  }
+
+  .run {
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  svg {
+    flex: none;
+    width: 11px;
+    height: 11px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
   .filters {
     flex-wrap: wrap;
     gap: 6px;
@@ -128,6 +181,7 @@ const { onStage = false } = Astro.props
   .field {
     display: inline-flex;
     align-items: center;
+    gap: 6px;
     min-width: 150px;
     padding: 3px 9px;
     border: 1px solid var(--border);
@@ -149,7 +203,8 @@ const { onStage = false } = Astro.props
 
   .select {
     display: inline-flex;
-    gap: 24px;
+    align-items: center;
+    gap: 10px;
     border: 1px solid var(--border);
     border-radius: 6px;
     padding: 3px 9px;

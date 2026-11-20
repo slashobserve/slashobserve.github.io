@@ -41,7 +41,7 @@ describe("timeline", () => {
     expect(saving?.tools).toBe("create_dashboard, update_panels 11")
     expect(saving?.messages).toHaveLength(12)
     expect(saving?.messages.at(-1)).toBe(
-      "Saved panel 12 of 12: Cache hit ratio (row Internals), then saved version 1 (3 rows, 12 panels)",
+      "Saved panel 12 of 12: Cache hit ratio (row Internals), then saved version 1 (12 panels in 3 rows)",
     )
   })
 
@@ -60,8 +60,8 @@ describe("buildStatus", () => {
 })
 
 describe("stepSummary", () => {
-  test("counts every discovery, query and save step and the time the last save took", () => {
-    expect(stepSummary()).toBe("Ran 15 steps in 38s")
+  test("counts every discovery, query and save step, the time the last save took and the cost", () => {
+    expect(stepSummary()).toBe("Ran 15 steps in 38s for under $0.01")
   })
 })
 

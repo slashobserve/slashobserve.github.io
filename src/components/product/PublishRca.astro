@@ -31,6 +31,10 @@ const revisions = [
         }
       </ul>
     </section>
+    <div class="revision-actions">
+      <span class="btn btn-sm">Open revision 2</span>
+      <span class="btn btn-sm">Withdraw</span>
+    </div>
     <section class="group" aria-label="Public links of revision 2">
       <h4>Public links, revision 2</h4>
       <p class="k small">
@@ -48,7 +52,7 @@ const revisions = [
           </div>
           <span class="link-actions">
             <span class="btn ghost">Copy link</span>
-            <span class="btn">Revoke</span>
+            <span class="btn revoke">Revoke</span>
           </span>
         </li>
       </ul>
@@ -132,6 +136,22 @@ const revisions = [
     border-color: transparent;
     background: transparent;
     color: var(--mfg);
+  }
+
+  .revision-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: -8px;
+  }
+
+  .revision-actions .btn {
+    min-height: 26px;
+    padding: 0 10px;
+  }
+
+  .revoke {
+    font-weight: 400;
   }
 
   .group {

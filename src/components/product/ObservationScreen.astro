@@ -30,6 +30,8 @@ const series = [
 ] as const
 
 const share = '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>'
+const discussion = '<path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/>'
+const more = '<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>'
 ---
 
 <Window url={`${HOST}/o/${OBSERVATION_ID}`} label="An observation with its discussion">
@@ -49,6 +51,13 @@ const share = '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1
             <svg viewBox="0 0 24 24" aria-hidden="true" set:html={share} />
             Share
           </span>
+          <span class="ghost pressed">
+            <svg viewBox="0 0 24 24" aria-hidden="true" set:html={discussion} />
+            3
+          </span>
+          <span class="ghost">
+            <svg viewBox="0 0 24 24" aria-hidden="true" set:html={more} />
+          </span>
         </span>
       </div>
       <div class="page">
@@ -67,7 +76,7 @@ const share = '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1
         </TextBlock>
         <PanelBlock
           title="Server error ratio by route"
-          caption="Prometheus, live"
+          caption="prom, live"
           live
           author="agent"
           byline="From Observe Agent"
@@ -143,7 +152,23 @@ const share = '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1
     font-size: 12.5px;
   }
 
-  .btn svg {
+  .ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 28px;
+    padding: 0 7px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pressed {
+    background: var(--muted);
+  }
+
+  .btn svg,
+  .ghost svg {
     width: 14px;
     height: 14px;
     fill: none;
@@ -165,7 +190,7 @@ const share = '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1
   .discussion {
     display: flex;
     flex-direction: column;
-    width: 348px;
+    width: 330px;
     flex: none;
   }
 

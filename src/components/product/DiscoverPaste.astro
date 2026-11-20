@@ -12,7 +12,7 @@ const SELECTED_MODE = "KQL"
     <span class="row crumbs">
       <span class="k">Logs</span>
       <span class="k" aria-hidden="true">/</span>
-      <span class="title">prod-es</span>
+      <span class="title">Elasticsearch prod</span>
       <span class="lang">KQL</span>
     </span>
     <span class="seg" aria-hidden="true">
@@ -23,7 +23,10 @@ const SELECTED_MODE = "KQL"
       Filled from a Discover link: query, time range, 2 columns. 1 filter from the URL was not applied.{" "}
       <span class="dismiss">Dismiss</span>
     </p>
-    <span class="btn btn-primary btn-sm run">Run query</span>
+    <span class="row run">
+      <span class="k">+ Add filter</span>
+      <span class="btn btn-primary btn-sm">Run query</span>
+    </span>
   </div>
 </Window>
 
@@ -97,6 +100,13 @@ const SELECTED_MODE = "KQL"
   }
 
   .run {
-    align-self: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .run .btn {
+    min-height: 26px;
+    padding: 0 9px;
+    font-size: 12px;
   }
 </style>

@@ -1,7 +1,8 @@
 ---
 import LevelIcon from "./LevelIcon.astro"
 import Window from "./Window.astro"
-import { ROOT, SLOWEST_ON_CRITICAL_PATH, SPANS, TRACE_START } from "./trace"
+import { TRACE_ID } from "./screen-ids"
+import { ROOT, SERVICES, SLOWEST_ON_CRITICAL_PATH, SPANS, TICKS, TRACE_START } from "./trace"
 
 const stats = [
   { label: "Duration", value: ROOT.duration },
@@ -15,8 +16,14 @@ const stats = [
 <Window onStage label="A trace">
   <div class="trace-card" data-in-view>
     <div class="head">
-      <span class="title">{ROOT.service} {ROOT.operation}</span>
-      <span class="action">Copy trace id</span>
+      <span class="crumbs">
+        <span class="k">Traces</span>
+        <span class="k" aria-hidden="true">/</span>
+        <span class="k">Tempo</span>
+        <span class="k" aria-hidden="true">/</span>
+        <span class="title">{ROOT.service} {ROOT.operation}</span>
+      </span>
+      <span class="action">Logs for this trace</span>
     </div>
     <div class="stats">
       {
@@ -33,6 +40,26 @@ const stats = [
           {SLOWEST_ON_CRITICAL_PATH.service}, <span class="num">{SLOWEST_ON_CRITICAL_PATH.duration}</span> on the critical path
         </span>
       </span>
+      <span class="stat">
+        <span class="k">Trace</span>
+        <span class="num">{TRACE_ID.slice(0, 8)}</span>
+      </span>
+    </div>
+    <div class="legend">
+      <span class="k">Services</span>
+      {
+        SERVICES.map(({ name, tone, count }) => (
+          <span class="service">
+            <i class={`tone-${tone}`} />
+            {name} <span class="k">{count}</span>
+          </span>
+        ))
+      }
+    </div>
+    <div class="span span-head k">
+      <span>Service and operation</span>
+      <span class="ticks">{[TICKS[0], TICKS[2], TICKS[4]].map((tick) => <span>{tick}</span>)}</span>
+      <span></span>
     </div>
     <div class="spans">
       {
@@ -42,7 +69,12 @@ const stats = [
               <span class="label-text">
                 <span class="k">{service}</span> {operation}
               </span>
-              {error && <LevelIcon level="Error" />}
+              {error && (
+                <span class="error">
+                  <LevelIcon level="Error" />
+                  Error
+                </span>
+              )}
             </span>
             <span class="track">
               <span class={`bar tone-${tone}`} style={`width:${width}%;margin-left:${offset}%;--i:${index}`} data-grow />
@@ -65,15 +97,69 @@ const stats = [
     align-items: center;
     gap: 8px;
     padding: 12px 14px 8px;
+    font-size: 12.5px;
+  }
+
+  .crumbs {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    white-space: nowrap;
   }
 
   .title {
-    flex: 1;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
-    font-weight: 600;
+    font-weight: 500;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+  }
+
+  .service {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 1px 7px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-weight: 500;
+  }
+
+  .service i {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--tone);
+  }
+
+  .span-head {
+    padding-top: 6px;
+    padding-bottom: 6px;
+    border-top: 1px solid var(--border);
+    font-size: 11.5px;
+  }
+
+  .ticks {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .error {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 4px;
   }
 
   .action {
@@ -105,8 +191,7 @@ const stats = [
   }
 
   .spans {
-    padding: 6px 0;
-    border-top: 1px solid var(--border);
+    padding: 0 0 6px;
   }
 
   .span {
@@ -154,6 +239,10 @@ const stats = [
   }
 
   @media (max-width: 900px) {
+    .span-head {
+      display: none;
+    }
+
     .span {
       grid-template-columns: minmax(0, 1fr) auto;
       grid-template-areas:

@@ -4,26 +4,56 @@ import { HOST } from "./screen-ids"
 
 interface Datasource {
   name: string
+  uid: string
   type: string
   tone: "ok" | "crit"
   status: string
   usedBy: string
-  explore: boolean
+  explore: string
 }
 
 const datasources: Datasource[] = [
-  { name: "prom", type: "Prometheus", tone: "ok", status: "Healthy", usedBy: "14 dashboards", explore: false },
-  { name: "prod-es", type: "Elasticsearch", tone: "ok", status: "Healthy", usedBy: "No dashboards", explore: true },
-  { name: "prod-os", type: "OpenSearch", tone: "ok", status: "Healthy", usedBy: "No dashboards", explore: true },
   {
-    name: "audit-os",
+    name: "Prometheus",
+    uid: "prom",
+    type: "Prometheus",
+    tone: "ok",
+    status: "Healthy",
+    usedBy: "14 dashboards",
+    explore: "Explore metrics",
+  },
+  {
+    name: "Elasticsearch prod",
+    uid: "prod-es",
+    type: "Elasticsearch",
+    tone: "ok",
+    status: "Healthy",
+    usedBy: "No dashboards",
+    explore: "Explore logs",
+  },
+  {
+    name: "OpenSearch prod",
+    uid: "prod-os",
+    type: "OpenSearch",
+    tone: "ok",
+    status: "Healthy",
+    usedBy: "No dashboards",
+    explore: "Explore logs",
+  },
+  {
+    name: "OpenSearch audit",
+    uid: "audit-os",
     type: "OpenSearch",
     tone: "crit",
     status: "Unavailable: The index pattern matches no index",
     usedBy: "No dashboards",
-    explore: true,
+    explore: "Explore logs",
   },
 ]
+
+const check = '<path d="M20 6 9 17l-5-5"/>'
+const alert = '<circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/>'
+const plus = '<path d="M5 12h14"/><path d="M12 5v14"/>'
 ---
 
 <Window url={`${HOST}/datasources`} label="The datasources page with Elasticsearch and OpenSearch datasources">
@@ -31,9 +61,15 @@ const datasources: Datasource[] = [
     <div class="row head">
       <div class="intro">
         <span class="title">Datasources</span>
-        <span class="k">Defined in the datasources file on the server. Edit that file and restart to add or change one.</span>
+        <span class="k">
+          Where dashboards and the agent read data from. Entries from the datasources file are read only; the ones you add
+          here can be changed.
+        </span>
       </div>
-      <span class="btn btn-sm">How to add a datasource</span>
+      <span class="row head-actions">
+        <span class="btn btn-sm">How datasources work</span>
+        <span class="btn btn-sm btn-primary"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={plus} />Add datasource</span>
+      </span>
     </div>
     <div class="scroll">
       <table class="tbl list">
@@ -46,26 +82,41 @@ const datasources: Datasource[] = [
         </thead>
         <tbody>
           {
-            datasources.map(({ name, type, tone, status, usedBy, explore }) => (
+            datasources.map(({ name, uid, type, tone, status, usedBy, explore }) => (
               <tr>
-                <td class="mono">{name}</td>
-                <td>{type}</td>
                 <td>
-                  <span class="row status">
-                    <span class={`dot tone-${tone}`} />
-                    {status}
+                  <span class="stack">
+                    <span class="label">{name}</span>
+                    <span class="mono k">{uid}</span>
+                  </span>
+                </td>
+                <td>
+                  <span class="stack">
+                    <span>{type}</span>
+                    <span class="k">From file</span>
+                  </span>
+                </td>
+                <td>
+                  <span class:list={["row status", tone === "ok" ? "fg-ok" : "fg-crit"]}>
+                    <svg viewBox="0 0 24 24" aria-hidden="true" set:html={tone === "ok" ? check : alert} />
+                    <span class="status-text">{status}</span>
                   </span>
                 </td>
                 <td class="k">{usedBy}</td>
                 <td class="k checked">2 min ago</td>
-                <td>{explore && <span class="btn btn-sm">Explore logs</span>}</td>
+                <td>
+                  <span class="row actions">
+                    <span class="btn btn-sm">Recheck</span>
+                    <span class="btn btn-sm">{explore}</span>
+                  </span>
+                </td>
               </tr>
             ))
           }
         </tbody>
       </table>
     </div>
-    <span class="k small">Addresses, users and secrets stay on the server and never reach the browser.</span>
+    <span class="k small">Addresses and users are shown only to Admins, and passwords, tokens and header values never leave the server.</span>
   </div>
 </Window>
 
@@ -116,7 +167,7 @@ const datasources: Datasource[] = [
 
   .list {
     position: relative;
-    min-width: 560px;
+    min-width: 640px;
   }
 
   .list th,
@@ -126,14 +177,38 @@ const datasources: Datasource[] = [
     vertical-align: middle;
   }
 
+  .head-actions {
+    gap: 6px;
+  }
+
+  svg {
+    flex: none;
+    width: 12px;
+    height: 12px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .stack {
+    display: flex;
+    flex-direction: column;
+  }
+
   .status {
-    align-items: baseline;
     gap: 5px;
   }
 
-  .status .dot {
-    flex: none;
-    transform: translateY(-1px);
+  .status-text {
+    color: var(--fg);
+  }
+
+  .actions {
+    justify-content: flex-end;
+    gap: 6px;
+    flex-wrap: nowrap;
   }
 
   .checked {

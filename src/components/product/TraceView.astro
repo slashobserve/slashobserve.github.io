@@ -1,197 +1,268 @@
 ---
+import LevelIcon from "./LevelIcon.astro"
 import Window from "./Window.astro"
 import { HOST, TRACE_ID } from "./screen-ids"
-import { LOG_LINK_RANGE, ROOT, SELECTED_SPAN, SPANS, TICKS, TRACE_START, hasChildren } from "./trace"
+import {
+  ROOT,
+  SELECTED_SPAN,
+  SERVICES,
+  SLOWEST_ON_CRITICAL_PATH,
+  SPANS,
+  TICKS,
+  TRACE_START,
+  hasChildren,
+} from "./trace"
 
 const selected = SPANS.find((span) => span.selected) ?? ROOT
-const SERVICE_COUNT = new Set(SPANS.map((span) => span.service)).size
 const ERROR_COUNT = SPANS.filter((span) => span.error).length
+const close = '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'
+const search = '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>'
 ---
 
 <Window url={`${HOST}/t/${TRACE_ID}?ds=tempo`} label="The trace view">
-  <div class="page">
-    <div class="head">
-      <div class="head-text">
+  <div class="trace-split">
+    <div class="page">
+      <div class="head">
         <span class="row crumbs">
           <span class="k">Traces</span>
           <span class="k" aria-hidden="true">/</span>
-          <span class="k">tempo</span>
+          <span class="k">Tempo</span>
           <span class="k" aria-hidden="true">/</span>
           <span class="title">{ROOT.service} {ROOT.operation}</span>
         </span>
-        <span class="k trace-id">Duration {ROOT.duration} · Spans {SPANS.length} · Services {SERVICE_COUNT} · Errors {ERROR_COUNT}</span>
-      </div>
-      <span class="row head-actions">
-        <span class="btn btn-sm hide-xs">{LOG_LINK_RANGE}</span>
-        <span class="btn btn-sm hide-xs">Logs for this trace</span>
-        <span class="btn btn-sm">Copy link</span>
-      </span>
-    </div>
-    <div class="card">
-      <div class="card-head">
-        <span class="label">{ROOT.service} {ROOT.operation}</span>
-        <span class="row k meta">
-          <span>Trace <span class="mono">{TRACE_ID}</span></span>
-          <span>{TRACE_START}</span>
-          <span>{ROOT.duration}</span>
+        <span class="row head-actions">
+          <span class="btn btn-sm">Last 1 hour</span>
+          <span class="btn btn-sm">Logs for this trace</span>
+          <span class="btn btn-sm hide-sm">Add to observation</span>
         </span>
       </div>
-      <div class="split">
-        <div class="waterfall">
-          <div class="span-row ruler">
-            <span>Service and operation</span>
-            <span class="ticks" aria-hidden="true">{TICKS.map((tick) => <span>{tick}</span>)}</span>
-          </div>
+      <div class="stats">
+        <span><span class="k">Duration</span> {ROOT.duration}</span>
+        <span><span class="k">Spans</span> {SPANS.length}</span>
+        <span><span class="k">Services</span> {SERVICES.length}</span>
+        <span><span class="k">Errors</span> <span class="fg-crit">{ERROR_COUNT}</span></span>
+        <span><span class="k">Started</span> {TRACE_START}</span>
+        <span>
+          <span class="k">Slowest service</span>{" "}
+          {SLOWEST_ON_CRITICAL_PATH.service}, {SLOWEST_ON_CRITICAL_PATH.duration} on the critical path
+        </span>
+        <span><span class="k">Trace</span> {TRACE_ID.slice(0, 8)}</span>
+      </div>
+      <div class="row tools">
+        <span class="find"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={search} />Find in trace</span>
+        <span class="btn btn-sm">Critical path</span>
+        <span class="btn btn-sm">Errors only</span>
+      </div>
+      <div class="waterfall">
+        <div class="row legend">
+          <span class="k">Services</span>
           {
-            SPANS.map(({ service, operation, depth, tone, width, offset, duration, error, selected }, index) => (
-              <div class:list={["span-row", { selected }]}>
-                <span class="name" style={`padding-left:${depth * 10}px`}>
-                  <span class="k chevron" aria-hidden="true">{hasChildren(index) ? "⌄" : ""}</span>
-                  <span class="op">
-                    <span class="k">{service}</span> {operation}
-                  </span>
-                  {error && (
-                    <span class="row err">
-                      <span class="dot tone-crit" />
-                      Error
-                    </span>
-                  )}
-                  <span class="k dur">{duration}</span>
-                </span>
-                <span class="track">
-                  <span class={`span-bar tone-${tone}`} style={`width:${width}%;margin-left:${offset}%`} />
-                </span>
-              </div>
+            SERVICES.map(({ name, tone, count }) => (
+              <span class="service">
+                <i class={`tone-${tone}`} />
+                {name} <span class="k">{count}</span>
+              </span>
             ))
           }
         </div>
-        <div class="pane">
-          <span class="label">
-            {selected.service} {selected.operation}
-          </span>
-          <span class="row k meta">
-            <span>Span <span class="mono">{SELECTED_SPAN.id}</span></span>
-            <span>{SELECTED_SPAN.start}</span>
-            <span>{selected.duration}</span>
-            <span class="row err">
-              <span class="dot tone-crit" />
-              Error
-            </span>
-          </span>
-          <div class="attrs">
-            {
-              SELECTED_SPAN.attributes.map(([key, value]) => (
-                <>
-                  <span class="k">{key}</span>
-                  <span class="mono">{value}</span>
-                </>
-              ))
-            }
-          </div>
+        <div class="span-row ruler k">
+          <span>Service and operation</span>
+          <span class="ticks" aria-hidden="true">{[TICKS[0], TICKS[2], TICKS[4]].map((tick) => <span>{tick}</span>)}</span>
         </div>
+        {
+          SPANS.map(({ service, operation, depth, tone, width, offset, duration, error, selected }, index) => (
+            <div class:list={["span-row", { selected }]}>
+              <span class="name" style={`padding-left:${depth * 10}px`}>
+                <span class="k chevron" aria-hidden="true">{hasChildren(index) ? "⌄" : ""}</span>
+                <span class="op">
+                  <span class="k">{service}</span> {operation}
+                </span>
+                {error && (
+                  <span class="row err">
+                    <LevelIcon level="Error" />
+                    Error
+                  </span>
+                )}
+              </span>
+              <span class="track">
+                <span class={`span-bar tone-${tone}`} style={`width:${width}%;margin-left:${offset}%`} />
+              </span>
+              <span class="k dur">{duration}</span>
+            </div>
+          ))
+        }
       </div>
     </div>
+    <aside class="pane" aria-label="Span details">
+      <div class="pane-head">
+        <span class="pane-title">
+          <span class="label">{selected.operation}</span>
+          <span class="k">{selected.service} / server span</span>
+        </span>
+        <svg class="k close" viewBox="0 0 24 24" aria-hidden="true" set:html={close} />
+      </div>
+      <span class="row status">
+        <span class="row err">
+          <LevelIcon level="Error" />
+          Error
+        </span>
+        <span>{selected.duration}</span>
+        <span class="k">66% of the trace</span>
+        <span class="k">starts at +551 ms</span>
+      </span>
+      <span class="section-title">Attributes <span class="k">{SELECTED_SPAN.attributes.length - 2}</span></span>
+      <div class="attrs">
+        {
+          SELECTED_SPAN.attributes.slice(0, 3).map(([key, value]) => (
+            <>
+              <span class="k mono">{key}</span>
+              <span class="mono">{value}</span>
+            </>
+          ))
+        }
+      </div>
+      <span class="section-title">Resource <span class="k">2</span></span>
+      <div class="attrs">
+        {
+          SELECTED_SPAN.attributes.slice(3).map(([key, value]) => (
+            <>
+              <span class="k mono">{key}</span>
+              <span class="mono">{value}</span>
+            </>
+          ))
+        }
+      </div>
+      <span class="section-title">Logs for this span <span class="k">2 lines</span></span>
+      <span class="btn btn-sm open-logs">Open in Logs</span>
+    </aside>
   </div>
 </Window>
 
 <style>
+  .trace-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 210px;
+    font-size: 11.5px;
+  }
+
   .page {
-    padding: 14px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    font-size: 11.5px;
+    gap: 10px;
+    min-width: 0;
+    padding: 12px 0 10px;
+  }
+
+  .head,
+  .stats,
+  .tools {
+    padding: 0 12px;
   }
 
   .head {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 8px 12px;
-  }
-
-  .head-text {
-    display: flex;
     flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-  }
-
-  .crumbs {
     gap: 8px;
   }
 
-  .title {
-    font-size: 13px;
-    font-weight: 500;
-  }
-
-  .trace-id {
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .head-actions {
+  .crumbs {
     gap: 6px;
-    flex: none;
-  }
-
-  .btn {
-    min-height: 28px;
     font-size: 12px;
   }
 
-  .card {
-    border-radius: 8px;
-    background: var(--muted);
-    overflow: hidden;
+  .title {
+    font-weight: 500;
   }
 
-  .card-head {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    padding: 7px 9px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .meta {
+  .head-actions {
     flex-wrap: wrap;
-    gap: 0 10px;
-    font-size: 11px;
+    gap: 6px;
   }
 
-  .split {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 38%;
+  .btn {
+    min-height: 24px;
+    padding: 0 8px;
+    font-size: 11.5px;
+  }
+
+  .stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 12px;
+  }
+
+  .tools {
+    gap: 6px;
+  }
+
+  .find {
+    display: inline-flex;
+    flex: 1;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    height: 24px;
+    padding: 0 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--mfg);
+    white-space: nowrap;
+  }
+
+  svg {
+    flex: none;
+    width: 12px;
+    height: 12px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   .waterfall {
-    min-width: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .legend {
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 8px 12px;
+  }
+
+  .service {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 6px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-weight: 500;
+  }
+
+  .service i {
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    background: var(--tone);
   }
 
   .span-row {
     display: grid;
-    grid-template-columns: minmax(150px, 46%) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) 44px;
+    gap: 8px;
     align-items: center;
-    min-height: 26px;
-    border-bottom: 1px solid var(--border);
+    padding: 4px 12px;
+    border-top: 1px solid var(--border);
   }
 
   .ruler {
-    color: var(--mfg);
-    font-size: 10.5px;
-  }
-
-  .ruler > span:first-child {
-    padding-left: 8px;
+    font-size: 11px;
   }
 
   .ticks {
     display: flex;
     justify-content: space-between;
-    padding: 0 8px;
   }
 
   .selected {
@@ -201,69 +272,103 @@ const ERROR_COUNT = SPANS.filter((span) => span.error).length
   .name {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding-right: 8px;
-    margin-left: 8px;
+    gap: 4px;
     min-width: 0;
-    white-space: nowrap;
   }
 
   .chevron {
     flex: none;
-    width: 9px;
-    margin-top: -4px;
+    width: 8px;
   }
 
   .op {
-    flex: 1;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .err {
-    gap: 4px;
     flex: none;
-  }
-
-  .dur {
-    flex: none;
+    gap: 3px;
   }
 
   .track {
-    padding: 0 8px;
+    display: block;
     min-width: 0;
   }
 
   .span-bar {
     display: block;
-    height: 10px;
-    border-radius: 5px;
+    height: 9px;
+    border-radius: 2px;
     background: var(--tone);
   }
 
+  .dur {
+    text-align: right;
+    white-space: nowrap;
+  }
+
   .pane {
-    border-left: 1px solid var(--border);
-    padding: 8px;
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 8px;
     min-width: 0;
+    padding: 12px;
+    border-left: 1px solid var(--border);
+  }
+
+  .pane-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .pane-title {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .label {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .close {
+    width: 13px;
+    height: 13px;
+  }
+
+  .status {
+    flex-wrap: wrap;
+    gap: 2px 8px;
+  }
+
+  .section-title {
+    margin-top: 4px;
+    font-weight: 600;
   }
 
   .attrs {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 2px 10px;
-    margin-top: 6px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 4px 8px;
   }
 
-  .attrs .mono {
+  .attrs span {
     overflow-wrap: anywhere;
   }
 
+  .open-logs {
+    align-self: flex-start;
+  }
+
   @media (max-width: 900px) {
-    .split {
+    .trace-split {
       grid-template-columns: minmax(0, 1fr);
     }
 
@@ -274,13 +379,12 @@ const ERROR_COUNT = SPANS.filter((span) => span.error).length
   }
 
   @media (max-width: 480px) {
-    .hide-xs,
-    .ticks > span:not(:first-child, :last-child) {
-      display: none;
+    .span-row {
+      grid-template-columns: minmax(0, 1fr) 40px;
     }
 
-    .span-row {
-      grid-template-columns: minmax(0, 62%) minmax(0, 1fr);
+    .track {
+      display: none;
     }
   }
 </style>

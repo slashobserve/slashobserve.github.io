@@ -39,7 +39,7 @@ const DISCOVERY: readonly Step[] = [
 function saveMessage(index: number): string {
   const { title, row } = BUILT_PANELS[index]
   const saved = `Saved panel ${index + 1} of ${PANEL_COUNT}: ${title} (row ${row})`
-  return index === PANEL_COUNT - 1 ? `${saved}, then saved version 1 (${BUILT_ROWS} rows, ${PANEL_COUNT} panels)` : saved
+  return index === PANEL_COUNT - 1 ? `${saved}, then saved version 1 (${PANEL_COUNT} panels in ${BUILT_ROWS} rows)` : saved
 }
 
 const SAVES: readonly Step[] = BUILT_PANELS.map((_, index) => ({
@@ -91,7 +91,7 @@ export function runningFor(step: number): string {
 }
 
 export function stepSummary(): string {
-  return `Ran ${TOTAL_STEPS} steps in ${elapsedSeconds(PANEL_COUNT)}s`
+  return `Ran ${TOTAL_STEPS} steps in ${elapsedSeconds(PANEL_COUNT)}s for under $0.01`
 }
 
 export function topRowTitle(step: number): string {
