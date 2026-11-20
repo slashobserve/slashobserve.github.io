@@ -7,20 +7,24 @@ interface Props {
   initials?: string
   tint?: 1 | 2 | 3 | 4
   name: string
+  verb: string
   time: string
   framed?: boolean
   seq?: number
 }
 
-const { as: Tag = "div", author, initials, tint, name, time, framed = false, seq } = Astro.props
+const { as: Tag = "div", author, initials, tint, name, verb, time, framed = false, seq } = Astro.props
 ---
 
 <Tag class:list={["msg", framed && "framed"]} data-seq={seq} style={seq === undefined ? undefined : `--seq:${seq}`}>
   <Mark kind={author} initials={initials} tint={tint} size={24} />
   <div class="msg-body">
-    <div class="msg-head"><b>{name}</b><span class="k">{time}</span></div>
+    <div class="msg-head">
+      <span class="who"><b>{name}</b><span class="k">{verb}</span></span>
+      <span class="k time">{time}</span>
+    </div>
     <p><slot /></p>
-    <span class="btn btn-sm add">Add to page</span>
+    <span class="actions"><span>Reply</span><span>Add to page</span></span>
   </div>
 </Tag>
 
@@ -28,7 +32,7 @@ const { as: Tag = "div", author, initials, tint, name, time, framed = false, seq
   .msg {
     display: flex;
     gap: 10px;
-    padding: 10px 16px;
+    padding: 8px 0;
   }
 
   .framed {
@@ -41,23 +45,35 @@ const { as: Tag = "div", author, initials, tint, name, time, framed = false, seq
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
     min-width: 0;
+    padding-top: 2px;
   }
 
   .msg-head {
     display: flex;
     align-items: baseline;
+    gap: 8px;
+  }
+
+  .who {
+    display: flex;
+    flex: 1;
     flex-wrap: wrap;
-    gap: 0 8px;
+    align-items: baseline;
+    gap: 2px 6px;
+    min-width: 0;
   }
 
-  .msg-head b {
-    font-weight: 600;
+  .who b {
+    font-weight: 500;
   }
 
-  .msg-head .k {
+  .time {
+    flex: none;
+    margin-left: auto;
     font-size: 12px;
+    font-variant-numeric: tabular-nums;
   }
 
   p {
@@ -66,15 +82,11 @@ const { as: Tag = "div", author, initials, tint, name, time, framed = false, seq
     overflow-wrap: anywhere;
   }
 
-  .add {
-    align-self: flex-start;
-    min-height: 28px;
-    margin-left: -8px;
-    padding: 0 8px;
-    border-color: transparent;
-    background: transparent;
+  .actions {
+    display: flex;
+    gap: 14px;
     color: var(--mfg);
-    font-size: 12.5px;
+    font-size: 12px;
   }
 
   @media (prefers-reduced-motion: no-preference) {
