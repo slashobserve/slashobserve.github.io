@@ -1,138 +1,199 @@
 ---
 import LevelIcon, { type Level } from "./LevelIcon.astro"
+import LogVolume from "./LogVolume.astro"
 import Window from "./Window.astro"
 import { HOST, TRACE_ID } from "./screen-ids"
 
 interface LogLine {
   time: string
-  pod: string
+  service: string
   level: Level
   text: string
   selected?: boolean
 }
 
-const appOf = (pod: string) => pod.slice(0, pod.lastIndexOf("-"))
-
 const QUERY = "service.name:checkout"
 
 const lines: LogLine[] = [
-  { time: "14:02:11.204", pod: "checkout-0", level: "Error", text: "payment declined order=8812 reason=card_declined" },
-  { time: "14:02:11.198", pod: "checkout-1", level: "Info", text: "GET /cart 200 12ms" },
-  { time: "14:02:10.911", pod: "checkout-0", level: "Warning", text: "db pool near max in_use=19 max=20" },
-  { time: "14:02:10.877", pod: "checkout-2", level: "Info", text: "charge ok amount=4900" },
+  { time: "14:02:11.204", service: "checkout", level: "Error", text: "payment declined order=8812 reason=card_declined" },
+  { time: "14:02:11.198", service: "checkout", level: "Info", text: "GET /cart 200 12ms" },
+  { time: "14:02:10.911", service: "checkout", level: "Warning", text: "db pool near max in_use=19 max=20" },
+  { time: "14:02:10.877", service: "checkout", level: "Info", text: "charge ok amount=4900" },
   {
     time: "14:02:09.540",
-    pod: "checkout-0",
+    service: "checkout",
     level: "Error",
     text: "upstream timeout upstream=payments after=2.0s",
     selected: true,
   },
-  { time: "14:02:09.102", pod: "checkout-1", level: "Info", text: "GET /product/41 200 8ms" },
-  { time: "14:02:08.990", pod: "checkout-2", level: "Info", text: "reserve ok sku=41 qty=1" },
-  { time: "14:02:08.421", pod: "checkout-0", level: "Error", text: "payment declined order=8809 reason=timeout" },
+  { time: "14:02:09.102", service: "checkout", level: "Info", text: "GET /product/41 200 8ms" },
+  { time: "14:02:08.990", service: "checkout", level: "Info", text: "reserve ok sku=41 qty=1" },
+  { time: "14:02:08.421", service: "checkout", level: "Error", text: "payment declined order=8809 reason=timeout" },
 ]
 
-const details = [
-  ["Time", "2026-11-06 14:02:09"],
-  ["level", "error"],
-  ["service", "checkout"],
+const columns = [
+  ["@timestamp", "2026-11-06T14:02:09.540Z"],
+  ["log.level", "error"],
+  ["service.name", "checkout"],
   ["trace_id", TRACE_ID],
-  ["_index", "logs-shop-2026.11.06"],
-  ["pod", "checkout-0"],
+  ["k8s.pod.name", "checkout-0"],
 ]
+
+const levels = [
+  { name: "Error", count: "87", tone: "crit" },
+  { name: "Warning", count: "214", tone: "warn" },
+  { name: "Info", count: "903", tone: "s1" },
+] as const
+
+const bars = [
+  14, 16, 15, 17, 16, 18, 17, 16, 19, 18, 17, 20, 19, 18, 22, 21, 19, 20, 18, 21, 20, 19, 22, 21, 20, 18, 19, 21, 22, 20,
+  19, 21, 20, 22, 21, 19,
+]
+
+const chevron = '<path d="m6 9 6 6 6-6"/>'
+const close = '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'
 ---
 
-<Window url={`${HOST}/logs/prod-es?q=${QUERY}`} label="The logs page on an Elasticsearch datasource">
+<Window url={`${HOST}/logs/es?q=${QUERY}`} label="The logs page on an Elasticsearch datasource">
   <div class="logs">
-    <div class="row head">
-      <span class="row crumbs">
-        <span class="k">Logs</span>
-        <span class="k" aria-hidden="true">/</span>
-        <span class="title">prod-es</span>
-        <span class="lang">KQL</span>
-      </span>
-      <span class="row head-actions">
-        <span class="btn btn-sm">Last 15 minutes</span>
-        <span class="btn btn-sm">Live tail</span>
-        <span class="btn btn-sm hide-xs">Add to dashboard</span>
-      </span>
-    </div>
-    <div class="mono code"><span class="k">1</span><span>{QUERY}</span></div>
-    <span class="btn btn-primary btn-sm run">Run query</span>
-    <div class="row options">
-      <span class="row">Sort <span class="select">Newest first<span class="k" aria-hidden="true">▾</span></span></span>
-      <span class="btn btn-sm">Wrap</span>
-      <span class="btn btn-sm">JSON</span>
-      <span class="btn btn-sm hide-sm">Columns</span>
-    </div>
-    <div class="results g1-sm">
-      <div class="lines">
-        {
-          lines.map(({ time, pod, level, text, selected }) => (
-            <div class:list={["line", { selected }]}>
-              <span class="k">2026-11-06 {time}</span>
-              <span class="mono k labels">service.name={appOf(pod)} pod={pod}</span>
-              <span class="row level">
-                <LevelIcon level={level} />
-                {level}
-              </span>
-              <span class="mono message">{text}</span>
-            </div>
-          ))
-        }
-      </div>
-      <div class="detail">
-        <span class="row detail-actions">
-          <span class="btn btn-sm">Surrounding documents</span>
-          <span class="btn btn-sm">Copy line</span>
-          <span class="btn btn-sm">Copy link</span>
+    <div class="main">
+      <div class="row head">
+        <span class="row crumbs">
+          <span class="k">Logs</span>
+          <span class="k" aria-hidden="true">/</span>
+          <span class="title">Elasticsearch</span>
+          <span class="lang">KQL</span>
         </span>
-        <span class="trace-link">Open trace {TRACE_ID.slice(0, 8)}</span>
-        <div class="fields">
+        <span class="row head-actions">
+          <span class="btn btn-sm">Last 1 hour</span>
+          <span class="btn btn-sm">Live tail</span>
+          <span class="select hide-sm">Saved searches<svg viewBox="0 0 24 24" aria-hidden="true" set:html={chevron} /></span>
+        </span>
+      </div>
+      <div class="part">
+        <span class="seg" aria-hidden="true"><span>Builder</span><span class="on">KQL</span><span>Ask</span></span>
+        <div class="mono code"><span class="k">1</span><span>{QUERY}</span></div>
+        <div class="row run">
+          <span class="k">+ Add filter</span>
+          <span class="btn btn-primary btn-sm">Run query</span>
+        </div>
+      </div>
+      <div class="part">
+        <LogVolume total="1,204" levels={[...levels]} bars={bars} ticks={["13:20", "13:40", "14:00"]} />
+      </div>
+      <div class="part results">
+        <div class="row bar">
+          <span class="row">
+            <span class="seg" aria-hidden="true"><span class="on">Documents</span><span>Patterns</span></span>
+            <span class="k">1,204 hits in 0.2 s</span>
+          </span>
+          <span class="row hide-sm">
+            <span class="ghost">Add to dashboard</span>
+            <span class="btn btn-sm">Add to observation</span>
+          </span>
+        </div>
+        <div class="row options">
+          <span class="row">Sort <span class="select">Newest first<svg viewBox="0 0 24 24" aria-hidden="true" set:html={chevron} /></span></span>
+          <span class="btn btn-sm">Wrap</span>
+          <span class="btn btn-sm">JSON</span>
+          <span class="btn btn-sm hide-sm">Columns 1</span>
+        </div>
+        <div class="table">
+          <div class="line line-head k">
+            <span>Time</span>
+            <span></span>
+            <span class="hide-sm">service</span>
+            <span>Message</span>
+          </div>
           {
-            details.map(([key, value]) => (
-              <>
-                <span class="k">{key}</span>
-                <span class="mono">{value}</span>
-              </>
+            lines.map(({ time, service, level, text, selected }) => (
+              <div class:list={["line", { selected }]}>
+                <span class="mono">2026-11-06 {time}</span>
+                <span class="row level">
+                  <LevelIcon level={level} />
+                  {level}
+                </span>
+                <span class="mono k hide-sm">{service}</span>
+                <span class="mono message">{text}</span>
+              </div>
             ))
           }
         </div>
       </div>
     </div>
+    <aside class="pane" aria-label="Line details">
+      <div class="pane-head">
+        <span class="pane-title">
+          <b>Line</b>
+          <span class="k">2026-11-06 14:02:09.540, Error</span>
+        </span>
+        <svg class="k close" viewBox="0 0 24 24" aria-hidden="true" set:html={close} />
+      </div>
+      <span class="mono">upstream timeout upstream=payments after=2.0s</span>
+      <span class="row ids mono">
+        <span class="id">Trace {TRACE_ID.slice(0, 8)}</span>
+        <span class="id">Span 9f2c1a7b3e4d5f60</span>
+      </span>
+      <span class="row actions">
+        <span class="btn btn-sm">Open trace</span>
+        <span class="ghost">Show context</span>
+        <span class="ghost">Copy line</span>
+        <span class="ghost">Copy link</span>
+      </span>
+      <span class="seg" aria-hidden="true"><span class="on">Table</span><span>JSON</span><span>Context</span></span>
+      <span class="section-title">Columns <span class="k">{columns.length}</span></span>
+      <div class="fields">
+        {
+          columns.map(([key, value]) => (
+            <>
+              <span class="k mono">{key}</span>
+              <span class="mono">{value}</span>
+            </>
+          ))
+        }
+      </div>
+    </aside>
   </div>
 </Window>
 
 <style>
   .logs {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    font-size: 12px;
+  }
+
+  .main {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 14px;
-    font-size: 12px;
+    min-width: 0;
+  }
+
+  .head,
+  .part {
+    padding: 12px 14px;
   }
 
   .head {
     justify-content: space-between;
     flex-wrap: wrap;
+    gap: 6px 12px;
+  }
+
+  .part {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-top: 1px solid var(--border);
+  }
+
+  .crumbs {
+    gap: 8px;
   }
 
   .title {
     font-size: 13px;
     font-weight: 500;
-  }
-
-  .head-actions {
-    gap: 6px;
-  }
-
-  .btn {
-    min-height: 28px;
-    font-size: 12px;
-  }
-
-  .crumbs {
-    gap: 8px;
   }
 
   .lang {
@@ -142,120 +203,201 @@ const details = [
     color: var(--mfg);
   }
 
+  .head-actions,
+  .options,
+  .actions {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .btn {
+    min-height: 26px;
+    padding: 0 9px;
+    font-size: 12px;
+  }
+
+  .ghost {
+    padding: 3px 6px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
   .select {
     display: inline-flex;
-    gap: 14px;
+    align-items: center;
+    gap: 6px;
+    height: 26px;
+    margin-left: 6px;
+    padding: 0 8px;
     border: 1px solid var(--border);
     border-radius: 6px;
-    padding: 4px 9px;
-    background: var(--card);
+    color: var(--fg);
     white-space: nowrap;
+  }
+
+  svg {
+    flex: none;
+    width: 12px;
+    height: 12px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .seg {
+    display: inline-flex;
+    align-self: flex-start;
+    padding: 2px;
+    border-radius: 6px;
+    background: var(--muted);
+  }
+
+  .seg span {
+    padding: 2px 10px;
+    border-radius: 4px;
+    color: var(--mfg);
+  }
+
+  .seg .on {
+    background: var(--card);
+    color: var(--fg);
+    font-weight: 500;
   }
 
   .code {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
-    gap: 10px;
-    border-radius: 6px;
-    padding: 7px 10px 18px;
-    font-size: 11.5px;
+    gap: 12px;
+    padding: 8px 12px;
+    border-radius: 8px;
     background: var(--muted);
-    overflow-wrap: anywhere;
   }
 
-  .run {
-    align-self: flex-start;
-  }
-
-  .options {
+  .run,
+  .bar {
+    justify-content: space-between;
     flex-wrap: wrap;
-    gap: 8px 16px;
+    gap: 6px 12px;
+  }
+
+  .bar > .row {
+    gap: 10px;
   }
 
   .results {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 290px;
-    border-top: 1px solid var(--border);
+    padding-bottom: 6px;
   }
 
-  .lines {
-    min-width: 0;
+  .table {
+    margin: 0 -14px;
   }
 
   .line {
     display: grid;
-    grid-template-columns: 156px minmax(0, 0.7fr) 64px minmax(0, 1fr);
-    gap: 8px;
-    padding: 4px 6px;
-    border-bottom: 1px solid var(--border);
-    font-size: 11.5px;
+    grid-template-columns: 172px 64px 64px minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    padding: 5px 14px;
+    border-top: 1px solid var(--border);
     white-space: nowrap;
   }
 
-  .line > span {
-    min-width: 0;
+  .line-head {
+    font-size: 11.5px;
+  }
+
+  .level {
+    gap: 6px;
+  }
+
+  .message {
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  .line.selected {
+  .selected {
     background: var(--accent-container);
   }
 
-  .level {
-    gap: 5px;
-  }
-
-  .detail {
-    border-left: 1px solid var(--border);
-    padding: 8px 10px;
+  .pane {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     min-width: 0;
+    padding: 12px 14px;
+    border-left: 1px solid var(--border);
   }
 
-  .detail-actions {
-    gap: 6px;
+  .pane-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .pane-title {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .pane-title b {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .close {
+    width: 14px;
+    height: 14px;
+  }
+
+  .ids {
     flex-wrap: wrap;
+    gap: 6px;
   }
 
-  .trace-link {
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 6px 10px;
-    text-decoration: underline;
-    text-underline-offset: 3px;
+  .id {
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--muted);
+  }
+
+  .section-title {
+    font-weight: 600;
   }
 
   .fields {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 3px 12px;
-    font-size: 11.5px;
+    grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
+    gap: 6px 12px;
   }
 
-  .fields .mono {
+  .fields span {
     overflow-wrap: anywhere;
   }
 
   @media (max-width: 900px) {
-    .line {
-      grid-template-columns: 150px 64px minmax(0, 1fr);
+    .logs {
+      grid-template-columns: minmax(0, 1fr);
     }
 
-    .labels {
-      display: none;
-    }
-
-    .detail {
+    .pane {
       border-left: 0;
       border-top: 1px solid var(--border);
     }
-  }
 
-  @media (max-width: 480px) {
-    .hide-xs {
+    .line {
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 2px 10px;
+    }
+
+    .message {
+      grid-column: 1 / -1;
+    }
+
+    .line-head {
       display: none;
     }
   }
