@@ -1,19 +1,15 @@
 ---
-const SIGNAL_ICONS = {
-  metrics: ["M4 19h16", "m5 15 4-5 4 3 6-8"],
-  database: ["M5 6.5c0-1.4 3.1-2.5 7-2.5s7 1.1 7 2.5-3.1 2.5-7 2.5-7-1.1-7-2.5Z", "M5 6.5v11c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-11", "M5 12c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5"],
-  logs: ["M4 6h16", "M4 11h11", "M4 16h14", "M4 21h7"],
-  traces: ["M4 5h10", "M8 10h9", "M11 15h9", "M6 20h5"],
-  search: ["M10.5 17a6.5 6.5 0 1 0 0-13 6.5 6.5 0 0 0 0 13Z", "m20 20-4.6-4.6"],
-} as const
+import { logoAspect, STORE_LOGOS } from "../../lib/store-logos"
 
-const stores: { store: string; icon: keyof typeof SIGNAL_ICONS }[] = [
-  { store: "Prometheus", icon: "metrics" },
-  { store: "ClickHouse", icon: "database" },
-  { store: "Loki", icon: "logs" },
-  { store: "Tempo", icon: "traces" },
-  { store: "Elasticsearch", icon: "search" },
-  { store: "OpenSearch", icon: "search" },
+const LOGO_HEIGHT = 22
+
+const stores: { store: string; logo: keyof typeof STORE_LOGOS }[] = [
+  { store: "Prometheus", logo: "prometheus" },
+  { store: "ClickHouse", logo: "clickhouse" },
+  { store: "Loki", logo: "loki" },
+  { store: "Tempo", logo: "tempo" },
+  { store: "Elasticsearch", logo: "elasticsearch" },
+  { store: "OpenSearch", logo: "opensearch" },
 ]
 ---
 
@@ -24,25 +20,20 @@ const stores: { store: string; icon: keyof typeof SIGNAL_ICONS }[] = [
         {
           [false, true].map((repeat) => (
             <ul aria-label={repeat ? undefined : "Stores"} aria-hidden={repeat ? "true" : undefined} class:list={{ repeat }}>
-              {stores.map(({ store, icon }) => (
+              {stores.map(({ store, logo }) => (
                 <li>
-                  <span class="tile">
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.8"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      {SIGNAL_ICONS[icon].map((d) => (
-                        <path d={d} />
-                      ))}
-                    </svg>
-                  </span>
+                  <svg
+                    class="logo"
+                    width={Math.round(LOGO_HEIGHT * logoAspect(STORE_LOGOS[logo]))}
+                    height={LOGO_HEIGHT}
+                    viewBox={STORE_LOGOS[logo].viewBox}
+                    aria-hidden="true"
+                    fill="currentColor"
+                  >
+                    {STORE_LOGOS[logo].paths.map((d) => (
+                      <path d={d} />
+                    ))}
+                  </svg>
                   <span class="store">{store}</span>
                 </li>
               ))}
@@ -93,15 +84,8 @@ const stores: { store: string; icon: keyof typeof SIGNAL_ICONS }[] = [
     font-weight: 500;
   }
 
-  .tile {
-    display: inline-flex;
+  .logo {
     flex: none;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 8px;
-    background: var(--muted);
     color: var(--mfg);
   }
 
