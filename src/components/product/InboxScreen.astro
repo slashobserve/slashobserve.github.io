@@ -12,12 +12,14 @@ interface Item {
   verb: string
   object: string
   reason?: string
+  excerpt?: string
   time: string
   unread?: boolean
   selected?: boolean
 }
 
 const TABS = ["For you", "Everything", "Proposals", "Mentions"]
+const FILTERS = ["Open", "Unread", "Done"]
 
 const groups: { label: string; items: Item[] }[] = [
   {
@@ -36,8 +38,9 @@ const groups: { label: string; items: Item[] }[] = [
         author: { kind: "person", initials: "JP", tint: 4 },
         actor: "Jo Park",
         verb: "mentioned you on",
-        object: "a dashboard",
+        object: "Demo shop overview",
         reason: "Mention",
+        excerpt: "@admin p95 on /api/checkout climbs after each deploy, can you look?",
         time: "3 h ago",
         unread: true,
         selected: true,
@@ -80,28 +83,33 @@ const selected = groups.flatMap(({ items }) => items).find((item) => item.select
         <div class="tabs" aria-hidden="true">
           {TABS.map((tab, index) => <span class:list={["tab", { on: index === 0 }]}>{tab}</span>)}
         </div>
+        <div class="filters" aria-hidden="true">
+          {FILTERS.map((filter, index) => <span class:list={["filter", { on: index === 0 }]}>{filter}</span>)}
+          <span class="filter">Group by dashboard or observation</span>
+        </div>
         {
           groups.map(({ label, items }) => (
             <section class="group">
               <h3 class="group-label">{label}</h3>
               <ul>
-                {items.map(({ author, actor, verb, object, reason, time, unread, selected }) => (
-                  <li class:list={["row-item", { selected }]}>
+                {items.map(({ author, actor, verb, object, reason, excerpt, time, unread, selected }) => (
+                  <li class:list={["row-item", { selected, unread }]}>
+                    <span class="unread-dot" aria-hidden="true" />
                     {author.kind === "agent" ? (
-                      <Mark kind="agent" size={28} />
+                      <Mark kind="agent" size={24} />
                     ) : (
-                      <Mark kind={author.kind} initials={author.initials} tint={author.kind === "person" ? author.tint : undefined} size={28} />
+                      <Mark kind={author.kind} initials={author.initials} tint={author.kind === "person" ? author.tint : undefined} size={24} />
                     )}
                     <span class="body">
                       <span class="sentence">
                         {actor} {verb} <b>{object}</b>
                       </span>
+                      {excerpt && <span class="k excerpt">{excerpt}</span>}
                       <span class="k meta">
                         {reason && <span class="reason">{reason}</span>}
                         {time}
                       </span>
                     </span>
-                    {unread && <span class="unread" aria-hidden="true" />}
                   </li>
                 ))}
               </ul>
@@ -115,7 +123,12 @@ const selected = groups.flatMap(({ items }) => items).find((item) => item.select
           {selected.reason && <span class="reason">{selected.reason}</span>}
           {selected.time}
         </p>
-        <span class="button">Open</span>
+        {selected.excerpt && <p class="detail-text">{selected.excerpt}</p>}
+        <span class="actions">
+          <span class="button">Open</span>
+          <span class="ghost">Mark as read</span>
+          <span class="ghost">Mark done</span>
+        </span>
       </section>
     </div>
   </div>
@@ -198,6 +211,28 @@ const selected = groups.flatMap(({ items }) => items).find((item) => item.select
     font-weight: 500;
   }
 
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding-top: 6px;
+  }
+
+  .filter {
+    display: inline-flex;
+    align-items: center;
+    height: 26px;
+    padding: 0 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .filter.on {
+    background: var(--muted);
+  }
+
   .group {
     display: flex;
     flex-direction: column;
@@ -223,9 +258,10 @@ const selected = groups.flatMap(({ items }) => items).find((item) => item.select
 
   .row-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
     min-height: 56px;
+    box-sizing: border-box;
     padding: 8px 10px;
     border-radius: 6px;
   }
@@ -243,6 +279,15 @@ const selected = groups.flatMap(({ items }) => items).find((item) => item.select
   }
 
   .sentence {
+    line-height: 1.35;
+  }
+
+  .unread .sentence {
+    font-weight: 500;
+  }
+
+  .excerpt {
+    font-size: 12px;
     line-height: 1.35;
   }
 
@@ -271,11 +316,15 @@ const selected = groups.flatMap(({ items }) => items).find((item) => item.select
     background: var(--card);
   }
 
-  .unread {
+  .unread-dot {
     flex: none;
     width: 7px;
     height: 7px;
+    margin-top: 8px;
     border-radius: 50%;
+  }
+
+  .unread .unread-dot {
     background: var(--primary);
   }
 
@@ -287,6 +336,25 @@ const selected = groups.flatMap(({ items }) => items).find((item) => item.select
     padding: 16px;
     border-radius: 10px;
     background: var(--card);
+  }
+
+  .detail-text {
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .ghost {
+    padding: 3px 8px;
+    font-size: 12.5px;
+    font-weight: 500;
+    white-space: nowrap;
   }
 
   .detail-title {
