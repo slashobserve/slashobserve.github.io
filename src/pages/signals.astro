@@ -6,6 +6,7 @@ import StoreStrip from "../components/signals/StoreStrip.astro"
 import StoresTable from "../components/signals/StoresTable.astro"
 import PageOpening from "../components/site/PageOpening.astro"
 import Section from "../components/site/Section.astro"
+import SectionHead from "../components/site/SectionHead.astro"
 import Split from "../components/site/Split.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
 ---
@@ -14,7 +15,7 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
   title="Signals | SlashObserve"
   description="Metrics, logs and traces from Prometheus, ClickHouse, Loki, Elasticsearch, OpenSearch and Tempo in one place: PromQL, SQL, LogQL, KQL (with Lucene and the Query DSL) and TraceQL. Dashboards mix them and a log line opens its trace."
 >
-  <PageOpening title="Three signals, six stores, one place to look.">
+  <PageOpening eyebrow="Signals" title="Three signals, six stores, one place to look.">
     <p class="lead">
       Prometheus or ClickHouse for metrics. Loki, ClickHouse, Elasticsearch or OpenSearch for logs. Tempo or ClickHouse for
       traces. Dashboards mix them, the agent queries all of them, and a log line with a trace id opens the trace.
@@ -25,21 +26,17 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
     <div data-in-view="rise"><LogsPage /></div>
   </section>
   <Section>
-    <Split rev>
-      <div slot="start" data-in-view="rise"><TraceView /></div>
-      <div slot="end" class="copy">
-        <h2 class="h2">The trace view.</h2>
-        <p class="lead">
-          A waterfall per trace, with the critical path outlined, a search inside the trace and the span's attributes,
-          events and links beside it. A span shows the logs that carry its trace id. Tempo or the OpenTelemetry tables in
-          ClickHouse, with TraceQL or SQL behind it.
-        </p>
-      </div>
-    </Split>
+    <SectionHead
+      eyebrow="Traces"
+      title="The trace view."
+      lead="A waterfall per trace, with the critical path outlined, a search inside the trace and the span's attributes, events and links beside it. A span shows the logs that carry its trace id. Tempo or the OpenTelemetry tables in ClickHouse, with TraceQL or SQL behind it."
+    />
+    <div data-in-view="rise"><TraceView /></div>
   </Section>
-  <Section>
+  <Section sunk>
     <Split>
-      <div slot="start" class="copy">
+      <div slot="start" class="split-copy">
+        <p class="eyebrow">Queries</p>
         <h2 class="h2">Try a query before you save it.</h2>
         <p class="lead">
           Each logs datasource has its own page, in its own language: LogQL on Loki, SQL on ClickHouse, KQL on
@@ -74,12 +71,6 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
 <style>
   .logs-wrap {
     padding-bottom: 96px;
-  }
-
-  .copy {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
   }
 
   @media (max-width: 900px) {

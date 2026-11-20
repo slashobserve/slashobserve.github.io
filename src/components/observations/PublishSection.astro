@@ -10,7 +10,8 @@ import PublishRca from "../product/PublishRca.astro"
     <div slot="start" data-in-view="rise">
       <Stage><PublishRca /></Stage>
     </div>
-    <div slot="end" class="copy">
+    <div slot="end" class="split-copy">
+      <p class="eyebrow">Publish</p>
       <h2 class="h2">Publish it as the RCA.</h2>
       <p class="lead">
         Publish as RCA freezes every live panel and saves a numbered revision. Earlier revisions do not change.
@@ -27,14 +28,3 @@ import PublishRca from "../product/PublishRca.astro"
   </Split>
 </Section>
 
-<style>
-  .copy {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .copy .lead {
-    font-size: 17px;
-  }
-</style>

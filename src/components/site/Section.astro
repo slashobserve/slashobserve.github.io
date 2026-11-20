@@ -1,13 +1,14 @@
 ---
 interface Props {
   ruled?: boolean
+  sunk?: boolean
   class?: string
   id?: string
 }
 
-const { ruled = true, class: className, id } = Astro.props
+const { ruled = true, sunk = false, class: className, id } = Astro.props
 ---
 
-<section class:list={[{ ruled }]} id={id}>
+<section class:list={[{ ruled, sunk }]} id={id}>
   <div class:list={["wrap section", className]}><slot /></div>
 </section>

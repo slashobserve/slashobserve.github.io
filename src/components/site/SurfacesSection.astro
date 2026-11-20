@@ -12,8 +12,8 @@ interface Props {
 const { lead } = Astro.props
 ---
 
-<Section>
-  <SectionHead title="In the browser, the terminal, or your own agent." lead={lead} />
+<Section sunk>
+  <SectionHead eyebrow="Three ways in" title="In the browser, the terminal, or your own agent." lead={lead} />
   <div data-in-view="rise">
     <div class="cols3"><ChatFollowUp /><CliBuild /><McpBuild /></div>
   </div>

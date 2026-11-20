@@ -10,9 +10,10 @@ interface Props {
 const { cliObservations } = Astro.props
 ---
 
-<Section>
+<Section sunk>
   <Split>
-    <div slot="start" class="copy">
+    <div slot="start" class="split-copy">
+      <p class="eyebrow">CLI</p>
       <h2 class="h2">The same verbs in the terminal.</h2>
       <p class="lead">
         <span class="mono">observe o</span> starts, reads, extends, resolves and publishes observations, and keeps or discards the
@@ -35,15 +36,3 @@ const { cliObservations } = Astro.props
   </Split>
 </Section>
 
-<style>
-  .copy {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    align-items: flex-start;
-  }
-
-  .copy .lead {
-    font-size: 17px;
-  }
-</style>

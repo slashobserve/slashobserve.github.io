@@ -1,6 +1,15 @@
 import { describe, expect, test } from "bun:test"
 import { resolveDocLinks } from "./doc-links"
-import { PRODUCT_LINKS, docsHomeHref, footerColumns, getStartedHref, headerNav, isCurrentPage } from "./site-nav"
+import {
+  PRODUCT_LINKS,
+  docsHomeHref,
+  footerColumns,
+  getStartedHref,
+  headerNav,
+  holdsCurrentPage,
+  isCurrentPage,
+  isNavGroup,
+} from "./site-nav"
 
 const withoutReference = new Set(["docs/get-started/quick-start", "docs/get-started/install"])
 const withReference = new Set([...withoutReference, "docs/reference/configuration"])
@@ -20,12 +29,24 @@ describe("PRODUCT_LINKS", () => {
 })
 
 describe("headerNav", () => {
-  test("lists the product pages then Docs, without Self-host", () => {
-    expect(headerNav(resolveDocLinks(withReference))).toEqual([...PRODUCT_ORDER, { label: "Docs", href: "/docs/" }])
+  const features = { label: "Features", items: [observations, dashboards, agents, signals] }
+
+  test("groups the feature pages, then lists Migrate and Docs, without Self-host", () => {
+    expect(headerNav(resolveDocLinks(withReference))).toEqual([features, migrate, { label: "Docs", href: "/docs/" }])
   })
 
-  test("keeps only the product pages when no docs exist", () => {
-    expect(headerNav(resolveDocLinks(new Set()))).toEqual(PRODUCT_ORDER)
+  test("keeps the group and Migrate when no docs exist", () => {
+    expect(headerNav(resolveDocLinks(new Set()))).toEqual([features, migrate])
+  })
+
+  test("tells a group from a link", () => {
+    expect(isNavGroup(features)).toBe(true)
+    expect(isNavGroup(migrate)).toBe(false)
+  })
+
+  test("marks the group that holds the page being read", () => {
+    expect(holdsCurrentPage(features, "/agents/")).toBe(true)
+    expect(holdsCurrentPage(features, "/migrate/")).toBe(false)
   })
 })
 

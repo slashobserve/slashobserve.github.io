@@ -14,7 +14,8 @@ const { proposals, inbox } = Astro.props
 
 <Section>
   <Split>
-    <div slot="start" class="copy">
+    <div slot="start" class="split-copy">
+      <p class="eyebrow">Proposals</p>
       <h2 class="h2">Direct, or propose.</h2>
       <p class="lead">
         Each connected agent has a mode, and the Mode menu on its row changes it. Direct, the default, lets its saves change
@@ -49,16 +50,6 @@ const { proposals, inbox } = Astro.props
 </Section>
 
 <style>
-  .copy {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .copy .lead {
-    font-size: 17px;
-  }
-
   .links {
     gap: 20px;
     flex-wrap: wrap;

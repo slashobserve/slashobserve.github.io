@@ -22,7 +22,7 @@ const stats = [
   title="Migrate to SlashObserve"
   description="Coming from Grafana, Kibana or OpenSearch Dashboards? Grafana dashboards import with their folders, variables and links. Elasticsearch and OpenSearch connect as they are, and the KQL you typed in Discover runs there. Saved objects are not imported."
 >
-  <PageOpening title="Coming from Grafana, Kibana or OpenSearch Dashboards?">
+  <PageOpening eyebrow="Migrate" title="Coming from Grafana, Kibana or OpenSearch Dashboards?">
     <p class="lead">
       Connect the stores you already have and keep the habits you already have. A Grafana comes across one dashboard at a
       time with every query checked. An Elasticsearch or OpenSearch index connects as it is, and the KQL you typed in
@@ -30,7 +30,7 @@ const stats = [
     </p>
     {
       (links.importGuide || links.elasticsearch) && (
-        <div class="row actions">
+        <div class="open-actions">
           {links.importGuide && (
             <a class="btn btn-primary" href={links.importGuide}>
               Read the import guide
@@ -48,18 +48,18 @@ const stats = [
   <ImportStats stats={stats} />
   <MoveTour links={links} />
   <ImportCoverageTable />
-  <Band>
-    <h2 class="h2 band-title">Bring the dashboards this afternoon. Keep the queries you know.</h2>
-    <p class="p">Point it at a Grafana you can read, or at the index pattern your Discover tab uses. Nothing is written back.</p>
-    {
-      links.importGuide && (
-        <div class="row actions">
+  <Band class="closing">
+    <h2 class="h2">Bring the dashboards this afternoon. Keep the queries you know.</h2>
+    <div class="closing-side">
+      <p class="p">Point it at a Grafana you can read, or at the index pattern your Discover tab uses. Nothing is written back.</p>
+      {
+        links.importGuide && (
           <a class="btn btn-band" href={links.importGuide}>
             Import guide
           </a>
-        </div>
-      )
-    }
+        )
+      }
+    </div>
   </Band>
 </MarketingLayout>
 
@@ -70,12 +70,25 @@ const stats = [
 </script>
 
 <style>
-  .actions {
-    gap: 10px;
-    flex-wrap: wrap;
+  :global(.band-inner.closing) {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 64px;
+    align-items: center;
   }
 
-  .band-title {
-    max-width: 22ch;
+  .closing-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    min-width: 0;
+  }
+
+  @media (max-width: 900px) {
+    :global(.band-inner.closing) {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 20px;
+    }
   }
 </style>

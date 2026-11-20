@@ -2,12 +2,14 @@
 interface Props {
   title: string
   lead?: string
+  eyebrow?: string
 }
 
-const { title, lead } = Astro.props
+const { title, lead, eyebrow } = Astro.props
 ---
 
 <div class="section-head">
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
   <h2 class="h2">{title}</h2>
   {lead && <p class="lead">{lead}</p>}
 </div>

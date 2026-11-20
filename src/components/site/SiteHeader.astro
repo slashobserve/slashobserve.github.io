@@ -1,6 +1,14 @@
 ---
 import type { DocLinks } from "../../lib/doc-links"
-import { getStartedHref, GITHUB_URL, headerNav, isCurrentPage } from "../../lib/site-nav"
+import {
+  FEATURE_BLURBS,
+  getStartedHref,
+  GITHUB_URL,
+  headerNav,
+  holdsCurrentPage,
+  isCurrentPage,
+  isNavGroup,
+} from "../../lib/site-nav"
 import GitHubIcon from "./GitHubIcon.astro"
 import ThemeToggle from "./ThemeToggle.astro"
 import Wordmark from "./Wordmark.astro"
@@ -15,17 +23,54 @@ const navItems = headerNav(links)
 const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? "page" : undefined)
 ---
 
-<div class="header-bar">
+<div class="header-bar" data-header-bar>
   <header class="wrap">
     <a class="home" href="/" aria-label="SlashObserve home">
       <Wordmark size={22} />
     </a>
     <nav aria-label="Main" class="nav main-nav hide-sm">
-      {navItems.map((item) => (
-        <a href={item.href} aria-current={currentFor(item.href)}>
-          {item.label}
-        </a>
-      ))}
+      {navItems.map((entry) =>
+        isNavGroup(entry) ? (
+          <div class="group" data-nav-group>
+            <button
+              type="button"
+              class="group-toggle"
+              aria-expanded="false"
+              aria-controls="nav-group-panel"
+              data-current={holdsCurrentPage(entry, Astro.url.pathname) ? "" : undefined}
+            >
+              {entry.label}
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </button>
+            <div class="group-panel" id="nav-group-panel">
+              <div class="group-list">
+                {entry.items.map((item) => (
+                  <a class="group-link" href={item.href} aria-current={currentFor(item.href)}>
+                    <span class="group-label">{item.label}</span>
+                    <span class="group-blurb">{FEATURE_BLURBS[item.href]}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <a href={entry.href} aria-current={currentFor(entry.href)}>
+            {entry.label}
+          </a>
+        ),
+      )}
     </nav>
     <div class="actions">
       <a class="github hide-sm" href={GITHUB_URL}>GitHub</a>
@@ -71,11 +116,23 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
       </button>
     </div>
     <nav id="site-menu" class="menu-panel" aria-label="Mobile" hidden>
-      {navItems.map((item) => (
-        <a class="menu-link" href={item.href} aria-current={currentFor(item.href)}>
-          {item.label}
-        </a>
-      ))}
+      {navItems.map((entry) =>
+        isNavGroup(entry) ? (
+          <Fragment>
+            <p class="menu-heading">{entry.label}</p>
+            {entry.items.map((item) => (
+              <a class="menu-link" href={item.href} aria-current={currentFor(item.href)}>
+                {item.label}
+              </a>
+            ))}
+            <hr class="menu-rule" />
+          </Fragment>
+        ) : (
+          <a class="menu-link" href={entry.href} aria-current={currentFor(entry.href)}>
+            {entry.label}
+          </a>
+        ),
+      )}
       <a class="menu-link" href={GITHUB_URL} aria-current={currentFor(GITHUB_URL)}>
         <GitHubIcon size={15} />GitHub
       </a>
@@ -90,6 +147,107 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
     z-index: 30;
     border-bottom: 1px solid var(--border);
     background: var(--bg);
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  .header-bar[data-at-top]:not(:has(.menu-toggle[aria-expanded="true"])) {
+    border-bottom-color: transparent;
+    background: transparent;
+  }
+
+  .main-nav {
+    align-items: center;
+  }
+
+  .group {
+    position: relative;
+  }
+
+  .group-toggle {
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: var(--mfg);
+    cursor: pointer;
+  }
+
+  .group-toggle:hover,
+  .group[data-open] .group-toggle {
+    color: var(--fg);
+  }
+
+  .group-toggle[data-current] {
+    font-weight: 500;
+    color: var(--fg);
+  }
+
+  .group-toggle svg {
+    transition: rotate 0.15s ease;
+  }
+
+  .group[data-open] .group-toggle svg {
+    rotate: 180deg;
+  }
+
+  .group-panel {
+    position: absolute;
+    top: 100%;
+    left: -18px;
+    display: none;
+    padding-top: 14px;
+  }
+
+  .group[data-open] .group-panel {
+    display: block;
+  }
+
+  .group-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 340px;
+    padding: 6px;
+    box-sizing: border-box;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
+  }
+
+  .group-link {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 9px 12px;
+    border-radius: 6px;
+  }
+
+  .group-link:hover,
+  .group-link[aria-current="page"] {
+    background: var(--muted);
+  }
+
+  .group-label {
+    font-weight: 500;
+    color: var(--fg);
+  }
+
+  .group-blurb {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--mfg);
+  }
+
+  @media (scripting: none) {
+    .group:hover .group-panel,
+    .group:focus-within .group-panel {
+      display: block;
+    }
   }
 
   header {
@@ -172,6 +330,28 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
     border-radius: 6px;
   }
 
+  @media (min-width: 901px) {
+    .menu-panel {
+      display: none;
+    }
+  }
+
+  .menu-heading {
+    margin: 6px 10px 2px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mfg);
+  }
+
+  .menu-rule {
+    width: 100%;
+    margin: 6px 0;
+    border: 0;
+    border-top: 1px solid var(--border);
+  }
+
   .menu-link:hover {
     background: var(--muted);
     color: var(--fg);
@@ -195,7 +375,8 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .menu-panel {
+    .menu-panel,
+    .group-list {
       animation: menu-fade 120ms ease-out;
     }
   }
@@ -207,7 +388,53 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
   }
 </style>
 
+<script is:inline>
+  {
+    const bar = document.querySelector("[data-header-bar]")
+    const markTop = () => bar.toggleAttribute("data-at-top", window.scrollY < 8)
+    markTop()
+    addEventListener("scroll", markTop, { passive: true })
+  }
+</script>
+
 <script>
+  document.querySelectorAll<HTMLElement>("[data-nav-group]").forEach((group) => {
+    const button = group.querySelector<HTMLButtonElement>("button")
+    if (!button) return
+    const canHover = matchMedia("(hover: hover)")
+    let openedByHover = false
+    const setOpen = (open: boolean) => {
+      group.toggleAttribute("data-open", open)
+      button.setAttribute("aria-expanded", String(open))
+      if (!open) openedByHover = false
+    }
+    const isOpen = () => group.hasAttribute("data-open")
+
+    button.addEventListener("click", () => {
+      setOpen(!isOpen() || openedByHover)
+      openedByHover = false
+    })
+    group.addEventListener("mouseenter", () => {
+      if (!canHover.matches || isOpen()) return
+      setOpen(true)
+      openedByHover = true
+    })
+    group.addEventListener("mouseleave", () => {
+      if (canHover.matches) setOpen(false)
+    })
+    group.addEventListener("focusout", (event) => {
+      if (!group.contains(event.relatedTarget as Node | null)) setOpen(false)
+    })
+    group.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" || !isOpen()) return
+      setOpen(false)
+      button.focus()
+    })
+    document.addEventListener("click", (event) => {
+      if (isOpen() && !group.contains(event.target as Node)) setOpen(false)
+    })
+  })
+
   const MOBILE_QUERY = "(max-width: 900px)"
   const toggle = document.querySelector<HTMLButtonElement>(".menu-toggle")
   const panel = document.getElementById("site-menu")

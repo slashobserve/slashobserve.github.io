@@ -13,8 +13,9 @@ const steps = [
 ]
 ---
 
-<Section ruled={false}>
+<Section ruled={false} sunk>
   <SectionHead
+    eyebrow="Shared rules"
     title="People and agents work under the same rules."
     lead="Observe Agent, Claude Code and other MCP clients show up by name, and what they change is on the record."
   />
@@ -79,9 +80,12 @@ const steps = [
     flex-direction: column;
     justify-content: center;
     gap: 8px;
-    height: 112px;
-    margin: 0;
-    padding: 0;
+    box-sizing: border-box;
+    height: 128px;
+    margin: 0 0 6px;
+    padding: 0 18px;
+    border-radius: 8px;
+    background: var(--muted);
     font-size: 13px;
     list-style: none;
   }
