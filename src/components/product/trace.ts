@@ -31,8 +31,14 @@ export const SPANS: Span[] = [
 ]
 
 export const ROOT = SPANS[0]
+
+export const SERVICES = [
+  { name: "frontend", tone: "s1", count: 2 },
+  { name: "checkout", tone: "s3", count: 2 },
+  { name: "inventory", tone: "s4", count: 1 },
+  { name: "payments", tone: "s2", count: 2 },
+] as const
 export const TRACE_START = "2026-11-06 14:02:09.112"
-export const LOG_LINK_RANGE = "2026-11-06 13:02:09 to 2026-11-06 15:02:09"
 
 export function hasChildren(index: number): boolean {
   return (SPANS[index + 1]?.depth ?? -1) > SPANS[index].depth
