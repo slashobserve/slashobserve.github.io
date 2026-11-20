@@ -32,7 +32,8 @@ const links = await getDocLinks()
   </section>
   <Section>
     <Split>
-      <div slot="start" class="statement inventory-statement">
+      <div slot="start" class="split-copy">
+        <p class="eyebrow">Inventory</p>
         <h2 class="h2">Every family in scope is accounted for.</h2>
         <p class="lead">
           Before it plans, the agent takes an inventory of every metric family in scope: a job, a service, a namespace,
@@ -48,10 +49,11 @@ const links = await getDocLinks()
       <div slot="end" data-in-view="rise"><MetricInventory /></div>
     </Split>
   </Section>
-  <Section>
+  <Section sunk>
     <Split rev>
       <div slot="start" data-in-view="rise"><VersionHistory /></div>
-      <div slot="end" class="statement">
+      <div slot="end" class="split-copy">
+        <p class="eyebrow">Versions</p>
         <h2 class="h2">Every change is a version.</h2>
         <p class="lead">
           A build becomes one version. A follow-up in the chat, an edit in the panel editor, an agent repair, each is
@@ -62,7 +64,8 @@ const links = await getDocLinks()
   </Section>
   <Section>
     <Split>
-      <div slot="start" class="statement">
+      <div slot="start" class="split-copy">
+        <p class="eyebrow">Activity</p>
         <h2 class="h2">Comments, requests and versions in one timeline.</h2>
         <p class="lead">
           Choose Activity on a dashboard and its comments, the requests people sent to the agent, proposals, annotations
@@ -86,16 +89,6 @@ const links = await getDocLinks()
 </script>
 
 <style>
-  .statement {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .inventory-statement {
-    gap: 18px;
-  }
-
   .inventory-chips {
     gap: 8px;
     flex-wrap: wrap;
