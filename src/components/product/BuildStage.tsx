@@ -177,6 +177,13 @@ const ROWS: { title: string; panels: { size: Size; body: ReactNode }[] }[] = [
   },
 ]
 
+const THUMBNAILS = [
+  { title: "Requests/s", d: "M0 14 C15 6 25 6 40 14 S65 22 80 12 S95 6 100 9" },
+  { title: "Error ratio", d: "M0 10 C15 18 25 18 40 10 S60 4 75 16 S92 20 100 12" },
+  { title: "p95 latency", d: "M0 12 C10 6 20 6 30 12 S50 18 60 12 S75 4 85 16 S95 14 100 10" },
+  { title: "Pods ready", d: "M0 12 C20 10 35 14 50 12 S80 10 100 12" },
+]
+
 const ROW_STARTS = ROWS.map((_, i) => ROWS.slice(0, i).reduce((count, row) => count + row.panels.length, 0))
 
 function Running({ step }: { step: number }) {
@@ -221,7 +228,21 @@ function Running({ step }: { step: number }) {
         </li>
       </ol>
       <span className="k stage-small">{runningFor(step)}</span>
+      <RequestLine />
     </div>
+  )
+}
+
+function RequestLine() {
+  return (
+    <span className="k stage-small stage-request">
+      <span className="mono">Request {REQUEST_ID.slice(0, 8)}</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+      </svg>
+      <span>Open in a new tab</span>
+    </span>
   )
 }
 
@@ -229,14 +250,19 @@ function Finished() {
   return (
     <div className="stage-turn-body">
       <span className="k stage-summary">
-        <span aria-hidden="true">▸</span> {stepSummary()}
+        <svg className="stage-caret" viewBox="0 0 10 10" aria-hidden="true">
+          <path d="M2 1v8l6-4z" />
+        </svg>
+        {stepSummary()}
       </span>
+      <RequestLine />
       <div className="stage-card">
         <div className="stage-thumbs" aria-hidden="true">
-          {[PODS, ROUTES].map((series, i) => (
-            <div key={i} className="stage-thumb">
-              <svg viewBox="0 0 400 130" preserveAspectRatio="none">
-                <path d={series[0].d} fill="none" stroke="var(--s1)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+          {THUMBNAILS.map(({ title, d }, i) => (
+            <div key={title} className="stage-thumb">
+              <span className="k stage-thumb-title">{title}</span>
+              <svg viewBox="0 0 100 24" preserveAspectRatio="none">
+                <path d={d} fill="none" stroke={`var(--${i === 2 ? "s2" : "s1"})`} strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
               </svg>
             </div>
           ))}
@@ -255,7 +281,6 @@ function Finished() {
           Saved as version 1, just now
         </span>
       </div>
-      <span className="k stage-small">Request {REQUEST_ID.slice(0, 8)}</span>
     </div>
   )
 }
@@ -372,6 +397,13 @@ export default function BuildStage() {
           })}
         </div>
         <div className="stage-rail">
+          <div className="stage-pane-head">
+            <span className="label">Chat</span>
+            <svg className="k" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
+          </div>
           <div ref={conversation} className="stage-conversation">
             <div className="stage-bubble">{PROMPT}</div>
             <div className="stage-turn">
@@ -385,7 +417,10 @@ export default function BuildStage() {
             <div className="stage-composer-box">
               <span className="k">{composer.placeholder}</span>
               <span className="stage-send" aria-hidden="true">
-                ↑
+                <svg viewBox="0 0 24 24">
+                  <path d="m5 12 7-7 7 7" />
+                  <path d="M12 19V5" />
+                </svg>
               </span>
             </div>
             <span className="k stage-note">{composer.note}</span>
