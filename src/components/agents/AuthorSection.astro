@@ -10,7 +10,8 @@ import Bylines from "../product/Bylines.astro"
     <div slot="start" data-in-view="rise">
       <Stage><Bylines /></Stage>
     </div>
-    <div slot="end" class="copy">
+    <div slot="end" class="split-copy">
+      <p class="eyebrow">Authors</p>
       <h2 class="h2">Every write has an author.</h2>
       <p class="lead">
         Each version, block and activity entry names who made it. The built-in agent shows as Observe Agent for admin, a connected
@@ -23,14 +24,3 @@ import Bylines from "../product/Bylines.astro"
   </Split>
 </Section>
 
-<style>
-  .copy {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .copy .lead {
-    font-size: 17px;
-  }
-</style>

@@ -7,7 +7,8 @@ import MessageToBlock from "../product/MessageToBlock.astro"
 
 <Section>
   <Split>
-    <div slot="start" class="copy">
+    <div slot="start" class="split-copy">
+      <p class="eyebrow">Discussion</p>
       <h2 class="h2">The discussion is the scratch space.</h2>
       <p class="lead">
         The page has one discussion, beside the blocks. Add to page puts a message's text on the page as a text block, and the
@@ -25,14 +26,3 @@ import MessageToBlock from "../product/MessageToBlock.astro"
   </Split>
 </Section>
 
-<style>
-  .copy {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .copy .lead {
-    font-size: 17px;
-  }
-</style>

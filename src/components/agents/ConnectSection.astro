@@ -12,7 +12,8 @@ import McpConfig from "../product/McpConfig.astro"
       <Stage><ConnectAgent /></Stage>
       <McpConfig />
     </div>
-    <div slot="end" class="copy">
+    <div slot="end" class="split-copy">
+      <p class="eyebrow">Connect</p>
       <h2 class="h2">Connect Claude Code or any MCP client.</h2>
       <p class="lead">
         Connect an agent shows one command, <span class="mono">claude mcp add --transport http slashobserve &lt;mcp url&gt;</span>, and
@@ -32,14 +33,9 @@ import McpConfig from "../product/McpConfig.astro"
 </Section>
 
 <style>
-  .copy,
   .drawings {
     display: flex;
     flex-direction: column;
     gap: 16px;
-  }
-
-  .copy .lead {
-    font-size: 17px;
   }
 </style>

@@ -14,13 +14,13 @@ const links = await getDocLinks()
 >
   <meta slot="head" name="robots" content="noindex" />
   <div class="not-found">
-    <PageOpening title="No data for this page">
+    <PageOpening eyebrow="404" title="No data for this page">
       <p class="lead">
         The address may be old, or the page moved when the docs were reorganised. Search the docs, or start from one
         of these.
       </p>
       <DocsSearch placeholder="Search docs" fromPath />
-      <div class="row actions">
+      <div class="open-actions">
         <a class="btn btn-primary" href="/">Home</a>
         {links.quickStart && <a class="btn" href={links.quickStart}>Quick start</a>}
         {links.reference && <a class="btn" href={links.reference}>Reference</a>}
@@ -34,9 +34,5 @@ const links = await getDocLinks()
     min-height: calc(100svh - 64px);
     padding-bottom: 64px;
     box-sizing: border-box;
-  }
-
-  .actions {
-    flex-wrap: wrap;
   }
 </style>

@@ -36,4 +36,14 @@ const { group } = Astro.props
   a:hover {
     color: var(--fg);
   }
+
+  @media (max-width: 900px) {
+    a {
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 0;
+      font-size: 14px;
+    }
+  }
 </style>

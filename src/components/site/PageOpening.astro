@@ -1,12 +1,40 @@
 ---
 interface Props {
   title: string
+  eyebrow: string
 }
 
-const { title } = Astro.props
+const { title, eyebrow } = Astro.props
 ---
 
-<section class="wrap open">
-  <h1 class="h1 h1-56">{title}</h1>
-  <slot />
+<section class="opening">
+  <div class="backdrop" aria-hidden="true"></div>
+  <div class="wrap open">
+    <p class="eyebrow">{eyebrow}</p>
+    <h1 class="h1 h1-56">{title}</h1>
+    <slot />
+  </div>
 </section>
+
+<style>
+  .opening {
+    position: relative;
+  }
+
+  .backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      radial-gradient(ellipse 50% 80% at 18% 0%, color-mix(in srgb, var(--brand) 11%, transparent), transparent),
+      radial-gradient(circle at 1px 1px, var(--border-strong) 1px, transparent 0);
+    background-size:
+      100% 100%,
+      28px 28px;
+    mask-image: linear-gradient(to bottom, #000 20%, transparent 95%);
+  }
+
+  .open > .eyebrow {
+    margin-bottom: -6px;
+  }
+</style>
