@@ -1,35 +1,78 @@
 ---
-const stores = [
-  { store: "Prometheus", language: "PromQL" },
-  { store: "ClickHouse", language: "SQL" },
-  { store: "Loki", language: "LogQL" },
-  { store: "Tempo", language: "TraceQL" },
-  { store: "Elasticsearch", language: "KQL" },
-  { store: "OpenSearch", language: "KQL" },
+const SIGNAL_ICONS = {
+  metrics: ["M4 19h16", "m5 15 4-5 4 3 6-8"],
+  database: ["M5 6.5c0-1.4 3.1-2.5 7-2.5s7 1.1 7 2.5-3.1 2.5-7 2.5-7-1.1-7-2.5Z", "M5 6.5v11c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-11", "M5 12c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5"],
+  logs: ["M4 6h16", "M4 11h11", "M4 16h14", "M4 21h7"],
+  traces: ["M4 5h10", "M8 10h9", "M11 15h9", "M6 20h5"],
+  search: ["M10.5 17a6.5 6.5 0 1 0 0-13 6.5 6.5 0 0 0 0 13Z", "m20 20-4.6-4.6"],
+} as const
+
+const stores: { store: string; icon: keyof typeof SIGNAL_ICONS }[] = [
+  { store: "Prometheus", icon: "metrics" },
+  { store: "ClickHouse", icon: "database" },
+  { store: "Loki", icon: "logs" },
+  { store: "Tempo", icon: "traces" },
+  { store: "Elasticsearch", icon: "search" },
+  { store: "OpenSearch", icon: "search" },
 ]
 ---
 
 <section class="strip">
   <div class="wrap">
-    <ul class="lined lined-6" aria-label="Stores">
-      {
-        stores.map(({ store, language }) => (
-          <li>
-            <span class="store">{store}</span>
-            <span class="mono k language">{language}</span>
-          </li>
-        ))
-      }
-    </ul>
+    <div class="marquee">
+      <div class="track">
+        {
+          [false, true].map((repeat) => (
+            <ul aria-label={repeat ? undefined : "Stores"} aria-hidden={repeat ? "true" : undefined} class:list={{ repeat }}>
+              {stores.map(({ store, icon }) => (
+                <li>
+                  <span class="tile">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      {SIGNAL_ICONS[icon].map((d) => (
+                        <path d={d} />
+                      ))}
+                    </svg>
+                  </span>
+                  <span class="store">{store}</span>
+                </li>
+              ))}
+            </ul>
+          ))
+        }
+      </div>
+    </div>
   </div>
 </section>
 
 <style>
   .strip {
-    padding-top: 40px;
+    padding-top: 48px;
+    padding-bottom: 64px;
+  }
+
+  .marquee {
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  }
+
+  .track {
+    display: flex;
+    width: max-content;
   }
 
   ul {
+    display: flex;
+    flex: none;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -37,16 +80,77 @@ const stores = [
 
   li {
     display: flex;
-    flex-direction: column;
-    gap: 2px;
+    flex: none;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    width: 240px;
+    padding: 10px 0;
   }
 
   .store {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 500;
   }
 
-  .language {
-    font-size: 12.5px;
+  .tile {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--muted);
+    color: var(--mfg);
+  }
+
+  @media (max-width: 900px) {
+    .strip {
+      padding-top: 36px;
+      padding-bottom: 44px;
+    }
+
+    li {
+      width: 190px;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .track {
+      animation: stores-scroll 36s linear infinite;
+    }
+
+    .marquee:hover .track {
+      animation-play-state: paused;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee {
+      mask-image: none;
+    }
+
+    .track,
+    ul {
+      flex-wrap: wrap;
+      justify-content: center;
+      width: auto;
+    }
+
+    li {
+      width: auto;
+      padding: 8px 20px;
+    }
+
+    .repeat {
+      display: none;
+    }
+  }
+
+  @keyframes stores-scroll {
+    to {
+      translate: -50% 0;
+    }
   }
 </style>
