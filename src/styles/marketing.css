@@ -95,6 +95,7 @@ body{margin:0}
 .ruled{border-top:1px solid var(--border)}
 .sunk{background:var(--chrome);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
 .sunk+.ruled{border-top:0}
+.box-grid::before{content:"";position:absolute;inset:0;background:var(--muted);mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Crect x='2.5' y='2.5' width='21' height='21' rx='6.4'/%3E%3C/svg%3E"),var(--box-grid-fade);mask-size:26px 26px,100% 100%;mask-position:top center,center;mask-composite:intersect}
 .eyebrow{margin:0;font-family:var(--font-mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--brand-text)}
 .band{background:var(--band-bg);color:var(--band-fg);border-top:1px solid var(--band-edge)}
 .band :focus-visible{outline-color:var(--band-fg)}
