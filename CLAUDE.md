@@ -73,6 +73,8 @@ Never hand-write docs pages in this repo; a docs change is a change to the core 
 - The band (`.band`) is ink in light and the chrome colour in dark, with a top border (`--band-edge`): `--band-bg` with `--band-fg` and `--band-mfg` text and `--band-line` borders; focus rings inside it use `--band-fg`.
 - `src/styles/marketing.css` is wrapped in `@layer site`, so unlayered component styles win over it without specificity tricks.
 - The header has two navs built from `headerNav(links)`: the desktop nav, hidden at 900px and below, and a phone menu panel opened by the hamburger.
+  `headerNav` returns a "Features" group (Observations, Dashboards, Agents, Signals) followed by Migrate and Docs; the desktop nav shows the group as a menu that opens on hover, click or focus, and the phone panel lists it under a heading.
+  The header bar is transparent while the page is at the top and takes its background and border once the page scrolls; the home hero's box grid runs up behind it.
   A new nav item shows in both, each link with `aria-current="page"` on its own page.
 - Never use gradient-filled text or buttons, backdrop blur, numbered section labels, emoji, stock illustrations or coloured left-border callouts.
 - Docs stay calm: flat background, 1px borders.

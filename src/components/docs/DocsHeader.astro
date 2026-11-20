@@ -4,11 +4,11 @@ import ThemeToggle from "@/components/site/ThemeToggle.astro"
 import Wordmark from "@/components/site/Wordmark.astro"
 import SearchTrigger from "@/components/ui/search/SearchTrigger.astro"
 import { getDocLinks } from "@/lib/get-doc-links"
-import { docsHomeHref, GITHUB_URL, headerNav, isCurrentPage } from "@/lib/site-nav"
+import { docsHomeHref, GITHUB_URL, isCurrentPage, PRODUCT_LINKS } from "@/lib/site-nav"
 
 const links = await getDocLinks()
 const docsHref = docsHomeHref(links)
-const siteNav = headerNav(links).filter((item) => !item.href.startsWith("/docs/"))
+const siteNav = PRODUCT_LINKS
 const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? "page" : undefined)
 ---
 

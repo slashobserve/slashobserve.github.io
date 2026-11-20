@@ -1,6 +1,8 @@
 import type { DocLinks } from "./doc-links"
 
 export type NavItem = { label: string; href: string }
+export type NavGroup = { label: string; items: NavItem[] }
+export type HeaderEntry = NavItem | NavGroup
 
 export const GITHUB_URL = "https://github.com/slashobserve/slashobserve"
 export const DASHBOARDS_PATH = "/dashboards/"
@@ -11,13 +13,31 @@ export const SIGNALS_PATH = "/signals/"
 export const DOCS_HOME_PATH = "/docs/"
 export const LLMS_TXT_PATH = "/llms.txt"
 
-export const PRODUCT_LINKS: NavItem[] = [
+export const FEATURE_LINKS: NavItem[] = [
   { label: "Observations", href: OBSERVATIONS_PATH },
   { label: "Dashboards", href: DASHBOARDS_PATH },
   { label: "Agents", href: AGENTS_PATH },
   { label: "Signals", href: SIGNALS_PATH },
-  { label: "Migrate", href: MIGRATE_PATH },
 ]
+
+export const FEATURE_BLURBS: Record<string, string> = {
+  [OBSERVATIONS_PATH]: "Investigation pages people and agents write together",
+  [DASHBOARDS_PATH]: "Built by the agent, every panel run before the save",
+  [AGENTS_PATH]: "Observe Agent, MCP clients and service accounts",
+  [SIGNALS_PATH]: "Metrics, logs and traces from six stores",
+}
+
+const MIGRATE_LINK: NavItem = { label: "Migrate", href: MIGRATE_PATH }
+
+export const PRODUCT_LINKS: NavItem[] = [...FEATURE_LINKS, MIGRATE_LINK]
+
+export function isNavGroup(entry: HeaderEntry): entry is NavGroup {
+  return "items" in entry
+}
+
+export function holdsCurrentPage(group: NavGroup, pathname: string): boolean {
+  return group.items.some((item) => isCurrentPage(item.href, pathname))
+}
 
 export function getStartedHref(links: DocLinks): string | null {
   return links.quickStart ?? links.selfHost
@@ -35,8 +55,8 @@ export function isCurrentPage(href: string, pathname: string): boolean {
   return !href.includes("#") && href === pathname
 }
 
-export function headerNav(links: DocLinks): NavItem[] {
-  return [...PRODUCT_LINKS, ...navItems([["Docs", docsHomeHref(links)]])]
+export function headerNav(links: DocLinks): HeaderEntry[] {
+  return [{ label: "Features", items: FEATURE_LINKS }, MIGRATE_LINK, ...navItems([["Docs", docsHomeHref(links)]])]
 }
 
 export function footerColumns(links: DocLinks): { title: string; items: NavItem[] }[] {
