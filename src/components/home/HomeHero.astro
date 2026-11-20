@@ -42,16 +42,31 @@ const { quickStart } = Astro.props
 
   .backdrop {
     position: absolute;
-    inset: 0 0 auto;
+    inset: -65px 0 auto;
     z-index: -1;
-    height: 620px;
-    background-image:
-      radial-gradient(ellipse 60% 70% at 50% 0%, color-mix(in srgb, var(--brand) 13%, transparent), transparent),
-      radial-gradient(circle at 1px 1px, var(--border-strong) 1px, transparent 0);
-    background-size:
-      100% 100%,
-      28px 28px;
-    mask-image: linear-gradient(to bottom, #000 30%, transparent);
+    height: 685px;
+    background-image: radial-gradient(
+      ellipse 60% 70% at 50% 0%,
+      color-mix(in srgb, var(--brand) 13%, transparent),
+      transparent
+    );
+  }
+
+  .backdrop::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--muted);
+    mask-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Crect x='2.5' y='2.5' width='21' height='21' rx='6.4'/%3E%3C/svg%3E"),
+      radial-gradient(ellipse 62% 78% at 50% 22%, black 25%, transparent);
+    mask-size:
+      26px 26px,
+      100% 100%;
+    mask-position:
+      top center,
+      center;
+    mask-composite: intersect;
   }
 
   .hero {
@@ -91,7 +106,8 @@ const { quickStart } = Astro.props
 
   @media (max-width: 900px) {
     .backdrop {
-      height: 420px;
+      top: -57px;
+      height: 477px;
     }
 
     .hero {
