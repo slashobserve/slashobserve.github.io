@@ -48,16 +48,18 @@ const stats = [
   <ImportStats stats={stats} />
   <MoveTour links={links} />
   <ImportCoverageTable />
-  <Band>
-    <h2 class="h2 band-title">Bring the dashboards this afternoon. Keep the queries you know.</h2>
-    <p class="p">Point it at a Grafana you can read, or at the index pattern your Discover tab uses. Nothing is written back.</p>
-    {
-      links.importGuide && (
-        <a class="btn btn-band" href={links.importGuide}>
-          Import guide
-        </a>
-      )
-    }
+  <Band class="closing">
+    <h2 class="h2">Bring the dashboards this afternoon. Keep the queries you know.</h2>
+    <div class="closing-side">
+      <p class="p">Point it at a Grafana you can read, or at the index pattern your Discover tab uses. Nothing is written back.</p>
+      {
+        links.importGuide && (
+          <a class="btn btn-band" href={links.importGuide}>
+            Import guide
+          </a>
+        )
+      }
+    </div>
   </Band>
 </MarketingLayout>
 
@@ -68,7 +70,25 @@ const stats = [
 </script>
 
 <style>
-  .band-title {
-    max-width: 22ch;
+  :global(.band-inner.closing) {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 64px;
+    align-items: center;
+  }
+
+  .closing-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    min-width: 0;
+  }
+
+  @media (max-width: 900px) {
+    :global(.band-inner.closing) {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 20px;
+    }
   }
 </style>
