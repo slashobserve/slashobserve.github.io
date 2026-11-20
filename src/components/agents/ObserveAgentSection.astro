@@ -4,9 +4,10 @@ import Split from "../site/Split.astro"
 import ChatFollowUp from "../product/ChatFollowUp.astro"
 ---
 
-<Section ruled={false}>
+<Section ruled={false} sunk>
   <Split>
-    <div slot="start" class="copy">
+    <div slot="start" class="split-copy">
+      <p class="eyebrow">Observe Agent</p>
       <h2 class="h2">Observe Agent, on the model you configure.</h2>
       <p class="lead">
         Observe Agent is built in and runs on the model you set on the server: Anthropic, or any OpenAI-compatible server, including
@@ -25,14 +26,3 @@ import ChatFollowUp from "../product/ChatFollowUp.astro"
   </Split>
 </Section>
 
-<style>
-  .copy {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .copy .lead {
-    font-size: 17px;
-  }
-</style>
