@@ -1,0 +1,107 @@
+---
+interface Props {
+  answer: string
+  change: string
+  menu?: boolean
+  note?: string
+}
+
+const { answer, change, menu = false, note } = Astro.props
+
+const icons = {
+  chevron: '<path d="m6 9 6 6 6-6"/>',
+  more: '<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>',
+}
+---
+
+<div class="answer">
+  <p class="answer-text">{answer}</p>
+  <p class="k change">Suggested change: {change}</p>
+  <span class="row answer-actions">
+    <span class="chip">1 evidence panel<svg viewBox="0 0 24 24" aria-hidden="true" set:html={icons.chevron} /></span>
+    <span class="revise">Revise the dashboard</span>
+    {menu && <span class="ghost" aria-hidden="true"><svg viewBox="0 0 24 24" set:html={icons.more} /></span>}
+  </span>
+  {note && <p class="k note">{note}</p>}
+</div>
+
+<style>
+  .answer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: var(--muted);
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .answer-text {
+    font-size: 12.5px;
+  }
+
+  .change {
+    overflow-wrap: anywhere;
+  }
+
+  .answer-actions {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  svg {
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .chip {
+    gap: 4px;
+    font-size: 11.5px;
+  }
+
+  .chip svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .revise {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 6px;
+    background: var(--primary);
+    color: var(--pfg);
+    font-size: 11.5px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .ghost {
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    margin-left: auto;
+    color: var(--mfg);
+  }
+
+  .ghost svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .note {
+    font-size: 11.5px;
+  }
+</style>

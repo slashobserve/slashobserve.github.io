@@ -1,0 +1,79 @@
+---
+interface Props {
+  kind: "person" | "ask"
+  x: string
+  y: string
+  initials?: string
+  tint?: 1 | 2 | 3 | 4
+  label: string
+}
+
+const { kind, x, y, initials, tint = 1, label } = Astro.props
+const at = '<circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/>'
+---
+
+<span
+  class:list={["pin", kind === "ask" ? "ask" : `tint-${tint}`]}
+  style={`left:${x};top:${y}`}
+  role="img"
+  aria-label={label}
+>
+  {kind === "ask" ? <svg viewBox="0 0 24 24" aria-hidden="true" set:html={at} /> : <b aria-hidden="true">{initials}</b>}
+</span>
+
+<style>
+  .pin {
+    position: absolute;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    box-sizing: border-box;
+    border: 1.5px solid var(--card);
+    border-radius: 50% 50% 50% 2px;
+    transform: translateY(-100%);
+    font-size: 9.5px;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .pin b {
+    font-weight: inherit;
+  }
+
+  .ask {
+    background: var(--primary);
+    color: var(--pfg);
+  }
+
+  .ask svg {
+    width: 12px;
+    height: 12px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .tint-1 {
+    background: var(--p1);
+    color: var(--p1-fg);
+  }
+
+  .tint-2 {
+    background: var(--p2);
+    color: var(--p2-fg);
+  }
+
+  .tint-3 {
+    background: var(--p3);
+    color: var(--p3-fg);
+  }
+
+  .tint-4 {
+    background: var(--p4);
+    color: var(--p4-fg);
+  }
+</style>

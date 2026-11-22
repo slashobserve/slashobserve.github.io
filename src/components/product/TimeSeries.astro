@@ -21,6 +21,7 @@ const { viewBox, height, yTicks, xTicks, series } = Astro.props
     <div class="ts-series" data-reveal>
       <Sparklines viewBox={viewBox} height="100%" series={series.map(({ d, tone }) => ({ d, tone }))} />
     </div>
+    <slot />
   </div>
   <span></span>
   <div class="ts-x">{xTicks.map((tick) => <span>{tick}</span>)}</div>

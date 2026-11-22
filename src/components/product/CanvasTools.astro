@@ -1,0 +1,96 @@
+---
+interface Props {
+  active: "comment" | "ask"
+  hint: string
+}
+
+const { active, hint } = Astro.props
+
+const tools = [
+  {
+    id: "select",
+    name: "Select",
+    icon: '<path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z"/>',
+  },
+  {
+    id: "comment",
+    name: "Comment",
+    icon: '<path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/><path d="M12 8v6"/><path d="M9 11h6"/>',
+  },
+  {
+    id: "ask",
+    name: "Ask",
+    icon: '<circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/>',
+  },
+]
+---
+
+<div class="tools-row">
+  <span class="tools" role="group" aria-label="Canvas tools">
+    {
+      tools.map(({ id, name, icon }) => (
+        <span class:list={["tool", { pressed: id === active }]}>
+          <svg viewBox="0 0 24 24" aria-hidden="true" set:html={icon} />
+          {name}
+        </span>
+      ))
+    }
+  </span>
+  <span class="k tools-hint">{hint}</span>
+</div>
+
+<style>
+  .tools-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px 12px;
+    min-width: 0;
+  }
+
+  .tools {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    height: 32px;
+    padding: 0 4px;
+    box-sizing: border-box;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+    font-size: 12px;
+  }
+
+  .tool {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 24px;
+    padding: 0 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  .tool.pressed {
+    background: var(--accent-container);
+    color: var(--on-accent-container);
+  }
+
+  .tool svg {
+    flex: none;
+    width: 13px;
+    height: 13px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .tools-hint {
+    min-width: 0;
+    font-size: 12px;
+    text-align: center;
+  }
+</style>

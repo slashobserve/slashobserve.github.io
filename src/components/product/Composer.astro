@@ -1,0 +1,96 @@
+---
+interface Props {
+  context?: string[]
+  delivery: string[]
+  placeholder: string
+  class?: string
+}
+
+const { context = [], delivery, placeholder, class: className } = Astro.props
+
+const icons = {
+  at: '<circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/>',
+  send: '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>',
+}
+---
+
+<div class:list={["composer", className]}>
+  <span class="chips">
+    {context.map((chip) => <span class="chip">{chip}</span>)}
+    {delivery.map((chip) => <span class="chip k">{chip}</span>)}
+  </span>
+  <span class="k placeholder">{placeholder}</span>
+  <span class="row composer-foot">
+    <svg class="k at" viewBox="0 0 24 24" aria-hidden="true" set:html={icons.at} />
+    <span class="send" aria-hidden="true"><svg viewBox="0 0 24 24" set:html={icons.send} /></span>
+  </span>
+</div>
+
+<style>
+  .composer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+    padding: 8px 8px 8px 10px;
+    border-radius: 8px;
+    background: var(--muted);
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .chip {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 11.5px;
+  }
+
+  .placeholder {
+    padding: 2px 2px 4px;
+    font-size: 12.5px;
+  }
+
+  .composer-foot {
+    gap: 8px;
+  }
+
+  svg {
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .at {
+    width: 15px;
+    height: 15px;
+    margin-left: auto;
+  }
+
+  .send {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    background: var(--primary);
+    color: var(--pfg);
+    opacity: 0.5;
+  }
+
+  .send svg {
+    width: 13px;
+    height: 13px;
+  }
+</style>

@@ -1,0 +1,139 @@
+---
+import AskBox from "./AskBox.astro"
+import CanvasPin from "./CanvasPin.astro"
+import CanvasTools from "./CanvasTools.astro"
+import Composer from "./Composer.astro"
+import Panel from "./Panel.astro"
+import TimeSeries from "./TimeSeries.astro"
+import Window from "./Window.astro"
+
+interface Props {
+  mode: "comment" | "ask"
+}
+
+const { mode } = Astro.props
+
+const routes = [
+  { name: "/checkout", tone: "s1", d: "M0 52 C30 48 60 40 100 44 S160 56 200 40 S260 26 300 32" },
+  { name: "/cart", tone: "s3", d: "M0 62 C40 60 70 56 100 58 S170 66 200 60 S260 54 300 56" },
+  { name: "/product/{id}", tone: "s2", d: "M0 36 C40 40 70 30 110 26 S170 22 200 32 S260 40 300 34" },
+] as const
+
+const hints = {
+  comment: "Click a spot on a panel to comment on it. Esc returns to Select.",
+  ask: "Click a spot on a panel to ask the agent about it. Esc returns to Select.",
+}
+
+const commentChips = ["Requests per second by route", "Range 22 Nov 13:40 to 13:55 UTC", "last hour"]
+const askChips = ["Server errors", "Value", "2.1%", "last hour"]
+---
+
+<Window label={mode === "comment" ? "A dashboard in Comment mode" : "A dashboard in Ask mode"}>
+  <div class="canvas">
+    {
+      mode === "comment" ? (
+        <>
+          <Panel title="Requests per second by route" datasource="prom">
+            <TimeSeries
+              viewBox="0 0 300 80"
+              height="150px"
+              yTicks={["600 req/s", "300 req/s", "0 req/s"]}
+              xTicks={["13:05", "13:35", "14:05"]}
+              series={[...routes]}
+            >
+              <span class="range" aria-hidden="true" />
+              <CanvasPin kind="person" initials="MK" tint={2} x="33%" y="50%" label="A comment by MK" />
+              <CanvasPin kind="ask" x="88%" y="38%" label="Your question on Requests per second by route" />
+            </TimeSeries>
+          </Panel>
+          <div class="box">
+            <Composer
+              context={commentChips}
+              delivery={["To: everyone here", "Visible to: everyone here"]}
+              placeholder="Write a comment"
+            />
+            <span class="k foot-line">Enter to send, Shift+Enter for a new line.</span>
+          </div>
+        </>
+      ) : (
+        <>
+          <div class="stats">
+            <Panel title="Requests per second" datasource="prom">
+              <span class="pv">412<span class="k unit"> req/s</span></span>
+            </Panel>
+            <Panel title="Server errors" datasource="prom">
+              <span class="pv fg-crit">
+                <span class="value-mark">2.1<span class="unit"> %</span></span>
+              </span>
+            </Panel>
+          </div>
+          <AskBox class="ask-draft" chips={askChips} />
+        </>
+      )
+    }
+    <CanvasTools active={mode} hint={hints[mode]} />
+  </div>
+</Window>
+
+<style>
+  .canvas {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+    padding: 14px 16px;
+    background: var(--canvas);
+    font-size: 12px;
+  }
+
+  .range {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 58%;
+    width: 16%;
+    border-radius: 3px;
+    background: var(--accent-container);
+    opacity: 0.6;
+  }
+
+  .box {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-self: flex-end;
+    width: min(100%, 300px);
+    padding: 8px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    background: var(--card);
+  }
+
+  .foot-line {
+    padding: 0 2px;
+    font-size: 11.5px;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .unit {
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .value-mark {
+    padding: 0 4px;
+    border-radius: 4px;
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  .canvas :global(.ask-draft) {
+    align-self: flex-end;
+    width: min(100%, 300px);
+  }
+</style>

@@ -1,0 +1,154 @@
+---
+import AnswerCard from "./AnswerCard.astro"
+import Composer from "./Composer.astro"
+import Mark from "./Mark.astro"
+
+interface Asked {
+  question: string
+  answer: string
+  change: string
+}
+
+interface Props {
+  chips: string[]
+  asked?: Asked
+  class?: string
+}
+
+const { chips, asked, class: className } = Astro.props
+
+const icons = {
+  close: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  lock: '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+}
+---
+
+<div class:list={["ask-box", className]} role="group" aria-label={asked ? "Your question on a spot, with the answer" : "Ask about this"}>
+  {
+    asked ? (
+      <>
+        <div class="box-head">
+          <span class="k head-text">{chips.join(" · ")}</span>
+          <svg class="k" viewBox="0 0 24 24" aria-hidden="true" set:html={icons.close} />
+        </div>
+        <div class="turns">
+          <div class="you">
+            <span class="you-name">You</span>
+            <p>{asked.question}</p>
+          </div>
+          <div class="agent-turn">
+            <Mark kind="agent" size={22} />
+            <AnswerCard
+              answer={asked.answer}
+              change={asked.change}
+              menu
+              note="A revision is visible to everyone who can see the dashboard."
+            />
+          </div>
+        </div>
+        <Composer class="follow-up" delivery={["To: Observe Agent"]} placeholder="Ask a follow-up" />
+      </>
+    ) : (
+      <div class="draft">
+        <Composer context={chips} delivery={["To: Observe Agent"]} placeholder="Ask about this" />
+        <span class="k foot-line">Enter to send, Shift+Enter for a new line.</span>
+        <span class="k foot-line">claude-haiku-5-5, medium effort</span>
+      </div>
+    )
+  }
+  <p class="k private"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={icons.lock} />Only you and Admins can see this.</p>
+</div>
+
+<style>
+  .ask-box {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border-radius: 10px;
+    background: var(--card);
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  svg {
+    flex: none;
+    width: 13px;
+    height: 13px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .box-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 10px 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .head-text {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .turns {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .you {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .you-name {
+    font-weight: 500;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .agent-turn {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 9px;
+  }
+
+  .draft {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .ask-box :global(.follow-up) {
+    margin: 0 12px 10px;
+  }
+
+  .foot-line {
+    padding: 0 2px;
+    font-size: 11.5px;
+  }
+
+  .private {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-top: 1px solid var(--border);
+    font-size: 11.5px;
+  }
+
+  .private svg {
+    width: 12px;
+    height: 12px;
+  }
+</style>
