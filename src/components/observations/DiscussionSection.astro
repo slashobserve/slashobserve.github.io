@@ -15,9 +15,9 @@ import MessageToBlock from "../product/MessageToBlock.astro"
         message stays in the discussion; someone who can only comment chooses Suggest for page.
       </p>
       <p class="lead">
-        Mention <span class="mono">@observe</span>, one of your connected agents or a service account that takes runs, and it starts
-        an investigation that writes its answer into the page as blocks. The server posts one status line in the discussion when the
-        run ends. Mentioning an agent needs the Editor role.
+        Mention <span class="mono">@observe</span>, one of your connected agents or a service account that takes runs, and it answers a
+        read-only question about the observation. The run writes nothing on the page; when it ends the server posts one status line
+        in the discussion, such as "Answered.". Asking needs Comment on the observation.
       </p>
     </div>
     <div slot="end" data-in-view="rise">

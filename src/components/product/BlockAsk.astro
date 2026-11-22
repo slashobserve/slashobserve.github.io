@@ -1,0 +1,168 @@
+---
+import CanvasPin from "./CanvasPin.astro"
+import Mark from "./Mark.astro"
+import PanelBlock from "./PanelBlock.astro"
+import TimeSeries from "./TimeSeries.astro"
+
+const timeouts = [
+  {
+    name: "checkout-7d9",
+    tone: "s1",
+    d: "M0 112 L40 111 L80 112 L120 111 L160 112 L196 110 L208 70 L220 40 L240 36 L270 38 L300 34 L330 37 L360 35 L400 36",
+  },
+  {
+    name: "checkout-2f4",
+    tone: "s2",
+    d: "M0 114 L40 113 L80 114 L120 113 L160 114 L200 113 L214 80 L230 60 L260 58 L290 61 L320 57 L360 60 L400 58",
+  },
+] as const
+
+const icons = {
+  comment:
+    '<path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/><path d="M12 8v6"/><path d="M9 11h6"/>',
+  at: '<circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/>',
+  right: '<path d="m9 18 6-6-6-6"/>',
+}
+---
+
+<div class="block-ask" role="group" aria-label="Comment and Ask on observation blocks">
+  <div class="text-wrap">
+    <p class="text">
+      The 5xx on /api/checkout start 3 minutes after the rollout, when <span class="selected"
+        >the payments client began timing out</span
+      >.
+    </p>
+    <span class="sel-tools" role="group" aria-label="Selected text">
+      <span class="sel-tool"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={icons.comment} />Comment</span>
+      <span class="sel-tool"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={icons.at} />Ask</span>
+    </span>
+  </div>
+  <PanelBlock title="Payments client timeouts by pod" caption="prom, live" live author="person" initials="JP" tint={4} byline="Added by Jo Park">
+    <TimeSeries
+      viewBox="0 0 400 120"
+      height="96px"
+      yTicks={["40/s", "20/s", "0/s"]}
+      xTicks={["16:10", "16:30", "16:50", "17:00"]}
+      series={[...timeouts]}
+    >
+      <CanvasPin kind="person" initials="AD" tint={1} x="52%" y="56%" label="A comment by admin" />
+      <CanvasPin kind="ask" x="56%" y="30%" label="Your question on Payments client timeouts by pod" />
+    </TimeSeries>
+  </PanelBlock>
+  <div class="run">
+    <Mark kind="agent" size={24} />
+    <span class="run-head">Observe Agent finished</span>
+    <span class="k run-link">View the run</span>
+    <span class="k run-details"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={icons.right} />Run details</span>
+  </div>
+  <div class="answer">
+    <p class="answer-title">Both checkout pods time out on payments</p>
+    <p class="text">
+      checkout-7d9 and checkout-2f4 began timing out on payments at 16:43, two minutes after the client timeout dropped to 2s.
+    </p>
+  </div>
+</div>
+
+<style>
+  .block-ask {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .text-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .text {
+    max-width: 640px;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  .selected {
+    border-radius: 2px;
+    background: var(--accent-container);
+    color: var(--on-accent-container);
+  }
+
+  .sel-tools {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+    font-size: 12px;
+  }
+
+  .sel-tool {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 24px;
+    padding: 0 8px;
+    border-radius: 6px;
+  }
+
+  svg {
+    flex: none;
+    width: 13px;
+    height: 13px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .run {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: var(--card);
+  }
+
+  .run-head {
+    flex: 1;
+    min-width: 0;
+    font-weight: 600;
+  }
+
+  .run-link {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .run-details {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .answer {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .answer-title {
+    font-size: 15px;
+    font-weight: 600;
+  }
+</style>

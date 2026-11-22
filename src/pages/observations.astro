@@ -1,4 +1,5 @@
 ---
+import BlockAskSection from "../components/observations/BlockAskSection.astro"
 import BlocksSection from "../components/observations/BlocksSection.astro"
 import DiscussionSection from "../components/observations/DiscussionSection.astro"
 import PublishSection from "../components/observations/PublishSection.astro"
@@ -46,6 +47,7 @@ const links = await getDocLinks()
   <StartSection />
   <BlocksSection />
   <DiscussionSection />
+  <BlockAskSection />
   <PublishSection />
   <RunsOnBand quickStart={links.quickStart} />
 </MarketingLayout>
