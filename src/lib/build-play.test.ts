@@ -81,14 +81,14 @@ describe("topRowTitle", () => {
 })
 
 describe("composerText", () => {
-  test("asks for a dashboard while building and for a change once done", () => {
+  test("waits for the build, then asks about the dashboard it made", () => {
     expect(composerText(false)).toEqual({
-      placeholder: "Describe a dashboard, like: checkout health by pod, last 6h",
-      note: "Wait for the dashboard, then ask for changes.",
+      placeholder: "Ask a follow-up, or describe a dashboard to build",
+      note: "Wait for the answer, or cancel the run, then ask a follow-up.",
     })
     expect(composerText(true)).toEqual({
-      placeholder: "Ask for another change to Checkout health",
-      note: "Each change is saved as a new version of the dashboard.",
+      placeholder: "Ask about Checkout health",
+      note: "The dashboard changes only when you choose Revise the dashboard on an answer.",
     })
   })
 })
