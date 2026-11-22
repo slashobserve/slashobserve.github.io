@@ -7,12 +7,14 @@ import { assertSiteSafe } from "./reference/markdown"
 import { apiPages } from "./reference/openapi"
 import { observespecPages, type Example } from "./reference/observespec"
 import { summarizeConformance, type AreaInput } from "./sync/conformance"
+import { chartAppVersion } from "./sync/core-release"
 import { summarizeGolden } from "./sync/corpus"
 import { INSTALL_SCRIPT_URL, isInstallScript } from "./sync/install-script"
 import { transformPage } from "./sync/markdown"
 import {
   API_DIR,
   API_SOURCE,
+  CHART_SOURCE,
   CONFORMANCE_SOURCE,
   CORPUS_GOLDEN_SOURCE,
   CORPUS_OUT,
@@ -44,6 +46,7 @@ function requireCore(core: string): void {
     CORPUS_GOLDEN_SOURCE,
     CONFORMANCE_SOURCE,
     `${API_SOURCE}/openapi.yaml`,
+    CHART_SOURCE,
   ].filter((entry) => !existsSync(path.join(core, entry)))
   if (missing.length === 0) return
   throw new Error(
@@ -246,6 +249,7 @@ async function prebuild(): Promise<string> {
   api.forEach(assertSiteSafe)
   const installScript = await readInstallScript(core)
   const version = readSiteVersion()
+  const release = chartAppVersion(await readFile(path.join(core, CHART_SOURCE), "utf8"))
 
   await rm(DOCS_OUT, { recursive: true, force: true })
   await rm(path.dirname(SCHEMA_OUT), { recursive: true, force: true })
@@ -273,7 +277,7 @@ async function prebuild(): Promise<string> {
   await writeFile(COVERAGE_OUT, JSON.stringify({ core: commit, ...conformance }, null, 2) + "\n")
 
   await mkdir(path.dirname(SITE_FACTS_PATH), { recursive: true })
-  await writeFile(SITE_FACTS_PATH, JSON.stringify({ version }, null, 2) + "\n")
+  await writeFile(SITE_FACTS_PATH, JSON.stringify({ version, release }, null, 2) + "\n")
 
   await mkdir(path.dirname(INSTALL_SCRIPT_OUT), { recursive: true })
   await writeFile(INSTALL_SCRIPT_OUT, installScript.text)

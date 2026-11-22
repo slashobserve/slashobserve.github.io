@@ -1,0 +1,58 @@
+---
+import { readSiteFacts, showsPreReleaseNotice } from "../../lib/site-facts"
+
+interface Props {
+  href: string | null
+}
+
+const { href } = Astro.props
+const shown = showsPreReleaseNotice(readSiteFacts())
+const title = "Under active development. Releases before 1.0 can include breaking changes."
+---
+
+{
+  shown &&
+    (href ? (
+      <a class="pre-release-tag" href={href} title={title}>
+        <span class="tag">Pre-1.0</span>
+      </a>
+    ) : (
+      <span class="pre-release-tag" title={title}>
+        <span class="tag">Pre-1.0</span>
+      </span>
+    ))
+}
+
+<style>
+  .pre-release-tag {
+    display: inline-flex;
+    align-items: center;
+    height: 44px;
+    text-decoration: none;
+  }
+
+  .tag {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 7px;
+    background: var(--card);
+    color: var(--mfg);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+
+  a.pre-release-tag:hover .tag {
+    color: var(--fg);
+  }
+
+  a.pre-release-tag:focus-visible {
+    outline: none;
+  }
+
+  a.pre-release-tag:focus-visible .tag {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+</style>

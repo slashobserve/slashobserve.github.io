@@ -22,6 +22,7 @@ export type DocLinkKey =
   | "switchFromGrafana"
   | "logsAndTraces"
   | "askAndComment"
+  | "upgrades"
 
 export type DocLinks = Record<DocLinkKey, string | null>
 
@@ -49,6 +50,7 @@ export const DOC_LINK_CANDIDATES: Record<DocLinkKey, readonly string[]> = {
   switchFromGrafana: ["docs/use/switch-from-grafana"],
   logsAndTraces: ["docs/use/logs-and-traces"],
   askAndComment: ["docs/use/ask-and-comment"],
+  upgrades: ["docs/operate/upgrades-and-backups"],
 }
 
 export function resolveCandidate(candidate: string, existingIds: ReadonlySet<string>): string | null {
