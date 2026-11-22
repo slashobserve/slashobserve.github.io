@@ -24,6 +24,7 @@ const { as: Tag = "div", author, initials, tint, name, verb, time, framed = fals
       <span class="k time">{time}</span>
     </div>
     <p><slot /></p>
+    <slot name="after" />
     <span class="actions"><span>Reply</span><span>Add to page</span></span>
   </div>
 </Tag>

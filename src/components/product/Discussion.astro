@@ -1,4 +1,5 @@
 ---
+import AnswerCard from "./AnswerCard.astro"
 import Mention from "./Mention.astro"
 import Message from "./Message.astro"
 
@@ -34,6 +35,10 @@ const send = '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>'
     </Message>
     <Message as="li" seq={1} author="agent" name="Observe Agent for admin" verb="replied" time="17:03">
       Answered.
+      <AnswerCard
+        slot="after"
+        answer="Yes. The 5xx on /api/checkout are payments client timeouts: both checkout pods began timing out at 16:43, two minutes after the client timeout dropped to 2s."
+      />
     </Message>
     <Message as="li" seq={2} author="person" initials="JP" tint={4} name="Jo Park" verb="commented" time="17:06">
       That matches the new 2s client timeout in the payments chart.
