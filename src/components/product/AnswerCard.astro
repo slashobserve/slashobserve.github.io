@@ -1,7 +1,7 @@
 ---
 interface Props {
   answer: string
-  change: string
+  change?: string
   menu?: boolean
   note?: string
 }
@@ -16,10 +16,10 @@ const icons = {
 
 <div class="answer">
   <p class="answer-text">{answer}</p>
-  <p class="k change">Suggested change: {change}</p>
+  {change && <p class="k change">Suggested change: {change}</p>}
   <span class="row answer-actions">
     <span class="chip">1 evidence panel<svg viewBox="0 0 24 24" aria-hidden="true" set:html={icons.chevron} /></span>
-    <span class="revise">Revise the dashboard</span>
+    {change && <span class="revise">Revise the dashboard</span>}
     {menu && <span class="ghost" aria-hidden="true"><svg viewBox="0 0 24 24" set:html={icons.more} /></span>}
   </span>
   {note && <p class="k note">{note}</p>}

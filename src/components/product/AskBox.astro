@@ -6,7 +6,7 @@ import Mark from "./Mark.astro"
 interface Asked {
   question: string
   answer: string
-  change: string
+  change?: string
 }
 
 interface Props {
@@ -42,7 +42,7 @@ const icons = {
               answer={asked.answer}
               change={asked.change}
               menu
-              note="A revision is visible to everyone who can see the dashboard."
+              note={asked.change && "A revision is visible to everyone who can see the dashboard."}
             />
           </div>
         </div>
