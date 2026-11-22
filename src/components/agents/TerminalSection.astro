@@ -19,8 +19,9 @@ const { cliObservations } = Astro.props
         <span class="mono">observe o</span> starts, reads, extends, resolves and publishes observations, and keeps or discards the
         blocks someone suggested. <span class="mono">observe proposals</span> lists, shows, merges and discards proposals. <span class="mono">observe</span> also has
         commands for dashboards, folders, comments, annotations, saved searches, datasources, logs, traces, metrics,
-        activity, search, access requests, agent requests and Grafana imports. It has no commands for the Inbox,
-        dashboard pins, the home dashboard or taking runs as an agent.
+        activity, the audit trail, search, access requests, agent requests, chats and Grafana imports. It has no commands for the Inbox,
+        dashboard pins, the home dashboard or taking runs as an agent. Comments and questions take <span class="mono">--at</span> to
+        point at one spot, and <span class="mono">observe comments list --json</span> prints each thread's spot and the agent's answer.
       </p>
       {
         cliObservations && (

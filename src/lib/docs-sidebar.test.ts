@@ -50,6 +50,15 @@ describe("orderPages", () => {
     expect(titles(first!.pages)).toEqual(["What is SlashObserve", "Quick start", "Run your own deployment"])
   })
 
+  test("puts ask and comment right after chat in Use", () => {
+    const [first] = orderPages([
+      page("use/review", "Comments and review"),
+      page("use/ask-and-comment", "Ask and comment on a dashboard"),
+      page("use/chat", "Chat"),
+    ])
+    expect(titles(first!.pages)).toEqual(["Chat", "Ask and comment on a dashboard", "Comments and review"])
+  })
+
   test("puts unlisted pages after listed ones, by title", () => {
     const [first] = orderPages([
       page("operate/outbound-access", "Outbound access"),

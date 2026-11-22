@@ -1,12 +1,14 @@
 ---
 import "../components/product/build-stage.css"
 import BuildStage from "../components/product/BuildStage"
+import CanvasMode from "../components/product/CanvasMode.astro"
 import DashboardActivity from "../components/product/DashboardActivity.astro"
 import MetricInventory from "../components/product/MetricInventory.astro"
 import VersionHistory from "../components/product/VersionHistory.astro"
 import PageOpening from "../components/site/PageOpening.astro"
 import RunsOnBand from "../components/site/RunsOnBand.astro"
 import Section from "../components/site/Section.astro"
+import SectionHead from "../components/site/SectionHead.astro"
 import Split from "../components/site/Split.astro"
 import SurfacesSection from "../components/site/SurfacesSection.astro"
 import MarketingLayout from "../layouts/MarketingLayout.astro"
@@ -30,7 +32,7 @@ const links = await getDocLinks()
     <div data-in-view="rise"><BuildStage client:visible /></div>
     <p class="hint playback-caption">A build, played back.</p>
   </section>
-  <Section>
+  <Section sunk>
     <Split>
       <div slot="start" class="split-copy">
         <p class="eyebrow">Inventory</p>
@@ -49,18 +51,39 @@ const links = await getDocLinks()
       <div slot="end" data-in-view="rise"><MetricInventory /></div>
     </Split>
   </Section>
-  <Section sunk>
+  <Section>
     <Split rev>
       <div slot="start" data-in-view="rise"><VersionHistory /></div>
       <div slot="end" class="split-copy">
         <p class="eyebrow">Versions</p>
         <h2 class="h2">Every change is a version.</h2>
         <p class="lead">
-          A build becomes one version. A follow-up in the chat, an edit in the panel editor, an agent repair, each is
-          another, with a diff and a restore. A comment can be sent to the agent, and its change is a version too.
+          A build becomes one version. An edit in the panel editor, an agent repair and each Revise the dashboard is
+          another, with a diff and a restore. A question in the chat or in a comment gets an answer and leaves the
+          dashboard as it was.
         </p>
       </div>
     </Split>
+  </Section>
+  <Section sunk>
+    <SectionHead
+      eyebrow="Canvas"
+      title="Comment or ask on any spot."
+      lead="Choose Comment or Ask in the canvas toolbar, then click a point, a table row or a value on a panel, or drag across a range. Chips name the spot. A comment starts a thread everyone here can see and leaves a pin. An ask goes to the agent, and the answer comes back in the box, seen only by you and Admins until you share it."
+    />
+    <div class="cols2 modes">
+      <div data-in-view="rise"><CanvasMode mode="comment" /></div>
+      <div data-in-view="rise"><CanvasMode mode="ask" /></div>
+    </div>
+    {
+      links.askAndComment && (
+        <p class="modes-more">
+          <a class="arrow" href={links.askAndComment}>
+            How Comment and Ask work →
+          </a>
+        </p>
+      )
+    }
   </Section>
   <Section>
     <Split>
@@ -68,9 +91,10 @@ const links = await getDocLinks()
         <p class="eyebrow">Activity</p>
         <h2 class="h2">Comments, requests and versions in one timeline.</h2>
         <p class="lead">
-          Choose Activity on a dashboard and its comments, the requests people sent to the agent, proposals, annotations
-          and saved versions sit in one list, sorted by time. Show narrows it to open comments or to changes only, and Panel narrows it to
-          one panel. A request to the agent shows the version it resolved by.
+          The Activity tab beside a dashboard puts its comments, the requests people sent to the agent, proposals,
+          annotations and saved versions in one list, sorted by time. Show narrows it to open comments or to changes
+          only, and Panel narrows it to one panel. Mention the agent in a comment and it answers in the thread; when a
+          change fits, the answer offers it with Revise the dashboard.
         </p>
       </div>
       <div slot="end" data-in-view="rise"><DashboardActivity /></div>
@@ -96,6 +120,14 @@ const links = await getDocLinks()
 
   .playback {
     padding-bottom: 96px;
+  }
+
+  .modes {
+    align-items: start;
+  }
+
+  .modes-more {
+    margin: 24px 0 0;
   }
 
   .playback-caption {

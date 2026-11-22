@@ -44,6 +44,7 @@ describe("resolveDocLinks", () => {
       opensearch: null,
       switchFromGrafana: null,
       logsAndTraces: null,
+      askAndComment: null,
     })
   })
 
@@ -57,6 +58,11 @@ describe("resolveDocLinks", () => {
     const links = resolveDocLinks(new Set([...corePages, "docs/use/switch-from-grafana", "docs/use/logs-and-traces"]))
     expect(links.switchFromGrafana).toBe("/docs/use/switch-from-grafana/")
     expect(links.logsAndTraces).toBe("/docs/use/logs-and-traces/")
+  })
+
+  test("links the ask and comment page when core has it", () => {
+    const links = resolveDocLinks(new Set([...corePages, "docs/use/ask-and-comment"]))
+    expect(links.askAndComment).toBe("/docs/use/ask-and-comment/")
   })
 
   test("returns null for a page that is not in core", () => {

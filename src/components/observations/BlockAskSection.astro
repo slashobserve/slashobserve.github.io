@@ -1,0 +1,41 @@
+---
+import Section from "../site/Section.astro"
+import Split from "../site/Split.astro"
+import Stage from "../site/Stage.astro"
+import BlockAsk from "../product/BlockAsk.astro"
+
+interface Props {
+  askAndComment: string | null
+}
+
+const { askAndComment } = Astro.props
+---
+
+<Section>
+  <Split rev>
+    <div slot="start" data-in-view="rise">
+      <Stage><BlockAsk /></Stage>
+    </div>
+    <div slot="end" class="split-copy">
+      <p class="eyebrow">Comment and ask</p>
+      <h2 class="h2">Point at a block, or at a sentence.</h2>
+      <p class="lead">
+        The page has the same Select, Comment and Ask tools as a dashboard. On a live panel block a click names the spot and a drag
+        names a range; on a snapshot or a run block a click is about the whole block. Selecting text in a text block shows Comment
+        and Ask under the selection.
+      </p>
+      <p class="lead">
+        A comment goes into the discussion as a message on that block, and pins mark the threads and your own questions. A question
+        is private: the agent reads the data and answers in a box that only you and Admins can see, and writes nothing on the
+        page.
+      </p>
+      {
+        askAndComment && (
+          <a class="arrow" href={askAndComment}>
+            How Comment and Ask work →
+          </a>
+        )
+      }
+    </div>
+  </Split>
+</Section>

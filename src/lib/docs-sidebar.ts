@@ -12,7 +12,7 @@ export const DOC_SECTIONS: readonly { dir: string; label: string }[] = [
 export const PAGE_ORDER: Record<string, readonly string[]> = {
   "get-started": ["what-is-slashobserve", "quick-start", "install", "first-dashboard", "known-limitations"],
   connect: ["prometheus", "clickhouse", "oidc", "llm-providers"],
-  use: ["chat", "review", "edit-panel", "import-grafana", "cli", "mcp"],
+  use: ["chat", "ask-and-comment", "review", "edit-panel", "import-grafana", "cli", "mcp"],
   teams: ["roles", "folders", "saved-prompts"],
   concepts: ["observespec", "agent", "datasources-and-variables", "versions"],
   operate: ["production", "upgrades-and-backups", "security-model"],

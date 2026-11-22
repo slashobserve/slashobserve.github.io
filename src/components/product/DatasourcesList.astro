@@ -10,6 +10,8 @@ interface Datasource {
   status: string
   usedBy: string
   explore: string
+  source?: string
+  onlyAdmins?: boolean
 }
 
 const datasources: Datasource[] = [
@@ -49,6 +51,17 @@ const datasources: Datasource[] = [
     usedBy: "No dashboards",
     explore: "Explore logs",
   },
+  {
+    name: "Audit trail",
+    uid: "slashobserve-audit",
+    type: "OpenSearch",
+    tone: "ok",
+    status: "Healthy",
+    usedBy: "4 dashboards",
+    explore: "Explore logs",
+    source: "Built in",
+    onlyAdmins: true,
+  },
 ]
 
 const check = '<path d="M20 6 9 17l-5-5"/>'
@@ -62,8 +75,8 @@ const plus = '<path d="M5 12h14"/><path d="M12 5v14"/>'
       <div class="intro">
         <span class="title">Datasources</span>
         <span class="k">
-          Where dashboards and the agent read data from. Entries from the datasources file are read only; the ones you add
-          here can be changed.
+          Where dashboards and the agent read data from. Entries from the datasources file and the built-in audit trail are read
+          only; the ones you add here can be changed.
         </span>
       </div>
       <span class="row head-actions">
@@ -82,18 +95,21 @@ const plus = '<path d="M5 12h14"/><path d="M12 5v14"/>'
         </thead>
         <tbody>
           {
-            datasources.map(({ name, uid, type, tone, status, usedBy, explore }) => (
+            datasources.map(({ name, uid, type, tone, status, usedBy, explore, source = "From file", onlyAdmins }) => (
               <tr>
                 <td>
                   <span class="stack">
-                    <span class="label">{name}</span>
+                    <span class="row name">
+                      <span class="label">{name}</span>
+                      {onlyAdmins && <span class="chip badge">Only Admins</span>}
+                    </span>
                     <span class="mono k">{uid}</span>
                   </span>
                 </td>
                 <td>
                   <span class="stack">
                     <span>{type}</span>
-                    <span class="k">From file</span>
+                    <span class="k">{source}</span>
                   </span>
                 </td>
                 <td>
@@ -195,6 +211,15 @@ const plus = '<path d="M5 12h14"/><path d="M12 5v14"/>'
   .stack {
     display: flex;
     flex-direction: column;
+  }
+
+  .name {
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .badge {
+    font-size: 11px;
   }
 
   .status {

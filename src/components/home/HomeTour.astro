@@ -2,7 +2,7 @@
 import { AGENTS_PATH, DASHBOARDS_PATH, OBSERVATIONS_PATH, SIGNALS_PATH } from "../../lib/site-nav"
 import { tourTitle, type TourStopContent } from "../../lib/tour"
 import AgentsScreen from "../product/AgentsScreen.astro"
-import DashboardActivity from "../product/DashboardActivity.astro"
+import AskOnPanel from "../product/AskOnPanel.astro"
 import InboxScreen from "../product/InboxScreen.astro"
 import LogsSource from "../product/LogsSource.astro"
 import MessageToBlock from "../product/MessageToBlock.astro"
@@ -10,6 +10,12 @@ import PublishRca from "../product/PublishRca.astro"
 import TraceCard from "../product/TraceCard.astro"
 import Stage from "../site/Stage.astro"
 import Tour from "../site/Tour.astro"
+
+interface Props {
+  askAndComment: string | null
+}
+
+const { askAndComment } = Astro.props
 
 const stops: TourStopContent[] = [
   {
@@ -29,9 +35,12 @@ const stops: TourStopContent[] = [
   {
     id: "dashboards",
     place: "Dashboards",
-    title: "Ask for a dashboard. Get one that works.",
-    text: "The agent takes an inventory of the metric families in scope, runs each panel it adds or changes before the save, and ends with a version and a link. Comments, agent requests and saved versions share one Activity pane on the dashboard.",
-    links: [{ href: DASHBOARDS_PATH, label: "Dashboards" }],
+    title: "Ask about any spot on a panel.",
+    text: "Ask for a dashboard and the agent runs each panel it adds before the save, then ends with a version and a link. On the dashboard, Ask mode puts your question on one point, range, table row or value, and the answer comes back in a box beside it, seen only by you and Admins until you share it. Only Revise the dashboard changes the dashboard.",
+    links: [
+      { href: DASHBOARDS_PATH, label: "Dashboards" },
+      ...(askAndComment ? [{ href: askAndComment, label: "How Comment and Ask work" }] : []),
+    ],
   },
   {
     id: "logs-and-traces",
@@ -58,7 +67,7 @@ const stops: TourStopContent[] = [
       <PublishRca />
     </div>
   </Stage>
-  <Stage slot="dashboards"><DashboardActivity onStage /></Stage>
+  <Stage slot="dashboards"><AskOnPanel /></Stage>
   <Stage slot="logs-and-traces">
     <div class="pair">
       <LogsSource />
