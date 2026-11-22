@@ -12,6 +12,7 @@ export const CORPUS_OUT = "src/generated/import-corpus.json"
 export const CONFORMANCE_SOURCE = "pkg/grafana/testdata/conformance"
 export const COVERAGE_OUT = "src/generated/import-coverage.json"
 export const INSTALL_SCRIPT_SOURCE = "install.sh"
+export const CHART_SOURCE = "deploy/helm/slashobserve/Chart.yaml"
 export const INSTALL_SCRIPT_OUT = "public/install.sh"
 
 const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/

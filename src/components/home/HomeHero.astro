@@ -2,6 +2,7 @@
 import { INSTALL_COMMAND } from "../../lib/site-facts"
 import ObservationScreen from "../product/ObservationScreen.astro"
 import CopyCommand from "../site/CopyCommand.astro"
+import PreReleaseNote from "../site/PreReleaseNote.astro"
 
 interface Props {
   quickStart: string | null
@@ -24,6 +25,7 @@ const { quickStart } = Astro.props
       {quickStart && <a class="btn btn-primary" href={quickStart}>Read the quick start</a>}
       <CopyCommand command={INSTALL_COMMAND} />
     </div>
+    <PreReleaseNote />
     <p class="hint">
       Installs the observe CLI on macOS and Linux. The server is one container beside Postgres, and people sign in through
       your OpenID Connect provider. The built-in agent sends your prompt, your datasource names and what its tools

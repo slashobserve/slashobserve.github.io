@@ -1,0 +1,42 @@
+---
+import { readSiteFacts, releaseLabel, RELEASE_NOTES_URL, showsPreReleaseNotice } from "../../lib/site-facts"
+
+const facts = readSiteFacts()
+const shown = showsPreReleaseNotice(facts)
+const label = releaseLabel(facts)
+---
+
+{
+  shown && (
+    <p class="pre-release-note">
+      {label && <span class="mono version">{label}</span>}
+      SlashObserve is under active development, and releases before 1.0 can include breaking changes. Read the{" "}
+      <a href={RELEASE_NOTES_URL}>release notes</a> before you upgrade.
+    </p>
+  )
+}
+
+<style>
+  .pre-release-note {
+    max-width: 640px;
+    margin: 0;
+    color: var(--mfg);
+    font-size: 13px;
+    text-wrap: balance;
+  }
+
+  .version {
+    margin-right: 6px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1px 6px;
+    background: var(--card);
+    color: var(--fg);
+    font-size: 12px;
+  }
+
+  a {
+    color: var(--fg);
+    text-underline-offset: 3px;
+  }
+</style>

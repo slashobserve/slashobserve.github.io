@@ -10,6 +10,7 @@ import {
   isNavGroup,
 } from "../../lib/site-nav"
 import GitHubIcon from "./GitHubIcon.astro"
+import PreReleaseTag from "./PreReleaseTag.astro"
 import ThemeToggle from "./ThemeToggle.astro"
 import Wordmark from "./Wordmark.astro"
 
@@ -28,6 +29,7 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
     <a class="home" href="/" aria-label="SlashObserve home">
       <Wordmark size={22} />
     </a>
+    <PreReleaseTag href={links.upgrades} />
     <nav aria-label="Main" class="nav main-nav hide-sm">
       {navItems.map((entry) =>
         isNavGroup(entry) ? (
@@ -255,6 +257,10 @@ const currentFor = (href: string) => (isCurrentPage(href, Astro.url.pathname) ? 
     align-items: center;
     gap: 36px;
     height: 64px;
+  }
+
+  header :global(.pre-release-tag) {
+    margin-left: -24px;
   }
 
   .home {

@@ -1,6 +1,7 @@
 ---
 import Window from "../product/Window.astro"
 import CopyCommand from "../site/CopyCommand.astro"
+import PreReleaseNote from "../site/PreReleaseNote.astro"
 import { INSTALL_COMMAND } from "../../lib/site-facts"
 ---
 
@@ -15,6 +16,7 @@ import { INSTALL_COMMAND } from "../../lib/site-facts"
     <div class="code"><span class="tl">export SLASHOBSERVE_LLM_PROVIDER=anthropic</span><span class="tl">{"export SLASHOBSERVE_LLM_API_KEY=<your Anthropic API key>"}</span></div>
     <p class="p">The CLI installs with one line:</p>
     <CopyCommand command={INSTALL_COMMAND} />
+    <PreReleaseNote />
   </div>
 </Window>
 
