@@ -11,6 +11,12 @@ import TraceCard from "../product/TraceCard.astro"
 import Stage from "../site/Stage.astro"
 import Tour from "../site/Tour.astro"
 
+interface Props {
+  askAndComment: string | null
+}
+
+const { askAndComment } = Astro.props
+
 const stops: TourStopContent[] = [
   {
     id: "inbox",
@@ -31,7 +37,10 @@ const stops: TourStopContent[] = [
     place: "Dashboards",
     title: "Ask about any spot on a panel.",
     text: "Ask for a dashboard and the agent runs each panel it adds before the save, then ends with a version and a link. On the dashboard, Ask mode puts your question on one point, range, table row or value, and the answer comes back in a box beside it, seen only by you and Admins until you share it. Only Revise the dashboard changes the dashboard.",
-    links: [{ href: DASHBOARDS_PATH, label: "Dashboards" }],
+    links: [
+      { href: DASHBOARDS_PATH, label: "Dashboards" },
+      ...(askAndComment ? [{ href: askAndComment, label: "How Comment and Ask work" }] : []),
+    ],
   },
   {
     id: "logs-and-traces",
