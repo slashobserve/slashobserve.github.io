@@ -47,7 +47,7 @@ const links = await getDocLinks()
   <StartSection />
   <BlocksSection />
   <DiscussionSection />
-  <BlockAskSection />
+  <BlockAskSection askAndComment={links.askAndComment} />
   <PublishSection />
   <RunsOnBand quickStart={links.quickStart} />
 </MarketingLayout>

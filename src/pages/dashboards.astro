@@ -75,6 +75,15 @@ const links = await getDocLinks()
       <div data-in-view="rise"><CanvasMode mode="comment" /></div>
       <div data-in-view="rise"><CanvasMode mode="ask" /></div>
     </div>
+    {
+      links.askAndComment && (
+        <p class="modes-more">
+          <a class="arrow" href={links.askAndComment}>
+            How Comment and Ask work →
+          </a>
+        </p>
+      )
+    }
   </Section>
   <Section>
     <Split>
@@ -115,6 +124,10 @@ const links = await getDocLinks()
 
   .modes {
     align-items: start;
+  }
+
+  .modes-more {
+    margin: 24px 0 0;
   }
 
   .playback-caption {

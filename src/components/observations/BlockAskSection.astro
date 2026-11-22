@@ -3,6 +3,12 @@ import Section from "../site/Section.astro"
 import Split from "../site/Split.astro"
 import Stage from "../site/Stage.astro"
 import BlockAsk from "../product/BlockAsk.astro"
+
+interface Props {
+  askAndComment: string | null
+}
+
+const { askAndComment } = Astro.props
 ---
 
 <Section>
@@ -23,6 +29,13 @@ import BlockAsk from "../product/BlockAsk.astro"
         answers in a box that only you and Admins can see. When an answer goes onto the page, its run block, text and evidence
         panels land directly under the block it was asked on.
       </p>
+      {
+        askAndComment && (
+          <a class="arrow" href={askAndComment}>
+            How Comment and Ask work →
+          </a>
+        )
+      }
     </div>
   </Split>
 </Section>
