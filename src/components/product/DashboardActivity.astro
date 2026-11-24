@@ -7,9 +7,9 @@ import TimeSeries from "./TimeSeries.astro"
 import Window from "./Window.astro"
 
 const routes = [
-  { name: "/checkout", tone: "s1", d: "M0 52 C30 48 60 40 100 44 S160 56 200 40 S260 26 300 32" },
-  { name: "/cart", tone: "s3", d: "M0 62 C40 60 70 56 100 58 S170 66 200 60 S260 54 300 56" },
-  { name: "/product/{id}", tone: "s2", d: "M0 36 C40 40 70 30 110 26 S170 22 200 32 S260 40 300 34" },
+  { name: "checkout", tone: "s1", d: "M0 52 C30 48 60 40 100 44 S160 56 200 40 S260 26 300 32" },
+  { name: "cart", tone: "s3", d: "M0 62 C40 60 70 56 100 58 S170 66 200 60 S260 54 300 56" },
+  { name: "product-catalog", tone: "s2", d: "M0 36 C40 40 70 30 110 26 S170 22 200 32 S260 40 300 34" },
 ] as const
 
 const icons = {
@@ -60,7 +60,7 @@ const icons = {
           </Panel>
         </div>
         <span class="row-head"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={icons.chevron} />Is traffic healthy?</span>
-        <Panel title="Requests per second by route" datasource="prom">
+        <Panel title="Requests per second by service" datasource="prom">
           <TimeSeries
             viewBox="0 0 300 80"
             height="96px"
@@ -93,7 +93,7 @@ const icons = {
               <div class="version-box">
                 <span>
                   <span class="version-name">Version 2</span>
-                  <span class="k block">Add the pool limit to Pool connections in use by pod.</span>
+                  <span class="k block">Add Payment errors to Are orders flowing?</span>
                 </span>
                 <span class="k see">See changes</span>
               </div>
@@ -104,11 +104,11 @@ const icons = {
             <Mark kind="person" initials="AD" tint={1} size={23} />
             <div class="content">
               <p class="line">
-                <span class="who">admin</span><span class="k verb">on</span><span class="panel-name">Pool connections in use by pod</span><span
+                <span class="who">admin</span><span class="k verb">on</span><span class="panel-name">Payment charges per minute by outcome</span><span
                   class="k when">09:12</span
                 >
               </p>
-              <p class="text"><Mention /> why did two pods reach the limit at 13:40?</p>
+              <p class="text"><Mention /> why did payment errors climb at 16:43?</p>
               <div class="reply">
                 <Mark kind="agent" size={20} />
                 <div class="content">
@@ -116,8 +116,8 @@ const icons = {
                   <p class="text">Answered.</p>
                   <p class="k run-link">View the run</p>
                   <AnswerCard
-                    answer="checkout-7d9 and checkout-2f4 held their connections for up to 9s while calls to payments timed out, so both reached the limit of 50 at 13:41."
-                    change="Add a panel of payments client timeouts by pod."
+                    answer="The checkout errors are failed payment charges: payment has returned Payment request failed. Invalid token. for about half of the charges since 16:43."
+                    change="Add a panel of payment charge errors by service."
                   />
                 </div>
               </div>

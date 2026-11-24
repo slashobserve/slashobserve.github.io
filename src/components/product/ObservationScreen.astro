@@ -9,21 +9,21 @@ import Window from "./Window.astro"
 import { HOST } from "./screen-ids"
 
 const OBSERVATION_ID = "9c4e2b7a-5d1f-4a3e-8b60-2f7d1c9a5e38"
-const TITLE = "Checkout errors after the payments deploy"
+const TITLE = "Checkout errors after paymentFailure was switched on"
 
 const series = [
   {
-    name: "/api/checkout",
+    name: "checkout",
     tone: "s1",
     d: "M0 112 L20 111 L40 113 L60 112 L80 111 L100 113 L120 112 L140 111 L160 112 L180 113 L196 110 L208 86 L220 58 L232 44 L246 42 L262 45 L280 40 L298 43 L316 41 L334 44 L352 40 L370 43 L386 41 L400 42",
   },
   {
-    name: "/api/orders/{id}",
+    name: "cart",
     tone: "s2",
     d: "M0 105 L24 106 L48 104 L72 106 L96 105 L120 103 L144 106 L168 104 L192 105 L216 107 L240 104 L264 105 L288 103 L312 106 L336 104 L360 105 L400 104",
   },
   {
-    name: "/api/products",
+    name: "product-catalog",
     tone: "s3",
     d: "M0 109 L24 108 L48 110 L72 109 L96 108 L120 110 L144 109 L168 108 L192 110 L216 109 L240 108 L264 110 L288 109 L312 108 L336 110 L360 109 L400 109",
   },
@@ -66,16 +66,16 @@ const more = '<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><cir
           <div class="meta">
             <span class="state"><span class="dot" aria-hidden="true"></span>Open</span>
             <span class="k">Started by admin, 13 h ago</span>
-            <span class="k">In <span class="folder">Checkout</span></span>
+            <span class="k">In <span class="folder">Demo</span></span>
             <span class="btn btn-sm">Resolve</span>
           </div>
         </div>
         <TextBlock>
-          Server errors on /api/checkout jumped from 0.1% to 2% within five minutes of the payments rollout. p95 latency
+          Server errors on checkout jumped from 0.1% to 2% within five minutes of paymentFailure being set to 50%. Traffic
           stayed flat, so this looks like a failing call rather than load.
         </TextBlock>
         <PanelBlock
-          title="Server error ratio by route"
+          title="Error ratio by service"
           caption="prom, Last hour, live"
           live
           author="agent"
@@ -85,7 +85,7 @@ const more = '<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><cir
             viewBox="0 0 400 120"
             height="120px"
             yTicks={["3%", "2%", "1%", "0%"]}
-            xTicks={["16:10", "16:20", "16:30", "16:40", "16:50", "17:00"]}
+            xTicks={["16:20", "16:30", "16:40", "16:50", "17:00", "17:10"]}
             series={[...series]}
           />
         </PanelBlock>

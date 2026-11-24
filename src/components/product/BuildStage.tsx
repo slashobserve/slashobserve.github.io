@@ -22,24 +22,24 @@ const X_TICKS = ["08:00", "10:00", "12:00", "14:00"]
 type Series = { d: string; tone: string; name: string }
 
 const ERROR_ROWS = [
-  ["/checkout", "41", "0.9%"],
-  ["/cart", "3", "0.1%"],
-  ["/product/{id}", "0", "0.0%"],
-  ["/search", "1", "0.0%"],
+  ["checkout", "41", "0.9%"],
+  ["cart", "3", "0.1%"],
+  ["product-catalog", "0", "0.0%"],
+  ["frontend-proxy", "1", "0.0%"],
 ] as const
 
-const POOL_BARS = [30, 45, 40, 70, 95, 80, 55, 50, 60, 48]
-const POOL_PEAK = 4
+const CONNECTION_BARS = [30, 45, 40, 70, 95, 80, 55, 50, 60, 48]
+const CONNECTION_PEAK = 4
 
-const PODS: Series[] = [
+const SERVICES: Series[] = [
   { d: "M0 96 C40 90 60 54 100 60 S170 108 210 76 S290 32 330 44 S380 76 400 66", tone: "s1", name: "checkout" },
   { d: "M0 108 C40 104 60 86 100 90 S170 120 210 104 S290 76 330 82 S380 104 400 98", tone: "s2", name: "payment" },
   { d: "M0 76 C40 82 60 64 100 54 S170 48 210 64 S290 86 330 74 S380 64 400 70", tone: "s3", name: "cart" },
 ]
 
-const ROUTES: Series[] = [
-  { d: "M0 86 L50 84 L100 76 L150 78 L200 52 L250 32 L300 40 L350 66 L400 70", tone: "s1", name: "/checkout" },
-  { d: "M0 108 L50 106 L100 104 L150 105 L200 98 L250 92 L300 94 L350 102 L400 103", tone: "s2", name: "/cart" },
+const LATENCY: Series[] = [
+  { d: "M0 86 L50 84 L100 76 L150 78 L200 52 L250 32 L300 40 L350 66 L400 70", tone: "s1", name: "checkout" },
+  { d: "M0 108 L50 106 L100 104 L150 105 L200 98 L250 92 L300 94 L350 102 L400 103", tone: "s2", name: "payment" },
 ]
 
 function PanelHead({ title }: { title: string }) {
@@ -117,26 +117,26 @@ const ROWS: { title: string; panels: { size: Size; body: ReactNode }[] }[] = [
       { size: "quarter", body: <Stat title="Requests/s" value="1.9k" unit="req/s" /> },
       { size: "quarter", body: <Stat title="Error ratio" value="0.4" unit="%" ok /> },
       { size: "quarter", body: <Stat title="p95 latency" value="212" unit="ms" /> },
-      { size: "quarter", body: <Stat title="Pods ready" value="3" /> },
+      { size: "quarter", body: <Stat title="Services reporting" value="15" /> },
     ],
   },
   {
     title: "Traffic",
     panels: [
-      { size: "wide", body: <TimeSeries title="Requests by service" yTicks={["900 req/s", "450 req/s", "0 req/s"]} series={PODS} /> },
-      { size: "wide", body: <TimeSeries title="Latency by route" yTicks={["400 ms", "200 ms", "0 s"]} series={ROUTES} /> },
+      { size: "wide", body: <TimeSeries title="Requests by service" yTicks={["900 req/s", "450 req/s", "0 req/s"]} series={SERVICES} /> },
+      { size: "wide", body: <TimeSeries title="Latency by service" yTicks={["400 ms", "200 ms", "0 s"]} series={LATENCY} /> },
       {
         size: "wide",
         body: (
           <>
-            <PanelHead title="Errors by route" />
+            <PanelHead title="Errors by service" />
             <div className="stage-table">
-              <span className="k">route</span>
+              <span className="k">service</span>
               <span className="k">errors</span>
               <span className="k">ratio</span>
-              {ERROR_ROWS.map(([route, errors, ratio], i) => (
-                <Fragment key={route}>
-                  <span className="mono">{route}</span>
+              {ERROR_ROWS.map(([service, errors, ratio], i) => (
+                <Fragment key={service}>
+                  <span className="mono">{service}</span>
                   <span>{errors}</span>
                   <span className={i === 0 ? "fg-crit" : undefined}>{ratio}</span>
                 </Fragment>
@@ -154,25 +154,25 @@ const ROWS: { title: string; panels: { size: Size; body: ReactNode }[] }[] = [
         size: "wide",
         body: (
           <>
-            <PanelHead title="DB pool in use" />
+            <PanelHead title="Connections by database" />
             <div className="stage-bars">
-              {POOL_BARS.map((h, i) => (
-                <i key={i} className={i === POOL_PEAK ? "tone-warn" : "tone-s1"} style={{ height: `${h}%` }} />
+              {CONNECTION_BARS.map((h, i) => (
+                <i key={i} className={i === CONNECTION_PEAK ? "tone-warn" : "tone-s1"} style={{ height: `${h}%` }} />
               ))}
             </div>
             <div className="stage-legend k">
               <span>
                 <i className="tone-s1" aria-hidden="true" />
-                in use
+                connections
               </span>
             </div>
           </>
         ),
       },
-      { size: "third", body: <Stat title="Queue depth" value="18" /> },
+      { size: "third", body: <Stat title="Orders placed" value="64" unit="/min" /> },
       { size: "third", body: <Stat title="Payment success" value="99.1" unit="%" ok /> },
-      { size: "third", body: <Stat title="Reservations/s" value="64" unit="req/s" /> },
-      { size: "third", body: <Stat title="Cache hit ratio" value="94" unit="%" /> },
+      { size: "third", body: <Stat title="Transactions/s" value="212" unit="/s" /> },
+      { size: "third", body: <Stat title="Buffer cache hit ratio" value="99" unit="%" /> },
     ],
   },
 ]
@@ -181,7 +181,7 @@ const THUMBNAILS = [
   { title: "Requests/s", d: "M0 14 C15 6 25 6 40 14 S65 22 80 12 S95 6 100 9" },
   { title: "Error ratio", d: "M0 10 C15 18 25 18 40 10 S60 4 75 16 S92 20 100 12" },
   { title: "p95 latency", d: "M0 12 C10 6 20 6 30 12 S50 18 60 12 S75 4 85 16 S95 14 100 10" },
-  { title: "Pods ready", d: "M0 12 C20 10 35 14 50 12 S80 10 100 12" },
+  { title: "Services reporting", d: "M0 12 C20 10 35 14 50 12 S80 10 100 12" },
 ]
 
 const ROW_STARTS = ROWS.map((_, i) => ROWS.slice(0, i).reduce((count, row) => count + row.panels.length, 0))

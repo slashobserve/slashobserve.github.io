@@ -13,10 +13,10 @@ interface Props {
 
 const { mode } = Astro.props
 
-const routes = [
-  { name: "/checkout", tone: "s1", d: "M0 52 C30 48 60 40 100 44 S160 56 200 40 S260 26 300 32" },
-  { name: "/cart", tone: "s3", d: "M0 62 C40 60 70 56 100 58 S170 66 200 60 S260 54 300 56" },
-  { name: "/product/{id}", tone: "s2", d: "M0 36 C40 40 70 30 110 26 S170 22 200 32 S260 40 300 34" },
+const services = [
+  { name: "checkout", tone: "s1", d: "M0 52 C30 48 60 40 100 44 S160 56 200 40 S260 26 300 32" },
+  { name: "cart", tone: "s3", d: "M0 62 C40 60 70 56 100 58 S170 66 200 60 S260 54 300 56" },
+  { name: "product-catalog", tone: "s2", d: "M0 36 C40 40 70 30 110 26 S170 22 200 32 S260 40 300 34" },
 ] as const
 
 const hints = {
@@ -24,7 +24,7 @@ const hints = {
   ask: "Click a spot on a panel to ask the agent about it. Esc returns to Select.",
 }
 
-const commentChips = ["Requests per second by route", "Range 22 Nov 13:40 to 13:55 UTC", "last hour"]
+const commentChips = ["Requests per second by service", "Range 22 Nov 16:40 to 16:55 UTC", "last hour"]
 const askChips = ["Server errors", "Value", "2.1%", "last hour"]
 ---
 
@@ -33,17 +33,17 @@ const askChips = ["Server errors", "Value", "2.1%", "last hour"]
     {
       mode === "comment" ? (
         <>
-          <Panel title="Requests per second by route" datasource="prom">
+          <Panel title="Requests per second by service" datasource="prom">
             <TimeSeries
               viewBox="0 0 300 80"
               height="150px"
               yTicks={["600 req/s", "300 req/s", "0 req/s"]}
               xTicks={["13:05", "13:35", "14:05"]}
-              series={[...routes]}
+              series={[...services]}
             >
               <span class="range" aria-hidden="true" />
               <CanvasPin kind="person" initials="MK" tint={2} x="33%" y="50%" label="A comment by MK" />
-              <CanvasPin kind="ask" x="88%" y="38%" label="Your question on Requests per second by route" />
+              <CanvasPin kind="ask" x="88%" y="38%" label="Your question on Requests per second by service" />
             </TimeSeries>
           </Panel>
           <div class="box">

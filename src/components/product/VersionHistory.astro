@@ -12,15 +12,15 @@ const pen = '<path d="M13 21h8"/><path d="M21.17 6.81a1 1 0 0 0-3.99-3.99L3.84 1
 const versions: { version: number; summary: string; author: string; agent?: boolean; saved: string }[] = [
   {
     version: 7,
-    summary: 'Added "Errors by route"; moved "p95 latency by route".',
+    summary: 'Added "Error ratio by service"; moved "p95 latency by service".',
     author: "Observe Agent for Priya",
     agent: true,
     saved: "2 hours ago",
   },
-  { version: 6, summary: "Set a threshold of 18 on DB pool in use.", author: "Priya", saved: "yesterday" },
-  { version: 5, summary: "Repair the CPU by pod query after container_cpu was renamed.", author: "Tom", saved: "2 days ago" },
-  { version: 4, summary: "Add payment errors from Loki to the Overview row.", author: "Tom", saved: "3 days ago" },
-  { version: 3, summary: "Show request rate per route instead of per pod.", author: "Priya", saved: "last week" },
+  { version: 6, summary: "Set a threshold of 80% on Database connections in use.", author: "Priya", saved: "yesterday" },
+  { version: 5, summary: "Repair the Connections by database query after postgresql_backends was renamed.", author: "Tom", saved: "2 days ago" },
+  { version: 4, summary: "Add Payment charges per minute by outcome to Are orders flowing?", author: "Tom", saved: "3 days ago" },
+  { version: 3, summary: "Show request rate per service instead of per route.", author: "Priya", saved: "last week" },
 ]
 ---
 
@@ -77,11 +77,11 @@ const versions: { version: number; summary: string; author: string; agent?: bool
         <span class="row"><span class="k">To</span><span class="select">v7<svg class="k" viewBox="0 0 24 24" aria-hidden="true" set:html={chevron} /></span></span>
       </span>
       <div class="change">
-        <span class="label">Panel "Errors by route"</span>
+        <span class="label">Panel "Error ratio by service"</span>
         <span class="row op"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={plus} /><b>Added</b></span>
       </div>
       <div class="change">
-        <span class="label">Panel "p95 latency by route"</span>
+        <span class="label">Panel "p95 latency by service"</span>
         <span class="row op"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={pen} /><b>Changed</b><span class="k">gridPos.y</span></span>
         <span class="values">
           <span class="value before"><b>Before</b><span class="mono">8</span></span>

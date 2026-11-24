@@ -57,7 +57,7 @@ const workspace: Item[] = ["Datasources", "API keys", "People", "Audit", "Settin
 type Entry = { name: string; tag?: string }
 
 const sublists: Partial<Record<Item, { label: string; entries: Entry[] }>> = {
-  Observations: { label: "Open observations", entries: [{ name: "Checkout errors after the payments deploy" }] },
+  Observations: { label: "Open observations", entries: [{ name: "Checkout errors after paymentFailure was switched on" }] },
   Logs: {
     label: "Log sources",
     entries: [

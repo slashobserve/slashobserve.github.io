@@ -3,8 +3,8 @@ import Mark from "./Mark.astro"
 import { DASHBOARD_TITLE } from "./screen-ids"
 
 const changes = [
-  { label: "Errors by route", change: "added" },
-  { label: "p95 latency by route", change: "changed" },
+  { label: "Payment charge errors by service", change: "added" },
+  { label: "p95 latency by service", change: "changed" },
   { label: "Dashboard settings", change: "changed" },
 ]
 ---
@@ -15,7 +15,7 @@ const changes = [
     <span class="k" aria-hidden="true">/</span>
     <span class="current">Proposals</span>
   </nav>
-  <h3 class="title">Add errors by route next to p95 latency</h3>
+  <h3 class="title">Add payment charge errors by service next to p95 latency</h3>
   <div class="byline">
     <div class="row author">
       <Mark kind="connected" initials="CC" size={24} />
@@ -24,7 +24,7 @@ const changes = [
     </div>
     <p class="k state">Open, based on version 4</p>
   </div>
-  <p class="summary">Errors by route sits next to p95 latency, so a slow route and a failing one read together.</p>
+  <p class="summary">Payment charge errors by service sits next to p95 latency, so a slow service and a failing one read together.</p>
   <div class="changes">
     <h4 class="heading">Changes</h4>
     <ul>

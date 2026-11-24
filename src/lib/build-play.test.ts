@@ -17,7 +17,7 @@ describe("timeline", () => {
       {
         label: "Discovering",
         tools: "list_metrics, list_label_values",
-        messages: ['Listed 12 metric families in {job="checkout"} on prom', "Listed 3 label values on prom"],
+        messages: ['Listed 12 metric families in {service_name!=""} on prom', "Listed 3 label values on prom"],
       },
       { label: "Running queries", tools: "query_range", messages: ["Ran a query on prom: 3 series"] },
     ])
@@ -41,7 +41,7 @@ describe("timeline", () => {
     expect(saving?.tools).toBe("create_dashboard, update_panels 11")
     expect(saving?.messages).toHaveLength(12)
     expect(saving?.messages.at(-1)).toBe(
-      "Saved panel 12 of 12: Cache hit ratio (row Internals), then saved version 1 (12 panels in 3 rows)",
+      "Saved panel 12 of 12: Buffer cache hit ratio (row Internals), then saved version 1 (12 panels in 3 rows)",
     )
   })
 

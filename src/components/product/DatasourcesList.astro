@@ -2,74 +2,42 @@
 import Window from "./Window.astro"
 import { HOST } from "./screen-ids"
 
+type Explore = "Explore metrics" | "Explore logs" | "Search traces"
+
 interface Datasource {
   name: string
   uid: string
   type: string
-  tone: "ok" | "crit"
-  status: string
   usedBy: string
-  explore: string
+  explore: Explore[]
   source?: string
   onlyAdmins?: boolean
 }
 
 const datasources: Datasource[] = [
-  {
-    name: "Prometheus",
-    uid: "prom",
-    type: "Prometheus",
-    tone: "ok",
-    status: "Healthy",
-    usedBy: "14 dashboards",
-    explore: "Explore metrics",
-  },
-  {
-    name: "Elasticsearch prod",
-    uid: "prod-es",
-    type: "Elasticsearch",
-    tone: "ok",
-    status: "Healthy",
-    usedBy: "No dashboards",
-    explore: "Explore logs",
-  },
-  {
-    name: "OpenSearch prod",
-    uid: "prod-os",
-    type: "OpenSearch",
-    tone: "ok",
-    status: "Healthy",
-    usedBy: "No dashboards",
-    explore: "Explore logs",
-  },
-  {
-    name: "OpenSearch audit",
-    uid: "audit-os",
-    type: "OpenSearch",
-    tone: "crit",
-    status: "Unavailable: The index pattern matches no index",
-    usedBy: "No dashboards",
-    explore: "Explore logs",
-  },
+  { name: "Prometheus", uid: "prom", type: "Prometheus", usedBy: "1 dashboard", explore: ["Explore metrics"] },
+  { name: "ClickHouse", uid: "ch", type: "ClickHouse, read only", usedBy: "1 dashboard", explore: ["Explore logs", "Search traces"] },
+  { name: "Loki", uid: "loki", type: "Loki", usedBy: "No dashboards", explore: ["Explore logs"] },
+  { name: "Tempo", uid: "tempo", type: "Tempo", usedBy: "No dashboards", explore: ["Search traces"] },
+  { name: "Jaeger", uid: "jaeger", type: "Jaeger", usedBy: "No dashboards", explore: ["Search traces"] },
+  { name: "Elasticsearch", uid: "es", type: "Elasticsearch", usedBy: "No dashboards", explore: ["Explore logs"] },
+  { name: "OpenSearch", uid: "os", type: "OpenSearch", usedBy: "No dashboards", explore: ["Explore logs"] },
   {
     name: "Audit trail",
     uid: "slashobserve-audit",
     type: "OpenSearch",
-    tone: "ok",
-    status: "Healthy",
     usedBy: "4 dashboards",
-    explore: "Explore logs",
+    explore: ["Explore logs"],
     source: "Built in",
     onlyAdmins: true,
   },
 ]
 
 const check = '<path d="M20 6 9 17l-5-5"/>'
-const alert = '<circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/>'
 const plus = '<path d="M5 12h14"/><path d="M12 5v14"/>'
 ---
 
-<Window url={`${HOST}/datasources`} label="The datasources page with Elasticsearch and OpenSearch datasources">
+<Window url={`${HOST}/datasources`} label="The datasources page with the Astronomy Shop datasources">
   <div class="datasources">
     <div class="row head">
       <div class="intro">
@@ -95,7 +63,7 @@ const plus = '<path d="M5 12h14"/><path d="M12 5v14"/>'
         </thead>
         <tbody>
           {
-            datasources.map(({ name, uid, type, tone, status, usedBy, explore, source = "From file", onlyAdmins }) => (
+            datasources.map(({ name, uid, type, usedBy, explore, source = "From file", onlyAdmins }) => (
               <tr>
                 <td>
                   <span class="stack">
@@ -113,9 +81,9 @@ const plus = '<path d="M5 12h14"/><path d="M12 5v14"/>'
                   </span>
                 </td>
                 <td>
-                  <span class:list={["row status", tone === "ok" ? "fg-ok" : "fg-crit"]}>
-                    <svg viewBox="0 0 24 24" aria-hidden="true" set:html={tone === "ok" ? check : alert} />
-                    <span class="status-text">{status}</span>
+                  <span class="row status fg-ok">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" set:html={check} />
+                    <span class="status-text">Healthy</span>
                   </span>
                 </td>
                 <td class="k">{usedBy}</td>
@@ -123,7 +91,7 @@ const plus = '<path d="M5 12h14"/><path d="M12 5v14"/>'
                 <td>
                   <span class="row actions">
                     <span class="btn btn-sm">Recheck</span>
-                    <span class="btn btn-sm">{explore}</span>
+                    {explore.map((label) => <span class="btn btn-sm">{label}</span>)}
                   </span>
                 </td>
               </tr>
