@@ -3,17 +3,17 @@ import TimeSeries from "./TimeSeries.astro"
 import Window from "./Window.astro"
 import { DASHBOARD_PATH, HOST } from "./screen-ids"
 
-const TITLE = "p95 latency by route"
+const TITLE = "p95 latency by service"
 
-const routes = [
-  { name: "/checkout", tone: "s1", d: "M0 60 C40 56 60 36 100 40 S160 70 200 50 S260 24 300 32" },
-  { name: "/cart", tone: "s3", d: "M0 74 C40 72 60 62 100 64 S160 80 200 72 S260 60 300 64" },
-  { name: "/product/{id}", tone: "s2", d: "M0 46 C40 54 60 44 100 36 S160 30 200 44 S260 54 300 46" },
+const services = [
+  { name: "checkout", tone: "s1", d: "M0 60 C40 56 60 36 100 40 S160 70 200 50 S260 24 300 32" },
+  { name: "payment", tone: "s3", d: "M0 74 C40 72 60 62 100 64 S160 80 200 72 S260 60 300 64" },
+  { name: "product-catalog", tone: "s2", d: "M0 46 C40 54 60 44 100 36 S160 30 200 44 S260 54 300 46" },
 ] as const
 
 const settings = [
   { label: "Panel type", value: "Time series" },
-  { label: "Unit", value: "seconds (s)" },
+  { label: "Unit", value: "milliseconds (ms)" },
 ]
 
 const chevron = '<path d="m6 9 6 6 6-6"/>'
@@ -21,7 +21,7 @@ const close = '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'
 const search = '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>'
 ---
 
-<Window url={`${HOST}${DASHBOARD_PATH}?panel=latency_by_route&edit=query`} label="The panel editor">
+<Window url={`${HOST}${DASHBOARD_PATH}?panel=p_latency_by_service&edit=query`} label="The panel editor">
   <div class="editor">
     <div class="head">
       <div class="head-text">
@@ -42,9 +42,9 @@ const search = '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>'
       <TimeSeries
         viewBox="0 0 300 90"
         height="88px"
-        yTicks={["300 ms", "150 ms", "0 s"]}
+        yTicks={["300 ms", "150 ms", "0 ms"]}
         xTicks={["09:00", "11:00", "13:00"]}
-        series={[...routes]}
+        series={[...services]}
       />
     </div>
     <div class="row ask">
@@ -64,12 +64,12 @@ const search = '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>'
         </div>
         <div class="mono code">
           <span class="k gutter">1</span>
-          <span>{'histogram_quantile(0.95, sum by (le, route) (rate(http_request_duration_seconds_bucket{job="checkout"}[$__rate_interval])))'}</span>
+          <span>{'histogram_quantile(0.95, sum by (service_name, le) (rate(traces_span_metrics_duration_milliseconds_bucket{span_kind="SPAN_KIND_SERVER"}[$__rate_interval])))'}</span>
         </div>
         <span class="row hint valid"><span class="fg-ok" aria-hidden="true">✓</span>Syntax is valid. The preview runs the query. Errors show under the line that has them.</span>
         <span class="row check"><span class="box" aria-hidden="true"></span>Exemplars</span>
         <span class="label">Legend</span>
-        <span class="mono input">{"{{route}}"}</span>
+        <span class="mono input">{"{{service_name}}"}</span>
         <span class="k add">+ Add query</span>
       </div>
       <div class="settings">

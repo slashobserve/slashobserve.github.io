@@ -8,21 +8,21 @@ const CHAT_ID = "3b9d01c2-6a4e-4f0b-8d21-9e7c5a1f4b60"
 const phases = [
   { label: "Discovering", tools: "list_labels, list_metrics", steps: 2 },
   { label: "Checking queries", tools: "lint_query", steps: 1, message: "Checked a query on prom: 0 errors" },
-  { label: "Running queries", tools: "query_range", steps: 1, message: "Ran a query on prom: 4 series" },
+  { label: "Running queries", tools: "query_range", steps: 1, message: "Ran a query on prom: 2 series" },
   {
     label: "Saving",
     tools: "update_panels",
     steps: 1,
-    message: "Saved panel 13: Errors by route (row Traffic), then saved version 7 (13 panels in 3 rows)",
+    message: "Saved panel 31: Payment charge errors by service (row Are orders flowing?), then saved version 7 (31 panels in 8 rows)",
   },
 ]
 
 const STEP_COUNT = phases.reduce((total, { steps }) => total + steps, 0)
 
 const thumbnails = [
-  { title: "Requests per second", span: 1, tone: "s1", d: "M0 14 C15 6 25 6 40 14 S65 22 80 12 S95 6 100 9" },
-  { title: "Error rate", span: 1, tone: "s1", d: "M0 10 C15 18 25 18 40 10 S60 4 75 16 S92 20 100 12" },
-  { title: "p95 latency by route", span: 2, tone: "s2", d: "M0 12 C10 6 20 6 30 12 S50 18 60 12 S75 4 85 16 S95 14 100 10" },
+  { title: "Server errors", span: 1, tone: "s1", d: "M0 14 C15 6 25 6 40 14 S65 22 80 12 S95 6 100 9" },
+  { title: "Payment errors", span: 1, tone: "s1", d: "M0 10 C15 18 25 18 40 10 S60 4 75 16 S92 20 100 12" },
+  { title: "Payment charge errors by service", span: 2, tone: "s2", d: "M0 12 C10 6 20 6 30 12 S50 18 60 12 S75 4 85 16 S95 14 100 10" },
 ] as const
 
 const copy = '<rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>'
@@ -37,7 +37,7 @@ const arrow = '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>'
       <span class="label">Observe</span>
       <span class="row k history"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={history} />History</span>
     </div>
-    <div class="bubble">Add errors by route to the Traffic row.</div>
+    <div class="bubble">Add payment charge errors by service to the Are orders flowing? row.</div>
     <div class="turn">
       <span class="tile" aria-hidden="true">/</span>
       <div class="turn-body">
@@ -74,7 +74,7 @@ const arrow = '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>'
           <div class="row result-head">
             <span class="result-text">
               <span class="label">{DASHBOARD_TITLE}</span>
-              <span class="k">13 panels from prom</span>
+              <span class="k">31 panels from prom</span>
             </span>
             <span class="btn btn-primary btn-sm">Open dashboard</span>
           </div>
@@ -88,7 +88,7 @@ const arrow = '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>'
       <span class="k hint hide-sm">Enter sends. Shift+Enter adds a new line. Up arrow recalls an earlier prompt. Type a slash for commands.</span>
       <span class="row composer-foot">
         <span class="row k sources">
-          {["ch", "loki", "prom", "tempo"].map((uid) => <span class="row"><span class="dot tone-ok" />{uid}</span>)}
+          {["ch", "jaeger", "loki", "prom", "tempo"].map((uid) => <span class="row"><span class="dot tone-ok" />{uid}</span>)}
           <span class="hide-sm">claude-haiku-5-5, medium effort</span>
         </span>
         <span class="send" aria-hidden="true"><svg viewBox="0 0 24 24" set:html={arrow} /></span>

@@ -1,21 +1,20 @@
 ---
 import Window from "./Window.astro"
 
-const header = "family                                   series  planned as"
+const header = "family                                            series  planned as"
 const planned = [
-  "http_requests_total                         18  Requests/s · Errors by route",
-  "http_request_duration_seconds               54  p95 latency · Latency by route",
-  "checkout_orders_total                        6  Queue depth",
-  "checkout_payment_total                       9  Payment success",
-  "inventory_reservations_total                 6  Reservations/s",
-  "db_pool_in_use                               3  DB pool in use",
-  "db_pool_max                                  3  DB pool in use",
-  "kube_pod_status_ready                        3  Pods ready",
+  "traces_span_metrics_calls_total                       18  Requests/s · Error ratio",
+  "traces_span_metrics_duration_milliseconds_bucket      54  p95 latency · Latency by service",
+  "postgresql_backends                                    3  Connections by database",
+  "postgresql_connection_max                              3  Connections by database",
+  "postgresql_commits_total                               6  Transactions/s",
+  "postgresql_blks_hit_total                              3  Buffer cache hit ratio",
+  "postgresql_blks_read_total                             3  Buffer cache hit ratio",
 ]
 const runtime = "2 runtime families counted"
 const summary = "12 families · 12 planned · 0 uncovered"
 ---
 
-<Window url={'list_metrics scope={job="checkout"}'}>
+<Window url={'list_metrics scope={service_name!=""}'}>
   <div class="term"><span class="tl k">{header}</span>{planned.map((line) => <span class="tl">{line}</span>)}<span class="tl">…</span><span class="tl k">{runtime}</span><span class="tl fg-ok">{summary}</span></div>
 </Window>

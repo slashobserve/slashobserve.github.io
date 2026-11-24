@@ -31,17 +31,17 @@ const send = '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>'
   </div>
   <ol class="messages" aria-label="Messages">
     <Message as="li" seq={0} author="person" initials="AD" tint={1} name="admin" verb="asked the agent" time="17:02">
-      <Mention /> can we confirm the errors come from the payments client timeout?
+      <Mention /> can we confirm the errors are failed payment charges?
     </Message>
     <Message as="li" seq={1} author="agent" name="Observe Agent for admin" verb="replied" time="17:03">
       Answered.
       <AnswerCard
         slot="after"
-        answer="Yes. The 5xx on /api/checkout are payments client timeouts: both checkout pods began timing out at 16:43, two minutes after the client timeout dropped to 2s."
+        answer="Yes. The checkout errors are failed payment charges: payment has returned Payment request failed. Invalid token. for about half of the charges since 16:43."
       />
     </Message>
     <Message as="li" seq={2} author="person" initials="JP" tint={4} name="Jo Park" verb="commented" time="17:06">
-      That matches the new 2s client timeout in the payments chart.
+      That matches paymentFailure set to 50% in the payment charge errors chart.
     </Message>
   </ol>
   <div class="composer-wrap">

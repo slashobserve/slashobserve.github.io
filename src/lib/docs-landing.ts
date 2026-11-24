@@ -38,6 +38,7 @@ export const TOPIC_GROUPS: readonly GroupSpec[] = [
         candidates: ["docs/connect/elasticsearch", "docs/connect/opensearch", "docs/use/logs-and-traces"],
       },
       { label: "Tempo and the trace view", candidates: ["docs/connect/tempo", "docs/use/logs-and-traces"] },
+      { label: "Jaeger", candidates: ["docs/connect/jaeger"] },
       { label: "Annotations", candidates: ["docs/use/annotations"] },
     ],
   },

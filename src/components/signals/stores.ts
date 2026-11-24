@@ -51,6 +51,13 @@ export const stores: Store[] = [
     traces: "TraceQL",
     discovery: "service names, span names, attribute keys and values",
   },
+  {
+    store: "Jaeger",
+    metrics: null,
+    logs: null,
+    traces: "key=value search",
+    discovery: "service names, span names per service",
+  },
 ]
 
 export function languagesOf({ metrics, logs, traces }: Store): string {

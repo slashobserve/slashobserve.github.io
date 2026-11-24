@@ -13,12 +13,12 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
 
 <MarketingLayout
   title="Signals | SlashObserve"
-  description="Metrics, logs and traces from Prometheus, ClickHouse, Loki, Elasticsearch, OpenSearch and Tempo in one place: PromQL, SQL, LogQL, KQL (with Lucene and the Query DSL) and TraceQL. Dashboards mix them and a log line opens its trace."
+  description="Metrics, logs and traces from Prometheus, ClickHouse, Loki, Elasticsearch, OpenSearch, Tempo and Jaeger in one place: PromQL, SQL, LogQL, KQL (with Lucene and the Query DSL), TraceQL and Jaeger searches. Dashboards mix them and a log line opens its trace."
 >
-  <PageOpening eyebrow="Signals" title="Three signals, six stores, one place to look.">
+  <PageOpening eyebrow="Signals" title="Three signals, seven stores, one place to look.">
     <p class="lead">
-      Prometheus or ClickHouse for metrics. Loki, ClickHouse, Elasticsearch or OpenSearch for logs. Tempo or ClickHouse for
-      traces. Dashboards mix them, the agent queries all of them, and a log line with a trace id opens the trace.
+      Prometheus or ClickHouse for metrics. Loki, ClickHouse, Elasticsearch or OpenSearch for logs. Tempo, Jaeger or ClickHouse
+      for traces. Dashboards mix them, the agent queries all of them, and a log line with a trace id opens the trace.
     </p>
     <StoreStrip />
   </PageOpening>
@@ -29,7 +29,7 @@ import MarketingLayout from "../layouts/MarketingLayout.astro"
     <SectionHead
       eyebrow="Traces"
       title="The trace view."
-      lead="A waterfall per trace, with the critical path outlined, a search inside the trace and the span's attributes, events and links beside it. A span shows the logs that carry its trace id. Tempo or the OpenTelemetry tables in ClickHouse, with TraceQL or SQL behind it."
+      lead="A waterfall per trace, with the critical path outlined, a search inside the trace and the span's attributes, events and links beside it. A span shows the logs that carry its trace id. Tempo, Jaeger or the OpenTelemetry tables in ClickHouse, with TraceQL, a Jaeger search or SQL behind it."
     />
     <div data-in-view="rise"><TraceView /></div>
   </Section>

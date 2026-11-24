@@ -5,27 +5,27 @@ import CanvasTools from "./CanvasTools.astro"
 import Panel from "./Panel.astro"
 import TimeSeries from "./TimeSeries.astro"
 
-const routes = [
-  { name: "/checkout", tone: "s1", d: "M0 92 L30 91 L60 93 L90 92 L120 91 L150 92 L172 91 L185 30 L200 24 L230 27 L260 25 L300 26" },
-  { name: "/cart", tone: "s3", d: "M0 95 L40 94 L80 96 L120 95 L160 94 L200 95 L240 96 L300 95" },
-  { name: "/product/{id}", tone: "s2", d: "M0 97 L40 96 L80 97 L120 96 L160 97 L200 96 L240 97 L300 96" },
+const services = [
+  { name: "checkout", tone: "s1", d: "M0 92 L30 91 L60 93 L90 92 L120 91 L150 92 L172 91 L185 30 L200 24 L230 27 L260 25 L300 26" },
+  { name: "payment", tone: "s3", d: "M0 95 L40 94 L80 96 L120 95 L160 94 L200 95 L240 96 L300 95" },
+  { name: "cart", tone: "s2", d: "M0 97 L40 96 L80 97 L120 96 L160 97 L200 96 L240 97 L300 96" },
 ] as const
 
-const chips = ["Server errors by route", "Point at 22 Nov 13:42 UTC on the series route=/checkout", "4.2%", "last hour"]
+const chips = ["Error ratio by service", "Point at 22 Nov 16:44 UTC on the series service_name=checkout", "4.2%", "last hour"]
 ---
 
 <div class="ask-on-panel" role="group" aria-label="A question asked about one point on a panel, answered beside it">
   <div class="canvas">
-    <Panel title="Server errors by route" datasource="prom">
+    <Panel title="Error ratio by service" datasource="prom">
       <TimeSeries
         viewBox="0 0 300 100"
         height="260px"
         yTicks={["6%", "3%", "0%"]}
         xTicks={["13:05", "13:35", "14:05"]}
-        series={[...routes]}
+        series={[...services]}
       >
         <span class="spot" aria-hidden="true"></span>
-        <CanvasPin kind="ask" x="61.7%" y="30%" label="Your question on Server errors by route" />
+        <CanvasPin kind="ask" x="61.7%" y="30%" label="Your question on Error ratio by service" />
       </TimeSeries>
     </Panel>
     <CanvasTools active="ask" hint="Click a spot on a panel to ask the agent about it. Esc returns to Select." />
@@ -35,8 +35,8 @@ const chips = ["Server errors by route", "Point at 22 Nov 13:42 UTC on the serie
     asked={{
       question: "Why did errors jump here?",
       answer:
-        "Errors on /checkout rose from 0.3% to 4.2% at 13:42, when calls to the payments service began timing out after 2s. The other routes stayed flat.",
-      change: "Add a panel of payments client timeouts by pod.",
+        "Errors on checkout rose from 0.3% to 4.2% at 16:44, when payment began failing about half of its charges. The other services stayed flat.",
+      change: "Add a panel of payment charge errors by service.",
     }}
   />
 </div>

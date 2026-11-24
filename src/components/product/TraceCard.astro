@@ -50,7 +50,7 @@ const stats = [
       {
         SERVICES.map(({ name, tone, count }) => (
           <span class="service">
-            <i class={`tone-${tone}`} />
+            <i style={`--tone:var(--${tone})`} />
             {name} <span class="k">{count}</span>
           </span>
         ))
@@ -77,7 +77,7 @@ const stats = [
               )}
             </span>
             <span class="track">
-              <span class={`bar tone-${tone}`} style={`width:${width}%;margin-left:${offset}%;--i:${index}`} data-grow />
+              <span class="bar" style={`--tone:var(--${tone});width:${width}%;margin-left:${offset}%;--i:${index}`} data-grow />
             </span>
             <span class="k num length">{duration}</span>
           </div>

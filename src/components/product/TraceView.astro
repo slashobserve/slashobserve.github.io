@@ -59,7 +59,7 @@ const search = '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>'
           {
             SERVICES.map(({ name, tone, count }) => (
               <span class="service">
-                <i class={`tone-${tone}`} />
+                <i style={`--tone:var(--${tone})`} />
                 {name} <span class="k">{count}</span>
               </span>
             ))
@@ -85,7 +85,7 @@ const search = '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>'
                 )}
               </span>
               <span class="track">
-                <span class={`span-bar tone-${tone}`} style={`width:${width}%;margin-left:${offset}%`} />
+                <span class="span-bar" style={`--tone:var(--${tone});width:${width}%;margin-left:${offset}%`} />
               </span>
               <span class="k dur">{duration}</span>
             </div>
@@ -107,9 +107,10 @@ const search = '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>'
           Error
         </span>
         <span>{selected.duration}</span>
-        <span class="k">66% of the trace</span>
-        <span class="k">starts at +551 ms</span>
+        <span class="k">{SELECTED_SPAN.share} of the trace</span>
+        <span class="k">starts at {SELECTED_SPAN.startsAt}</span>
       </span>
+      <span class="message">{SELECTED_SPAN.statusMessage}</span>
       <span class="section-title">Attributes <span class="k">{SELECTED_SPAN.attributes.length - 2}</span></span>
       <div class="attrs">
         {
@@ -286,6 +287,10 @@ const search = '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>'
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .message {
+    overflow-wrap: anywhere;
   }
 
   .err {

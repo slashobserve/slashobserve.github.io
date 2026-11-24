@@ -4,7 +4,7 @@ import Window from "./Window.astro"
 const QUERY_FORMS = [
   "service.name:checkout and log.level:error",
   "lucene:service.name:checkout AND NOT log.level:info",
-  '{"query": {"match_phrase": {"message": "timeout"}}}',
+  '{"query": {"match_phrase": {"message": "Invalid token"}}}',
 ]
 ---
 

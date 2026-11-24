@@ -2,15 +2,15 @@ const BUILT_PANELS = [
   { title: "Requests/s", row: "Overview" },
   { title: "Error ratio", row: "Overview" },
   { title: "p95 latency", row: "Overview" },
-  { title: "Pods ready", row: "Overview" },
-  { title: "Requests by pod", row: "Traffic" },
-  { title: "Latency by route", row: "Traffic" },
-  { title: "Errors by route", row: "Traffic" },
-  { title: "DB pool in use", row: "Internals" },
-  { title: "Queue depth", row: "Internals" },
+  { title: "Services reporting", row: "Overview" },
+  { title: "Requests by service", row: "Traffic" },
+  { title: "Latency by service", row: "Traffic" },
+  { title: "Errors by service", row: "Traffic" },
+  { title: "Connections by database", row: "Internals" },
+  { title: "Orders placed", row: "Internals" },
   { title: "Payment success", row: "Internals" },
-  { title: "Reservations/s", row: "Internals" },
-  { title: "Cache hit ratio", row: "Internals" },
+  { title: "Transactions/s", row: "Internals" },
+  { title: "Buffer cache hit ratio", row: "Internals" },
 ] as const
 
 const BUILT_ROWS = new Set(BUILT_PANELS.map(({ row }) => row)).size
@@ -31,7 +31,7 @@ interface Step {
 const DATASOURCE = "prom"
 
 const DISCOVERY: readonly Step[] = [
-  { phase: "Discovering", tool: "list_metrics", message: `Listed 12 metric families in {job="checkout"} on ${DATASOURCE}` },
+  { phase: "Discovering", tool: "list_metrics", message: `Listed 12 metric families in {service_name!=""} on ${DATASOURCE}` },
   { phase: "Discovering", tool: "list_label_values", message: `Listed 3 label values on ${DATASOURCE}` },
   { phase: "Running queries", tool: "query_range", message: `Ran a query on ${DATASOURCE}: 3 series` },
 ]
