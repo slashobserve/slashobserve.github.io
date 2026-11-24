@@ -24,7 +24,7 @@ export const FEATURE_BLURBS: Record<string, string> = {
   [OBSERVATIONS_PATH]: "Investigation pages people and agents write together",
   [DASHBOARDS_PATH]: "Built by the agent, every panel run before the save",
   [AGENTS_PATH]: "Observe Agent, MCP clients and service accounts",
-  [SIGNALS_PATH]: "Metrics, logs and traces from six stores",
+  [SIGNALS_PATH]: "Metrics, logs and traces from seven stores",
 }
 
 const MIGRATE_LINK: NavItem = { label: "Migrate", href: MIGRATE_PATH }

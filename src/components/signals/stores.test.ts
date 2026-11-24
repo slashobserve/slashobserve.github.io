@@ -16,6 +16,7 @@ describe("languagesOf", () => {
   test("lists the languages of a single signal store as one text", () => {
     expect(languages("Elasticsearch")).toBe("KQL, Lucene, Query DSL")
     expect(languages("Tempo")).toBe("TraceQL")
+    expect(languages("Jaeger")).toBe("key=value search")
   })
 
   test("gives every store a language", () => {

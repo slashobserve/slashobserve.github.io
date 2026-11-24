@@ -6,7 +6,7 @@ export const SOCIAL_CARDS: readonly SocialCard[] = [
   { id: "dashboards", path: "/dashboards/", section: "Dashboards", title: "Ask for a dashboard. Get one that works." },
   { id: "agents", path: "/agents/", section: "Agents", title: "Agents are members of the workspace." },
   { id: "migrate", path: "/migrate/", section: "Migrate", title: "Coming from Grafana, Kibana or OpenSearch Dashboards?" },
-  { id: "signals", path: "/signals/", section: "Signals", title: "Three signals, six stores, one place to look." },
+  { id: "signals", path: "/signals/", section: "Signals", title: "Three signals, seven stores, one place to look." },
   { id: "docs", path: "/docs/", section: "Docs", title: "Start with the demo stack, then connect your own stores." },
 ]
 
