@@ -21,15 +21,15 @@ interface QueuedDashboard {
 
 const rows: QueuedDashboard[] = [
   {
-    name: "Kubernetes / Pods",
-    folder: "Platform / Kubernetes",
+    name: "Spanmetrics Demo Dashboard",
+    folder: "Astronomy Shop / Services",
     unverified: "3 panels",
     placeholders: 0,
     repair: { label: "Repairing", tone: "running", live: true },
     canRepair: false,
   },
   {
-    name: "Node exporter full",
+    name: "Linux",
     folder: "Infra",
     unverified: "5 panels, 1 variable",
     placeholders: 0,
@@ -37,23 +37,23 @@ const rows: QueuedDashboard[] = [
     canRepair: false,
   },
   {
-    name: "Payments latency",
-    folder: "Platform / Services",
+    name: "Demo Dashboard",
+    folder: "Astronomy Shop / Services",
     unverified: "1 panel",
     placeholders: 0,
     repair: { label: "Repaired, still failing", tone: "ok", finished: "12 min ago" },
     canRepair: true,
   },
   {
-    name: "Ingest pipeline",
+    name: "OpenTelemetry Collector",
     folder: "Observability",
     unverified: "2 panels",
     placeholders: 3,
     repair: { label: "Repair failed", tone: "critical", finished: "1 h ago" },
     canRepair: true,
   },
-  { name: "Service health", folder: "Platform / Services", unverified: "1 panel", placeholders: 0, repair: null, canRepair: true },
-  { name: "Graphite legacy", folder: "Infra", unverified: "None", placeholders: 4, repair: null, canRepair: false },
+  { name: "Self-Observability", folder: "Astronomy Shop / Services", unverified: "1 panel", placeholders: 0, repair: null, canRepair: true },
+  { name: "Cart Service Exemplars", folder: "Infra", unverified: "None", placeholders: 4, repair: null, canRepair: false },
 ]
 
 interface Props {
