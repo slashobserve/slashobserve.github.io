@@ -3,7 +3,7 @@ const BUILT_PANELS = [
   { title: "Error ratio", row: "Overview" },
   { title: "p95 latency", row: "Overview" },
   { title: "Pods ready", row: "Overview" },
-  { title: "Requests by pod", row: "Traffic" },
+  { title: "Requests by service", row: "Traffic" },
   { title: "Latency by route", row: "Traffic" },
   { title: "Errors by route", row: "Traffic" },
   { title: "DB pool in use", row: "Internals" },

@@ -16,7 +16,7 @@ import {
 } from "../../lib/build-play"
 
 const REQUEST_ID = "7c2e91a4-5b0d-4e8f-9a1c-3d6f2b8e4a17"
-const PROMPT = "checkout health by pod, last 6h"
+const PROMPT = "checkout health by service, last 6h"
 const X_TICKS = ["08:00", "10:00", "12:00", "14:00"]
 
 type Series = { d: string; tone: string; name: string }
@@ -32,9 +32,9 @@ const POOL_BARS = [30, 45, 40, 70, 95, 80, 55, 50, 60, 48]
 const POOL_PEAK = 4
 
 const PODS: Series[] = [
-  { d: "M0 96 C40 90 60 54 100 60 S170 108 210 76 S290 32 330 44 S380 76 400 66", tone: "s1", name: "checkout-0" },
-  { d: "M0 108 C40 104 60 86 100 90 S170 120 210 104 S290 76 330 82 S380 104 400 98", tone: "s2", name: "checkout-1" },
-  { d: "M0 76 C40 82 60 64 100 54 S170 48 210 64 S290 86 330 74 S380 64 400 70", tone: "s3", name: "checkout-2" },
+  { d: "M0 96 C40 90 60 54 100 60 S170 108 210 76 S290 32 330 44 S380 76 400 66", tone: "s1", name: "checkout" },
+  { d: "M0 108 C40 104 60 86 100 90 S170 120 210 104 S290 76 330 82 S380 104 400 98", tone: "s2", name: "payment" },
+  { d: "M0 76 C40 82 60 64 100 54 S170 48 210 64 S290 86 330 74 S380 64 400 70", tone: "s3", name: "cart" },
 ]
 
 const ROUTES: Series[] = [
@@ -123,7 +123,7 @@ const ROWS: { title: string; panels: { size: Size; body: ReactNode }[] }[] = [
   {
     title: "Traffic",
     panels: [
-      { size: "wide", body: <TimeSeries title="Requests by pod" yTicks={["900 req/s", "450 req/s", "0 req/s"]} series={PODS} /> },
+      { size: "wide", body: <TimeSeries title="Requests by service" yTicks={["900 req/s", "450 req/s", "0 req/s"]} series={PODS} /> },
       { size: "wide", body: <TimeSeries title="Latency by route" yTicks={["400 ms", "200 ms", "0 s"]} series={ROUTES} /> },
       {
         size: "wide",
